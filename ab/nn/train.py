@@ -144,10 +144,13 @@ def main(config='', n_epochs=1, n_optuna_trials=100):
                 else:
                     print(f"\nStarting training for the model: {model_name}, task: {task}, dataset: {dataset_name},"
                           f" metric: {metric}, transform: {transform_name}, epochs: {epoch}")
-                    if task == "img_segmentation":
+                    if task == "img_segmentation" or task == "obj_detection":
                         import ab.nn.loader.coco as coco
                         dataset_params['class_list'] = coco.class_list()
                         dataset_params['path'] = "./data/coco"
+
+
+                        
                     # Paths for loader and transform
                     loader_path = f"loader.{dataset_name}.loader"
                     transform_path = f"transform.{transform_name}.transform" if transform_name else None
@@ -210,6 +213,6 @@ if __name__ == "__main__":
     # conf = 'img_classification-cifar10-acc-cifar10_norm' # For a particular configuration for all models
     # conf = 'img_classification-cifar10-acc-cifar10_norm-GoogLeNet'  # For a particular configuration and model
     # conf = ['img_classification', 'img_segmentation']  # For all image classification and segmentation configurations
-    conf = 'obj_detection-coco-map-coco_norm-SSDLite'
+    conf = 'obj_detection-coco_detection-map-coco_detection_transform-SSDLite'
     # Run training with Optuna: detects and saves performance metric values for a varying number of epochs
-    main(conf, [1, 2, 5], 100)
+    main(conf, [1, 2, 5], 10)

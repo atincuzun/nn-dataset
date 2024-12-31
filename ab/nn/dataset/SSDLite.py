@@ -57,7 +57,7 @@ class SSDLiteHead(nn.Module):
         return {
             "bbox_regression": self.regression_head(x),
             "cls_logits": self.classification_head(x),
-        }bbb
+        }
 
 class SSDLiteClassificationHead(SSDScoringHead):
     def __init__(self, in_channels: List[int], num_anchors: List[int], num_classes: int, norm_layer: Callable[..., nn.Module]):

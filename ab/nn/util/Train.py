@@ -74,22 +74,35 @@ class Train:
             raise ValueError(f"Metric '{metric_name}' not found. Ensure a corresponding file and function exist.") \
                 from e
 
-    def forward_pass(self, inputs):
+    def forward_pass(self, inputs, targets=None):
         """
         Runs a forward pass through the model and removes auxiliary outputs if present.
         """
+        if self.task == "obj_detection" and self.model.training:
+            return self.model(inputs, targets)
         outputs = self.model(inputs)
-        if isinstance(outputs, (tuple, list)):  # For models like InceptionV3 that may have multiple outputs
-            outputs = outputs[0]  # Keep only the main output
+        #if isinstance(outputs, (tuple, list)):  # For models like InceptionV3 that may have multiple outputs
+        #    outputs = outputs[0]  # Keep only the main output
         return outputs
 
     def evaluate(self, num_epochs):
+        collate_fn = getattr(self.train_dataset, 'collate_fn', None)
+        
         train_loader = torch.utils.data.DataLoader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=2
+            self.train_dataset, 
+            batch_size=self.batch_size, 
+            shuffle=True, 
+            num_workers=0,
+            collate_fn=collate_fn  # Pass it explicitly
         )
         test_loader = torch.utils.data.DataLoader(
-            self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=2
+            self.test_dataset, 
+            batch_size=self.batch_size, 
+            shuffle=False, 
+            num_workers=0,
+            collate_fn=collate_fn
         )
+
         # Criterion и Optimizer
         if self.task == "img_segmentation":
             params_list = []
@@ -108,41 +121,67 @@ class Train:
         for epoch in range(num_epochs):
             self.model.train()
             for inputs, labels in tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}"):
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
+                
+                if self.task == "obj_detection":
+                    inputs = inputs.to(self.device)
+                    labels = [{k: v.to(self.device) for k, v in t.items()} for t in labels]
 
-                optimizer.zero_grad()
-                outputs = self.forward_pass(inputs)
-                loss = criterion(outputs, labels)
+                
+                    optimizer.zero_grad()
+                
+                    loss_dict = self.forward_pass(inputs, labels)  # labels are our targets
+                    loss = sum(loss for loss in loss_dict.values())
+                else:
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    
+                    optimizer.zero_grad()
+                    outputs = self.forward_pass(inputs)
+                    loss = criterion(outputs, labels)
+
+            
                 loss.backward()
-                nn.utils.clip_grad_norm_(self.model.parameters(), 3)
                 optimizer.step()
 
         # --- Evaluation --- #
         self.model.eval()
         total_correct, total_samples = 0, 0
-
-        if hasattr(self.metric_function, "reset"):  # Check for reset()
-            self.metric_function.reset()
+        predictions = []
+        all_targets = []
 
         with torch.no_grad():
             for inputs, labels in test_loader:
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = self.forward_pass(inputs)
+                if self.task == "obj_detection":
+                    inputs, target_dicts = inputs.to(self.device), [{k: v.to(self.device) for k, v in t.items()} for t in labels]
+                    outputs = self.forward_pass(inputs)
+                    # For object detection, collect predictions and targets
 
-                if hasattr(self.metric_function, "update"):  # For mIoU
-                    self.metric_function.update(outputs, labels)
-                else:  # For accuracy and others
-                    correct, total = self.metric_function(outputs, labels)
-                    total_correct += correct
-                    total_samples += total
+
+                    predictions.extend(outputs)
+                    all_targets.extend(target_dicts)
+
+                else:
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    outputs = self.forward_pass(inputs)
+                    if hasattr(self.metric_function, "update"):  # For mIoU
+                        self.metric_function.update(outputs, labels)
+                    else:  # For accuracy and others
+                        correct, total = self.metric_function(outputs, labels)
+                        total_correct += correct
+                        total_samples += total
 
         # Metric result
-        if hasattr(self.metric_function, "get"):
+        if self.task == "obj_detection":
+            # Call compute function for map metric
+
+
+            result, _ = self.metric_function(predictions, all_targets)
+        elif hasattr(self.metric_function, "get"):
             result = self.metric_function.get()
         else:
             result = total_correct / total_samples
 
         return result
+
 
     def get_args(self):
         return self.args

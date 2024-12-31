@@ -218,4 +218,4 @@ def loader(path="./data/cocos", transform=None, class_list=None, **kwargs):
 
 
 
-    return train_dataset, val_dataset
+    return 1, train_dataset, val_dataset
