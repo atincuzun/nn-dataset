@@ -103,23 +103,4 @@ class Net(SSD):
             image_std=[0.5, 0.5, 0.5]
         )
     
-    def forward(self, x, targets=None):
-        if targets is not None:
-            # targets is our padded tensor of shape (batch_size, max_objects, 5)
-            batch_size = targets.shape[0]
-            dict_targets = []
-            
-            for i in range(batch_size):
-                # Find valid objects (where sum of box coordinates is not 0)
-                valid_mask = targets[i, :, :4].sum(dim=1) != 0
-                
-                dict_targets.append({
-                    'boxes': targets[i, valid_mask, :4],
-                    'labels': targets[i, valid_mask, 4].long()
-                })
-                
-            # Call parent SSD's forward with the converted targets
-            return super().forward(x, dict_targets)
-        
-        # For inference, just pass through to parent
-        return super().forward(x)
+

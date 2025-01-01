@@ -213,6 +213,6 @@ if __name__ == "__main__":
     # conf = 'img_classification-cifar10-acc-cifar10_norm' # For a particular configuration for all models
     # conf = 'img_classification-cifar10-acc-cifar10_norm-GoogLeNet'  # For a particular configuration and model
     # conf = ['img_classification', 'img_segmentation']  # For all image classification and segmentation configurations
-    conf = 'obj_detection-coco_detection-map-coco_detection_transform-SSDLite'
+    conf = 'obj_detection-coco_detection-map-coco_detection_transform-RetinaNet'
     # Run training with Optuna: detects and saves performance metric values for a varying number of epochs
     main(conf, [1, 2, 5], 10)

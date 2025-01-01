@@ -1,9 +1,10 @@
 import math
+from typing import List, Dict, Optional, Tuple
 import torch
 import torch.nn as nn
 from torch import Tensor
-from typing import List, Dict, Optional, Tuple
 from functools import partial
+from collections import OrderedDict
 from torchvision.models import resnet50
 from torchvision.models.resnet import ResNet50_Weights
 from torchvision.ops import boxes as box_ops
@@ -13,7 +14,8 @@ from torchvision.models.detection.transform import GeneralizedRCNNTransform
 from torchvision.models.detection.backbone_utils import _resnet_fpn_extractor
 from torchvision.models.detection.anchor_utils import AnchorGenerator
 from torchvision.ops.feature_pyramid_network import LastLevelP6P7
-from collections import OrderedDict
+from torchvision.models.detection import _utils as det_utils
+
 
 args = [91]
 
@@ -30,7 +32,7 @@ def _default_anchorgen():
     return anchor_generator
 
 class RetinaNetHead(nn.Module):
-    def __init__(self, in_channels, num_anchors, num_classes, norm_layer: Optional[Callable[..., nn.Module]] = None):
+    def __init__(self, in_channels, num_anchors, num_classes, norm_layer=None):
         super().__init__()
         self.classification_head = RetinaNetClassificationHead(in_channels, num_anchors, num_classes, norm_layer=norm_layer)
         self.regression_head = RetinaNetRegressionHead(in_channels, num_anchors, norm_layer=norm_layer)
@@ -38,11 +40,14 @@ class RetinaNetHead(nn.Module):
     def compute_loss(self, targets, head_outputs, anchors, matched_idxs):
         return {
             "classification": self.classification_head.compute_loss(targets, head_outputs, matched_idxs),
-            "bbox_regression": self.regression_head.compute_loss(targets, head_outputs, anchors, matched_idxs),
+            "bbox_regression": self.regression_head.compute_loss(targets, head_outputs, anchors, matched_idxs)
         }
 
     def forward(self, x):
-        return {"cls_logits": self.classification_head(x), "bbox_regression": self.regression_head(x)}
+        return {
+            "cls_logits": self.classification_head(x),
+            "bbox_regression": self.regression_head(x)
+        }
 
 class RetinaNetClassificationHead(nn.Module):
     def __init__(self, in_channels, num_anchors, num_classes, prior_probability=0.01, norm_layer=None):
@@ -78,7 +83,7 @@ class RetinaNetClassificationHead(nn.Module):
             gt_classes_target = torch.zeros_like(cls_logits_per_image)
             gt_classes_target[
                 foreground_idxs_per_image,
-                targets_per_image["labels"][matched_idxs_per_image[foreground_idxs_per_image]],
+                targets_per_image["labels"][matched_idxs_per_image[foreground_idxs_per_image]]
             ] = 1.0
 
             valid_idxs_per_image = matched_idxs_per_image != self.BETWEEN_THRESHOLDS
@@ -88,8 +93,7 @@ class RetinaNetClassificationHead(nn.Module):
                     cls_logits_per_image[valid_idxs_per_image],
                     gt_classes_target[valid_idxs_per_image],
                     reduction="sum",
-                )
-                / max(1, num_foreground)
+                ) / max(1, num_foreground)
             )
 
         return _sum(losses) / len(targets)
@@ -145,8 +149,7 @@ class RetinaNetRegressionHead(nn.Module):
             bbox_regression_per_image = bbox_regression_per_image[foreground_idxs_per_image, :]
             anchors_per_image = anchors_per_image[foreground_idxs_per_image, :]
 
-            target_regression = self.box_coder.encode_single(matched_gt_boxes_per_image, anchors_per_image)
-
+            target_regression = self.box_coder_encode_single(matched_gt_boxes_per_image, anchors_per_image)
             losses.append(torch.nn.functional.l1_loss(bbox_regression_per_image, target_regression, reduction="sum") / max(1, num_foreground))
 
         return _sum(losses) / len(targets)
@@ -167,164 +170,11 @@ class RetinaNetRegressionHead(nn.Module):
 
         return torch.cat(all_bbox_regression, dim=1)
 
-class Net(nn.Module):
-    def __init__(self, num_classes=91):
-        super().__init__()
-        
-        backbone = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
-        backbone = _resnet_fpn_extractor(
-            backbone,
-            trainable_layers=3,
-            returned_layers=[2, 3, 4],
-            extra_blocks=LastLevelP6P7(256, 256)
-        )
-        
-        anchor_generator = _default_anchorgen()
-        norm_layer = partial(nn.GroupNorm, 32)
-        
-        self.backbone = backbone
-        self.anchor_generator = anchor_generator
-        self.head = RetinaNetHead(
-            backbone.out_channels,
-            anchor_generator.num_anchors_per_location()[0],
-            num_classes,
-            norm_layer=norm_layer
-        )
-        
-        self.transform = GeneralizedRCNNTransform(
-            min_size=800,
-            max_size=1333,
-            image_mean=[0.485, 0.456, 0.406],
-            image_std=[0.229, 0.224, 0.225],
-        )
-        
-        self.score_thresh = 0.05
-        self.nms_thresh = 0.5
-        self.detections_per_img = 300
-        self.topk_candidates = 1000
-        self.num_classes = num_classes
-
-    def forward(self, x, targets=None):
-        if targets is not None:
-            batch_size = targets.shape[0]
-            dict_targets = []
-            
-            for i in range(batch_size):
-                valid_mask = targets[i, :, :4].sum(dim=1) != 0
-                dict_targets.append({
-                    'boxes': targets[i, valid_mask, :4],
-                    'labels': targets[i, valid_mask, 4].long()
-                })
-            targets = dict_targets
-
-        original_image_sizes = []
-        for img in x:
-            val = img.shape[-2:]
-            original_image_sizes.append((val[0], val[1]))
-
-        x, targets = self.transform(x, targets)
-        
-        features = self.backbone(x.tensors)
-        if isinstance(features, torch.Tensor):
-            features = OrderedDict([("0", features)])
-        features = list(features.values())
-        
-        head_outputs = self.head(features)
-        anchors = self.anchor_generator(x, features)
-        
-        losses = {}
-        detections = []
-        
-        if self.training:
-            if targets is None:
-                torch._assert(False, "targets should not be none when in training mode")
-            losses = self.compute_loss(targets, head_outputs, anchors)
-        else:
-            detections = self.postprocess_detections(head_outputs, anchors, x.image_sizes)
-            detections = self.transform.postprocess(detections, x.image_sizes, original_image_sizes)
-
-        if torch.jit.is_scripting():
-            return losses, detections
-        
-        return detections if not self.training else losses
-
-    def compute_loss(self, targets, head_outputs, anchors):
-        matched_idxs = []
-        for anchors_per_image, targets_per_image in zip(anchors, targets):
-            if targets_per_image["boxes"].numel() == 0:
-                matched_idxs.append(
-                    torch.full((anchors_per_image.size(0),), -1, dtype=torch.int64, device=anchors_per_image.device)
-                )
-                continue
-
-            match_quality_matrix = box_ops.box_iou(targets_per_image["boxes"], anchors_per_image)
-            matched_idxs.append(self.proposal_matcher(match_quality_matrix))
-
-        return self.head.compute_loss(targets, head_outputs, anchors, matched_idxs)
-
-    def postprocess_detections(self, head_outputs, anchors, image_shapes):
-        class_logits = head_outputs["cls_logits"]
-        box_regression = head_outputs["bbox_regression"]
-        num_images = len(image_shapes)
-        detections = []
-
-        for index in range(num_images):
-            box_regression_per_image = [br[index] for br in box_regression]
-            logits_per_image = [cl[index] for cl in class_logits]
-            anchors_per_image, image_shape = anchors[index], image_shapes[index]
-
-            image_boxes = []
-            image_scores = []
-            image_labels = []
-
-            for box_regression_per_level, logits_per_level, anchors_per_level in zip(
-                box_regression_per_image, logits_per_image, anchors_per_image
-            ):
-                num_classes = logits_per_level.shape[-1]
-
-                scores_per_level = torch.sigmoid(logits_per_level).flatten()
-                keep_idxs = scores_per_level > self.score_thresh
-                scores_per_level = scores_per_level[keep_idxs]
-                topk_idxs = torch.where(keep_idxs)[0]
-
-                num_topk = min(topk_idxs.size(0), self.topk_candidates)
-                scores_per_level, idxs = scores_per_level.topk(num_topk)
-                topk_idxs = topk_idxs[idxs]
-
-                anchor_idxs = torch.div(topk_idxs, num_classes, rounding_mode="floor")
-                labels_per_level = topk_idxs % num_classes
-
-                boxes_per_level = self.box_coder.decode_single(
-                    box_regression_per_level[anchor_idxs], anchors_per_level[anchor_idxs]
-                )
-                boxes_per_level = box_ops.clip_boxes_to_image(boxes_per_level, image_shape)
-
-                image_boxes.append(boxes_per_level)
-                image_scores.append(scores_per_level)
-                image_labels.append(labels_per_level)
-
-            image_boxes = torch.cat(image_boxes, dim=0)
-            image_scores = torch.cat(image_scores, dim=0)
-            image_labels = torch.cat(image_labels, dim=0)
-
-            keep = box_ops.batched_nms(image_boxes, image_scores, image_labels, self.nms_thresh)
-            keep = keep[: self.detections_per_img]
-
-            detections.append(
-                {
-                    "boxes": image_boxes[keep],
-                    "scores": image_scores[keep],
-                    "labels": image_labels[keep],
-                }
-            )
-
-        return detections
-
     def box_coder_encode_single(self, reference_boxes, proposals):
         dtype = reference_boxes.dtype
         device = reference_boxes.device
         weights = torch.as_tensor([1.0, 1.0, 1.0, 1.0], dtype=dtype, device=device)
-        
+
         wx = weights[0]
         wy = weights[1]
         ww = weights[2]
@@ -359,19 +209,14 @@ class Net(nn.Module):
         return targets
 
     def box_coder_decode_single(self, rel_codes, boxes):
-        dtype = rel_codes.dtype
-        device = rel_codes.device
-        weights = torch.as_tensor([1.0, 1.0, 1.0, 1.0], dtype=dtype, device=device)
+        boxes = boxes.to(dtype=rel_codes.dtype)
 
-        boxes = boxes.to(dtype)
-        
         widths = boxes[:, 2] - boxes[:, 0]
         heights = boxes[:, 3] - boxes[:, 1]
         ctr_x = boxes[:, 0] + 0.5 * widths
         ctr_y = boxes[:, 1] + 0.5 * heights
 
-        wx, wy, ww, wh = weights[0], weights[1], weights[2], weights[3]
-
+        wx, wy, ww, wh = [1.0] * 4
         dx = rel_codes[:, 0::4] / wx
         dy = rel_codes[:, 1::4] / wy
         dw = rel_codes[:, 2::4] / ww
@@ -386,9 +231,155 @@ class Net(nn.Module):
         pred_h = torch.exp(dh) * heights[:, None]
 
         pred_boxes = torch.zeros_like(rel_codes)
-        pred_boxes[:, 0::4] = pred_ctr_x - 0.5 * pred_w  # x1
-        pred_boxes[:, 1::4] = pred_ctr_y - 0.5 * pred_h  # y1
-        pred_boxes[:, 2::4] = pred_ctr_x + 0.5 * pred_w  # x2
-        pred_boxes[:, 3::4] = pred_ctr_y + 0.5 * pred_h  # y2
+        pred_boxes[:, 0::4] = pred_ctr_x - 0.5 * pred_w
+        pred_boxes[:, 1::4] = pred_ctr_y - 0.5 * pred_h
+        pred_boxes[:, 2::4] = pred_ctr_x + 0.5 * pred_w
+        pred_boxes[:, 3::4] = pred_ctr_y + 0.5 * pred_h
 
         return pred_boxes
+
+class Net(nn.Module):
+    def __init__(self, num_classes=91):
+        super().__init__()
+        fg_iou_thresh = 0.5
+        bg_iou_thresh = 0.4
+
+        backbone = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        backbone = _resnet_fpn_extractor(
+            backbone,
+            trainable_layers=3,
+            returned_layers=[2, 3, 4],
+            extra_blocks=LastLevelP6P7(256, 256)
+        )
+        
+        anchor_generator = _default_anchorgen()
+        norm_layer = partial(nn.GroupNorm, 32)
+        
+        self.backbone = backbone
+        self.anchor_generator = anchor_generator
+        self.head = RetinaNetHead(
+            backbone.out_channels,
+            anchor_generator.num_anchors_per_location()[0],
+            num_classes,
+            norm_layer=norm_layer
+        )
+        
+        self.transform = GeneralizedRCNNTransform(
+            min_size=320,
+            max_size=320,
+            image_mean=[0.485, 0.456, 0.406],
+            image_std=[0.229, 0.224, 0.225]
+        )
+        
+        self.score_thresh = 0.05
+        self.nms_thresh = 0.5
+        self.detections_per_img = 300
+        self.topk_candidates = 1000
+        self.num_classes = num_classes
+        
+        self.box_coder = det_utils.BoxCoder(weights=(1.0, 1.0, 1.0, 1.0))
+
+        self.proposal_matcher = det_utils.Matcher(
+            fg_iou_thresh,
+            bg_iou_thresh,
+            allow_low_quality_matches=True,
+        )
+
+
+    def forward(self, images, targets=None):
+        if targets is not None:
+            for target in targets:
+                boxes = target["boxes"]
+                if isinstance(boxes, torch.Tensor):
+                    if len(boxes.shape) != 2 or boxes.shape[-1] != 4:
+                        raise ValueError(f"Expected target boxes to be a tensor of shape [N, 4], got {boxes.shape}.")
+                else:
+                    raise ValueError("Expected target boxes to be of type Tensor.")
+
+        original_image_sizes = []
+        for img in images:
+            val = img.shape[-2:]
+            original_image_sizes.append((val[0], val[1]))
+
+        images = self.transform(images)[0]
+        features = self.backbone(images.tensors)
+        
+        if isinstance(features, torch.Tensor):
+            features = OrderedDict([("0", features)])
+        features = list(features.values())
+
+        head_outputs = self.head(features)
+        anchors = self.anchor_generator(images, features)
+
+        losses = {}
+        detections = []
+        
+        if self.training:
+            losses = self.compute_loss(targets, head_outputs, anchors)
+        else:
+            detections = self.postprocess_detections(head_outputs, anchors, images.image_sizes)
+
+        if torch.jit.is_scripting():
+            if not self._has_warned:
+                warnings.warn("RetinaNet always returns a (Losses, Detections) tuple in scripting")
+                self._has_warned = True
+            return losses, detections
+        
+        return losses if self.training else detections
+
+    def compute_loss(self, targets, head_outputs, anchors):
+        matched_idxs = []
+        for anchors_per_image, targets_per_image in zip(anchors, targets):
+            if targets_per_image["boxes"].numel() == 0:
+                matched_idxs.append(
+                    torch.full((anchors_per_image.size(0),), -1, dtype=torch.int64, device=anchors_per_image.device)
+                )
+                continue
+
+            match_quality_matrix = box_ops.box_iou(targets_per_image["boxes"], anchors_per_image)
+            matched_idxs.append(self.proposal_matcher(match_quality_matrix))
+
+        return self.head.compute_loss(targets, head_outputs, anchors, matched_idxs)
+
+    def postprocess_detections(self, head_outputs, anchors, image_sizes):
+        class_logits = head_outputs["cls_logits"]
+        box_regression = head_outputs["bbox_regression"]
+        
+        num_images = len(image_sizes)
+        detections = []
+
+        for index in range(num_images):
+            box_regression_per_image = box_regression[index]
+            logits_per_image = class_logits[index]
+            anchors_per_image = anchors[index]
+            image_size = image_sizes[index]
+
+            scores_per_image = torch.sigmoid(logits_per_image)
+
+            # Keep only the top k scores
+            top_k = min(self.topk_candidates, scores_per_image.shape[0])
+            scores_per_image, topk_idxs = scores_per_image.flatten().topk(top_k)
+            
+            anchor_idxs = topk_idxs // self.num_classes
+            labels_per_image = topk_idxs % self.num_classes
+
+            boxes_per_image = self.head.regression_head.box_coder_decode_single(
+                box_regression_per_image[anchor_idxs], anchors_per_image[anchor_idxs]
+            )
+            boxes_per_image = box_ops.clip_boxes_to_image(boxes_per_image, image_size)
+
+            keep = box_ops.batched_nms(
+                boxes_per_image,
+                scores_per_image,
+                labels_per_image,
+                self.nms_thresh,
+            )
+            keep = keep[:self.detections_per_img]
+
+            detections.append({
+                "boxes": boxes_per_image[keep],
+                "labels": labels_per_image[keep],
+                "scores": scores_per_image[keep],
+            })
+
+        return detections
