@@ -383,3 +383,27 @@ class Net(nn.Module):
             })
 
         return detections
+        
+    def train_setup(self, device, prm):
+        self.device = device
+        self.optimizer = torch.optim.SGD(
+            self.parameters(),
+            lr=prm['lr'],
+            momentum=prm['momentum']
+        )
+        
+    def learn(self, train_data):
+        self.model.train()
+        for inputs, labels in train_data:
+            
+            inputs = inputs.to(self.device)
+            labels = [{k: v.to(self.device) for k, v in t.items()} for t in labels]
+        
+            optimizer.zero_grad()
+        
+            loss_dict = self.forward_pass(inputs, labels)
+            loss = sum(loss for loss in loss_dict.values())
+                
+        
+            loss.backward()
+            optimizer.step()

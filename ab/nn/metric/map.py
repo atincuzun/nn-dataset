@@ -38,6 +38,7 @@ def compute(predictions, targets):
         all_aps.append(ap)
     if len(all_aps) == 0:
         return (0.0, 1)
+    print('mAP', float(torch.tensor(all_aps).mean()))
     return (float(torch.tensor(all_aps).mean()), 1)
 
 def compute_ap(class_preds, class_targets, iou_threshold):

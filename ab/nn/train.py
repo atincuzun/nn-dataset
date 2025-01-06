@@ -215,4 +215,4 @@ if __name__ == "__main__":
     # conf = ['img_classification', 'img_segmentation']  # For all image classification and segmentation configurations
     conf = 'obj_detection-coco_detection-map-coco_detection_transform-RetinaNet'
     # Run training with Optuna: detects and saves performance metric values for a varying number of epochs
-    main(conf, [1, 2, 5], 10)
+    main(conf, [1, 2, 5], 100)

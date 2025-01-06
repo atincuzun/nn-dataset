@@ -284,17 +284,21 @@ class Net(nn.Module):
             momentum=prm['momentum']
         )
 
-    def learn(self, train_loader):
-        for images, targets in train_loader:
-            images = images.to(self.device)
-            targets = targets.to(self.device)
+    def learn(self, train_data):
+        self.model.train()
+        for inputs, labels in train_data:
             
-            self.optimizer.zero_grad()
-            losses = self(images, targets)
-            
-            total_loss = sum(loss for loss in losses.values())
-            total_loss.backward()
-            self.optimizer.step()
+            inputs = inputs.to(self.device)
+            labels = [{k: v.to(self.device) for k, v in t.items()} for t in labels]
+        
+            optimizer.zero_grad()
+        
+            loss_dict = self.forward_pass(inputs, labels)
+            loss = sum(loss for loss in loss_dict.values())
+                
+        
+            loss.backward()
+            optimizer.step()
 
     def forward(self, images, targets=None):
         if targets is not None:

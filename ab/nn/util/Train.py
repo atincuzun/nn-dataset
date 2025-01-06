@@ -131,6 +131,7 @@ class Train:
                 
                     loss_dict = self.forward_pass(inputs, labels)  # labels are our targets
                     loss = sum(loss for loss in loss_dict.values())
+                    
                 else:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     
