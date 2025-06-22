@@ -80,15 +80,15 @@ python run.py -h
 ### Docker
 All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be seamlessly run within its Docker container.
 
-<h4>Example of training LEMUR neural networks within the AI Linux container (Linux host)</h4>
+<h4>Example of training LEMUR neural networks within the AI Linux container (Linux host):</h4>
 
-Installing the latest version of the project from GitHub:
+Installing the latest version of the project from GitHub
 ```bash
 chmod 777 $(pwd)
 docker run --rm -v $(pwd):/a/mm abrainone/ai-linux bash -c "[ -d nn-dataset ] && git -C nn-dataset pull || git -c advice.detachedHead=false clone --depth 1 https://github.com/ABrain-One/nn-dataset"
 ```
 
-Running script:
+Running script
 ```bash
 docker run --rm --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". run50.sh"
 ```
