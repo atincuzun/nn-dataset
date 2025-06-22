@@ -216,7 +216,7 @@ def args():
     parser.add_argument('-a', '--nn_fail_attempts', type=int, default=default_nn_fail_attempts,
                         help="Number of attempts if the neural network model throws exceptions.")
     parser.add_argument('-r', '--random_config_order', type=bool, default=default_random_config_order,
-                        help="If random shuffling of the config list is required.")
+                        help=f"If set to True, randomly shuffles the configuration list. Default is {default_random_config_order}.")
     parser.add_argument('-w', '--workers', type=int, default=default_num_workers,
                         help="Number of data loader workers.")
     parser.add_argument('--pretrained', type=int, choices=[1, 0], default=default_pretrained,

@@ -1,7 +1,6 @@
 import importlib
 import sys
 import time as time
-from os import remove
 from os.path import join
 from typing import Union
 
@@ -17,6 +16,7 @@ from ab.nn.util.Util import *
 from ab.nn.util.db.Calc import save_results
 from ab.nn.util.db.Read import supported_transformers
 
+debug = False
 
 def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, max_momentum, min_dropout, max_dropout,
                      min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained):
@@ -48,18 +48,6 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
         print(f"Initialize training with {prm_str[2:]}")
         # Load dataset
         out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
-        #
-        # # Initialize model and trainer
-        # if task == 'txt-generation':
-        #     # Dynamically import RNN or LSTM model
-        #     if nn.lower() == 'rnn':
-        #         from ab.nn.nn.RNN import Net as RNNNet
-        #         model = RNNNet(1, 256, len(train_set.chars), batch)
-        #     elif nn.lower() == 'lstm':
-        #         from ab.nn.nn.LSTM import Net as LSTMNet
-        #         model = LSTMNet(1, 256, len(train_set.chars), batch, num_layers=2)
-        #     else:
-        #         raise ValueError(f"Unsupported text generation model: {nn}")
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
                      num_workers, prms).train_n_eval(n_epochs)
     except Exception as e:
@@ -196,12 +184,13 @@ class Train:
 
     def eval(self, test_loader):
         """Evaluation with standardized metric interface"""
-        for inputs, labels in test_loader:
-            print(f"[EVAL DEBUG] labels type: {type(labels)}")
-            if isinstance(labels, torch.Tensor):
-                print(f"[EVAL DEBUG] labels shape: {labels.shape}")
-            else:
-                print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
+        if debug:
+            for inputs, labels in test_loader:
+                print(f"[EVAL DEBUG] labels type: {type(labels)}")
+                if isinstance(labels, torch.Tensor):
+                    print(f"[EVAL DEBUG] labels shape: {labels.shape}")
+                else:
+                    print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
         self.model.eval()
 
         # Reset the metric at the start of evaluation
