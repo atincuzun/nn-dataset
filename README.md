@@ -78,7 +78,7 @@ python run.py -h
 ```
 
 ### Docker
-All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be run inside the Docker container.
+All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be seamlessly run within its Docker container.
 
 <h4>Example of training LEMUR neural networks within the AI Linux container (Linux host)</h4>
 
