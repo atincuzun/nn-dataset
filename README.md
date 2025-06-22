@@ -80,7 +80,7 @@ python run.py -h
 ### Docker
 All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be run inside the Docker container.
 
-<h3>Example of training LEMUR neural networks within the AI Linux container (Linux host)</h3>
+<h4>Example of training LEMUR neural networks within the AI Linux container (Linux host)</h4>
 
 Installing the latest version of the project from GitHub:
 ```bash
