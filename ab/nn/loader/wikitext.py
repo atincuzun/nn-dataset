@@ -9,7 +9,7 @@ MINIMUM_ACCURACY = 0.01
 def loader(transform_fn, task):
     dataset_name = "Salesforce/wikitext"
     config = "wikitext-2-raw-v1"
-    seq_length = 16
+    seq_length = 128
 
     raw = load_dataset(dataset_name, config, split="train")
     text_all = "\n".join(raw["text"]).lower()
