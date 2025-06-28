@@ -1,12 +1,7 @@
 import json
-import uuid
 
 from ab.nn.util.Util import *
 from ab.nn.util.db.Init import init_db, sql_conn, close_conn
-
-
-def uuid4():
-    return str(uuid.uuid4())
 
 
 def init_population():
@@ -16,16 +11,17 @@ def init_population():
 
 
 def code_to_db(cursor, table_name, code=None, code_file=None, force_name = None):
-    # If model does not exist, insert it with a new UUID
+    # If the model does not exist, insert it with a new UUID
     if code_file:
         nm = code_file.stem 
     elif force_name is None:
-        nm = uuid4()
+        nm = uuid4(code)
     else:
         nm = force_name
     if not code:
         with open(code_file, 'r') as file:
             code = file.read()
+    id_val = uuid4(code)
     # Check if the model exists in the database
     cursor.execute(f"SELECT code FROM {table_name} WHERE name = ?", (nm,))
     existing_entry = cursor.fetchone()
@@ -34,9 +30,9 @@ def code_to_db(cursor, table_name, code=None, code_file=None, force_name = None)
         existing_code = existing_entry[0]
         if existing_code != code:
             print(f"Updating code for model: {nm}")
-            cursor.execute("UPDATE nn SET code = ? WHERE name = ?", (code, nm))
+            cursor.execute("UPDATE nn SET code = ?, id = ? WHERE name = ?", (code, id_val, nm))
     else:
-        cursor.execute(f"INSERT INTO {table_name} (name, code) VALUES (?, ?)", (nm, code))
+        cursor.execute(f"INSERT INTO {table_name} (name, code, id) VALUES (?, ?, ?)", (nm, code, id_val))
     return nm
 
 

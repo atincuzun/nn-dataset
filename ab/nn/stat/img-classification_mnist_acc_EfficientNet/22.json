@@ -1,5 +1,15 @@
 [
     {
+        "accuracy": 0.993,
+        "batch": 4,
+        "dropout": 0.3487510965468454,
+        "duration": 2950468862358,
+        "lr": 0.02392948768210865,
+        "momentum": 0.7480571720661273,
+        "transform": "echo_128_flip",
+        "uid": "035b9993b7a136d67e0554755f3f83da"
+    },
+    {
         "accuracy": 0.9917,
         "batch": 8,
         "dropout": 0.41825508262656935,
@@ -7,7 +17,7 @@
         "lr": 0.3443773641008352,
         "momentum": 0.3964717091436609,
         "transform": "echo_256_flip",
-        "uid": "dbb1c8b9-3ebf-4243-8663-127a7025231d"
+        "uid": "31544047b8bf4e62cbf7b78fe63a56b3"
     },
     {
         "accuracy": 0.9912,
@@ -17,7 +27,17 @@
         "lr": 0.2525184583747904,
         "momentum": 0.6995441159550584,
         "transform": "norm",
-        "uid": "35a4d15b-1445-406b-be99-57dba5e29c9a"
+        "uid": "796012bfc2a4505238911f1df94e526b"
+    },
+    {
+        "accuracy": 0.9848,
+        "batch": 4,
+        "dropout": 0.4368222544580197,
+        "duration": 3138293225061,
+        "lr": 0.00013461062711316125,
+        "momentum": 0.8380723106179484,
+        "transform": "norm_256_flip",
+        "uid": "6326a783f933d1e26116dca49034b29e"
     },
     {
         "accuracy": 0.7887,
@@ -27,7 +47,17 @@
         "lr": 0.0008251744207322931,
         "momentum": 0.1885991585312169,
         "transform": "echo_32_flip",
-        "uid": "59b1ccf5-93d2-4c0b-ab7e-2f48aa0a92a9"
+        "uid": "36e355422814df7b76fa67a061b7d7b5"
+    },
+    {
+        "accuracy": 0.7165,
+        "batch": 128,
+        "dropout": 0.3337668945037338,
+        "duration": 111536219938,
+        "lr": 0.0027338275927872684,
+        "momentum": 0.19428755349659843,
+        "transform": "norm_flip",
+        "uid": "a721f641e5e2fddc705a6098c4d9e74d"
     },
     {
         "accuracy": 0.5674,
@@ -37,6 +67,6 @@
         "lr": 0.0005095343581118018,
         "momentum": 0.006087377946953354,
         "transform": "norm_64_flip",
-        "uid": "facceb85-4c29-4d77-b069-b068deae7a17"
+        "uid": "9eb532528dd9abf573c82983c0275b4b"
     }
 ]

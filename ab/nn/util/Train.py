@@ -1,7 +1,6 @@
 import importlib
 import sys
 import time as time
-from os import remove
 from os.path import join
 from typing import Union
 
@@ -17,6 +16,7 @@ from ab.nn.util.Util import *
 from ab.nn.util.db.Calc import save_results
 from ab.nn.util.db.Read import supported_transformers
 
+debug = False
 
 def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, max_momentum, min_dropout, max_dropout,
                      min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained):
@@ -48,18 +48,6 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
         print(f"Initialize training with {prm_str[2:]}")
         # Load dataset
         out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
-        #
-        # # Initialize model and trainer
-        # if task == 'txt-generation':
-        #     # Dynamically import RNN or LSTM model
-        #     if nn.lower() == 'rnn':
-        #         from ab.nn.nn.RNN import Net as RNNNet
-        #         model = RNNNet(1, 256, len(train_set.chars), batch)
-        #     elif nn.lower() == 'lstm':
-        #         from ab.nn.nn.LSTM import Net as LSTMNet
-        #         model = LSTMNet(1, 256, len(train_set.chars), batch, num_layers=2)
-        #     else:
-        #         raise ValueError(f"Unsupported text generation model: {nn}")
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
                      num_workers, prms).train_n_eval(n_epochs)
     except Exception as e:
@@ -179,7 +167,8 @@ class Train:
                                         f"Accuracy is too low: {accuracy}."
                                         f" The minimum accepted accuracy for the '{self.config[1]}"
                                         f"' dataset is {self.minimum_accuracy}.")
-            prm = merge_prm(self.prm, {'duration': duration, 'accuracy': accuracy, 'uid': DB_Write.uuid4()})
+            prm = merge_prm(self.prm, {'duration': duration, 'accuracy': accuracy})
+            prm = merge_prm(self.prm, {'uid': uuid4(prm)})
             if self.save_to_db:
                 if self.is_code:  # We don't want the filename contain full codes
                     if self.save_path is None:
@@ -195,6 +184,13 @@ class Train:
 
     def eval(self, test_loader):
         """Evaluation with standardized metric interface"""
+        if debug:
+            for inputs, labels in test_loader:
+                print(f"[EVAL DEBUG] labels type: {type(labels)}")
+                if isinstance(labels, torch.Tensor):
+                    print(f"[EVAL DEBUG] labels shape: {labels.shape}")
+                else:
+                    print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
         self.model.eval()
 
         # Reset the metric at the start of evaluation
@@ -228,7 +224,7 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
     return:
         (str, float): Name of the model and the accuracy
     """
-    model_name = DB_Write.uuid4()
+    model_name = uuid4(nn_code)
     if prefix:
         model_name = prefix + "-" + model_name  # Create temporal name for processing
 
@@ -264,7 +260,7 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
         epoch = prm['epoch']
         result, duration = trainer.train_n_eval(epoch)
         if save_to_db:
-            # if result fits the requirement, save the model to database
+            # If the result meets the requirements, save the model to the database.
             if good(result, minimum_accuracy, duration):
                 model_name = DB_Write.save_nn(nn_code, task, dataset, metric, epoch, prm, force_name=model_name)
                 print(f"Model saved to database with accuracy: {result}")

@@ -1,16 +1,15 @@
 import time
-import uuid
 import unittest
-from pathlib import Path
-from pprint import pprint
+import uuid
 from unittest.mock import patch
 
 import pandas as pd
 
 import ab.nn.api as api
+import ab.nn.train as train
+import ab.nn.util.db.Init as DB_Init
 import ab.nn.util.db.Read as DB_Read
 import ab.nn.util.db.Write as DB_Write
-import ab.nn.util.db.Init as DB_Init
 from ab.nn.util.Const import (
     default_nn_path,
     default_nn_name,
@@ -18,10 +17,10 @@ from ab.nn.util.Const import (
 )
 from ab.nn.util.Util import read_py_file_as_string
 
-class Testing(unittest.TestCase):
 
-    inserted_uid: str | None = None      # set in setUpClass
-    dummy_cfg_ext: tuple | None = None   # (task, dataset, metric, nn, epoch)
+class Testing(unittest.TestCase):
+    inserted_uid: str | None = None  # set in setUpClass
+    dummy_cfg_ext: tuple | None = None  # (task, dataset, metric, nn, epoch)
 
     @classmethod
     def setUpClass(cls):
@@ -81,7 +80,7 @@ class Testing(unittest.TestCase):
     def test_data(self):
         all_rows = DB_Read.data()
         img_rows = DB_Read.data(task="img-classification", nn=default_nn_name)
-        img_3_rows = DB_Read.data(task="img-classification", nn=default_nn_name, max_rows=3)
+        img_3_rows = DB_Read.data(task="img-classification", nn=default_nn_name, max_rows=3, only_best_accuracy=True)
         print(img_3_rows)
         self.assertGreater(len(all_rows), len(img_rows))
         self.assertGreater(len(img_rows), len(img_3_rows))
@@ -165,7 +164,7 @@ class Testing(unittest.TestCase):
         elapsed = time.perf_counter() - start
         print(f"DB_Read.data() fetched {len(rows)} rows in {elapsed:.3f}s")
 
-        budget = max(10.0, 0.00025 * len(rows))   # 0.25 ms/row, ≥10 s
+        budget = max(10.0, 0.00025 * len(rows))  # 0.25 ms/row, ≥10 s
         self.assertLess(
             elapsed,
             budget,
@@ -215,6 +214,12 @@ class Testing(unittest.TestCase):
         self.assertIsInstance(df, pd.DataFrame)
         self.assertIn("metric", df.columns)
 
+    # ------------------------------------------------------------------
+    #  9 · Training
+    # ------------------------------------------------------------------
+    def test_nn_train(self):
+        train.main('img-classification_cifar-10_acc_' + default_nn_name, 1,
+                   min_batch_binary_power=6, max_batch_binary_power=6, transform='norm_64_flip')
 
 
 if __name__ == '__main__':
