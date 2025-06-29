@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 from datasets import load_dataset
 
 
-minimum_accuracy = 0.01
+MINIMUM_ACCURACY = 0.01
 
 
 def loader(transform_fn, task):
@@ -15,7 +15,7 @@ def loader(transform_fn, task):
     text_all = "\n".join(raw["text"]).lower()
     ds = TextDatasetPreparation(text_all, seq_length)
 
-    return (ds.vocab_size,), minimum_accuracy, ds, ds
+    return (ds.vocab_size,), MINIMUM_ACCURACY, ds, ds
 
 
 class TextDatasetPreparation(Dataset):

@@ -52,7 +52,7 @@ def get_ab_nn_attr(mod, f):
 
 
 def min_accuracy(dataset):
-    return get_ab_nn_attr(f"loader.{dataset}", 'minimum_accuracy')
+    return get_ab_nn_attr(f"loader.{dataset}", 'MINIMUM_ACCURACY')
 
 
 def order_configs(configs, random_config_order):
