@@ -5,6 +5,7 @@ import requests
 from collections import Counter
 
 import torch
+import nltk
 from torch.utils.data import Dataset
 from PIL import Image
 from pycocotools.coco import COCO
@@ -24,6 +25,7 @@ minimum_bleu = 0.001
 class COCOCaptionDataset(Dataset):
     def __init__(self, transform, root, split='train', word2idx=None, idx2word=None):
         super().__init__()
+        nltk.download('punkt_tab')
         valid_splits = ['train', 'val']
         if split not in valid_splits:
             raise ValueError(f"Invalid split: {split}. Must be 'train' or 'val'.")
