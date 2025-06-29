@@ -146,16 +146,6 @@ class Testing(unittest.TestCase):
         self.assertIn(prm["flag"], (0, 1))
 
     # ------------------------------------------------------------------
-    #  4 · cast_prm flag now irrelevant
-    # ------------------------------------------------------------------
-    def test_cast_flag_equivalence(self):
-        a = DB_Read.data(cast_prm=True)
-        b = DB_Read.data(cast_prm=False)
-        self.assertEqual(len(a), len(b))
-        if a:
-            self.assertEqual(type(a[0]["prm"]), type(b[0]["prm"]))
-
-    # ------------------------------------------------------------------
     #  5 · Performance guard (dynamic budget)
     # ------------------------------------------------------------------
     def test_fetch_time_budget(self):

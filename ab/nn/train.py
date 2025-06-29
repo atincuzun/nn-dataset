@@ -69,9 +69,10 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
                     def objective(trial):
                         nonlocal continue_study, fail_iterations, max_batch_binary_power_local
                         try:
-                            accuracy, duration = optuna_objective(trial, sub_config, num_workers, min_learning_rate, max_learning_rate,
-                                                                  min_momentum, max_momentum, min_dropout, max_dropout,
-                                                                  min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained)
+                            accuracy, accuracy_to_time, duration = optuna_objective(trial, sub_config, num_workers, min_learning_rate, max_learning_rate,
+                                                                                    min_momentum, max_momentum, min_dropout, max_dropout,
+                                                                                    min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs,
+                                                                                    pretrained)
                             if good(accuracy, min_accuracy(dataset), duration):
                                 fail_iterations = nn_fail_attempts
                             return accuracy
