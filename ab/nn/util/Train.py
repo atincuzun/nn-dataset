@@ -167,8 +167,7 @@ class Train:
                                         f"Accuracy is too low: {accuracy}."
                                         f" The minimum accepted accuracy for the '{self.config[1]}"
                                         f"' dataset is {self.minimum_accuracy}.")
-            prm = merge_prm(self.prm, {'duration': duration, 'accuracy': accuracy})
-            prm = merge_prm(self.prm, {'uid': uuid4(prm)})
+            prm = merge_prm(self.prm, {'uid': uuid4(self.prm), 'duration': duration, 'accuracy': accuracy})
             if self.save_to_db:
                 if self.is_code:  # We don't want the filename contain full codes
                     if self.save_path is None:
