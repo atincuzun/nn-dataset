@@ -1,5 +1,4 @@
 import json
-import uuid
 
 from ab.nn.util.Util import *
 from ab.nn.util.db.Init import init_db, sql_conn, close_conn
@@ -14,7 +13,7 @@ def init_population():
 def code_to_db(cursor, table_name, code=None, code_file=None, force_name = None):
     # If the model does not exist, insert it with a new UUID
     if code_file:
-        nm = code_file.stem
+        nm = code_file.stem 
     elif force_name is None:
         nm = uuid4(code)
     else:
@@ -33,7 +32,7 @@ def code_to_db(cursor, table_name, code=None, code_file=None, force_name = None)
             print(f"Updating code for model: {nm}")
             cursor.execute("UPDATE nn SET code = ?, id = ? WHERE name = ?", (code, id_val, nm))
     else:
-        cursor.execute(f"INSERT INTO {table_name} (name, code, id) VALUES (?, ?, ?)", (_serialize_uid(nm), code, _serialize_uid(id_val)))
+        cursor.execute(f"INSERT INTO {table_name} (name, code, id) VALUES (?, ?, ?)", (nm, code, id_val))
     return nm
 
 
@@ -56,48 +55,16 @@ def populate_code_table(table_name, cursor, name=None):
 #         cursor.execute(f"INSERT INTO {table_name} (uid, name, value, type) VALUES (?, ?, ?, ?)",
 #                        (uid, nm, str(value), type(value).__name__))
 
-def _serialize_value(value):
-    """
-    Return a DB-compatible scalar (str / int / float / bytes / None).
-    """
-    if isinstance(value, uuid.UUID):
-        return str(value)
-    if value is None or isinstance(value, (str, int, float, bytes)):
-        return value
-    return str(value)
-
-
-def _serialize_uid(uid):
-    """
-    Make sure the UID column always receives text (SQLite TEXT).
-    """
-    return str(uid) if isinstance(uid, uuid.UUID) else uid
-
-
 def populate_prm_table(table_name, cursor, prm, uid):
     """
-    Insert every hyper-parameter in its native Python type.
+    Insert every hyperparameter in its native Python type.
     The target table layout is (uid TEXT, name TEXT, value).
     """
-    columns = getattr(populate_prm_table, "_cache", {}).get(table_name)
-    if columns is None:
-        columns = [row[1] for row in cursor.execute(f"PRAGMA table_info({table_name})")]
-        populate_prm_table._cache = getattr(populate_prm_table, "_cache", {})
-        populate_prm_table._cache[table_name] = columns
-
-    has_type = "type" in columns
-
     for nm, value in prm.items():
-        if has_type:
-            cursor.execute(
-                f"INSERT INTO {table_name} (uid, name, value, type) VALUES (?, ?, ?, ?)",
-                (_serialize_uid(uid), nm, _serialize_value(value), type(value).__name__),
-            )
-        else:
-            cursor.execute(
-                f"INSERT INTO {table_name} (uid, name, value) VALUES (?, ?, ?)",
-                (_serialize_uid(uid), nm, _serialize_value(value)),
-            )
+        cursor.execute(
+            f"INSERT OR IGNORE INTO {table_name} (uid, name, value) VALUES (?, ?, ?)",
+            (uid, nm, value),
+        )
 
 
 def save_stat(config_ext: tuple[str, str, str, str, int], prm, cursor):
@@ -107,10 +74,11 @@ def save_stat(config_ext: tuple[str, str, str, str, int], prm, cursor):
     extra_main_column_values = [prm.pop(nm, None) for nm in extra_main_columns]
     for nm in param_tables:
         populate_prm_table(nm, cursor, prm, uid)
+    all_values = [transform, uid, *config_ext, *extra_main_column_values]
     cursor.execute(f"""
-        INSERT INTO stat (id, transform, prm, {', '.join(main_columns_ext + extra_main_columns)})
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (_serialize_uid(uid), transform, _serialize_uid(uid), *config_ext, *extra_main_column_values))
+    INSERT INTO stat (id, transform, prm, {', '.join(main_columns_ext + extra_main_columns)}) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (uuid4(all_values), *all_values))
 
 
 def json_n_code_to_db():

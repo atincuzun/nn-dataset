@@ -1,7 +1,6 @@
 import importlib
 import sys
 import time as time
-from os import remove
 from os.path import join
 from typing import Union
 
@@ -37,10 +36,6 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
                     prms[prm] = trial.suggest_float(prm, min_dropout, max_dropout)
                 case 'pretrained':
                     prms[prm] = float(pretrained if pretrained else trial.suggest_categorical(prm, [0, 1]))
-                case 'stochastic_depth_prob':
-                    prms[prm] = trial.suggest_float(prm, prm, prm)
-                case 'attention_dropout':
-                    prms[prm] = trial.suggest_float(prm, prm, prm)
                 case _:
                     prms[prm] = trial.suggest_float(prm, 0.0, 1.0)
         batch = trial.suggest_categorical('batch', [max_batch(x) for x in range(min_batch_binary_power, max_batch_binary_power_local + 1)])
@@ -163,12 +158,7 @@ class Train:
 
             accuracy = self.eval(self.test_loader)
             accuracy = 0.0 if math.isnan(accuracy) or math.isinf(accuracy) else accuracy
-
-            if self.metric_name.lower() in {"ppl", "perplexity"}:
-                accuracy = 1.0 / (accuracy + 1e-9)
-
             duration = time.time_ns() - start_time
-
             # The accuracy-to-time metric is not stored in the database as it can change over time and can be quickly calculated from saved values.
             accuracy_to_time = accuracy_to_time_metric(accuracy, self.minimum_accuracy, duration)
             if not good(accuracy, self.minimum_accuracy, duration):
@@ -180,7 +170,7 @@ class Train:
             if self.save_to_db:
                 if self.is_code:  # We don't want the filename contain full codes
                     if self.save_path is None:
-                        print(f"[WARN]parameter `save_Path` set to null, the statistics will not be saved into a file.")
+                        print(f"[WARN]parameter `save_Path` set to null, the staticis will not be saved into a file.")
                     else:
                         save_results(self.config + (epoch,), join(self.save_path, f"{epoch}.json"), prm)
                 else:  # Legacy save result codes in file
@@ -192,12 +182,13 @@ class Train:
 
     def eval(self, test_loader):
         """Evaluation with standardized metric interface"""
-        # for inputs, labels in test_loader:
-            # print(f"[EVAL DEBUG] labels type: {type(labels)}")
-            # if isinstance(labels, torch.Tensor):
-            #     print(f"[EVAL DEBUG] labels shape: {labels.shape}")
-            # else:
-            #     print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
+        if debug:
+            for inputs, labels in test_loader:
+                print(f"[EVAL DEBUG] labels type: {type(labels)}")
+                if isinstance(labels, torch.Tensor):
+                    print(f"[EVAL DEBUG] labels shape: {labels.shape}")
+                else:
+                    print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
         self.model.eval()
 
         # Reset the metric at the start of evaluation
@@ -206,18 +197,12 @@ class Train:
         with torch.no_grad():
             for inputs, labels in test_loader:
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
+                outputs = self.model(inputs)
 
-                logits = self.model(inputs)
+                # Call the metric - all metrics now use the same interface
+                self.metric_function(outputs, labels)
 
-                if logits.dim() == 3:  # [B,S,V] -> [B*S,V]
-                    B, S, V = logits.shape
-                    logits = logits.reshape(B * S, V)
-
-                if labels.dim() == 2:  # [B,S] -> [B*S]
-                    labels = labels.reshape(-1)
-
-                self.metric_function(logits, labels)
-
+        # Get the final result from the metric
         return self.metric_function.result()
 
 
