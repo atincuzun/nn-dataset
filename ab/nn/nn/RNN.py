@@ -1,46 +1,66 @@
 import torch
 import torch.nn as nn
+from torch import Tensor
 
 
-def supported_hyperparameters():
-    return {'lr', 'momentum'}
+def supported_hyperparameters() -> set[str]:
+    return {"lr", "momentum"}
 
 
 class Net(nn.Module):
-
-    def train_setup(self, prm):
-        self.to(self.device)
-        self.criteria = (nn.CrossEntropyLoss().to(self.device),)
-        self.optimizer = torch.optim.SGD(self.parameters(), lr=prm['lr'], momentum=prm['momentum'])
-
-    def learn(self, train_data):
-        for inputs, labels in train_data:
-            inputs, labels = inputs.to(self.device), labels.to(self.device)
-            self.optimizer.zero_grad()
-            outputs = self(inputs)
-            loss = self.criteria[0](outputs, labels)
-            loss.backward()
-            nn.utils.clip_grad_norm_(self.parameters(), 3)
-            self.optimizer.step()
-
-    def __init__(self, input_size: int = 128, hidden_size: int = 256, output_size: int = 10, batch: int = 1, num_layers: int = 1) -> None:
+    def __init__(
+        self,
+        in_shape: tuple,            # (S,)
+        out_shape: tuple,           # (V,)
+        prm: dict,
+        device: torch.device,
+    ):
         super().__init__()
-        self.input_size = input_size
-        self.hidden_size = hidden_size
-        self.output_size = output_size
-        self.batch = batch
-        self.num_layers = num_layers
+        self.device = device
 
-        self.i2h = nn.Linear(input_size, hidden_size, bias=False)
-        self.h2h = nn.Linear(hidden_size, hidden_size)
-        self.h2o = nn.Linear(hidden_size, output_size)
+        self.seq_len: int = in_shape[0]       # S
+        self.vocab_size: int = out_shape[0]   # V
+        self.hidden_size: int = 256
+        self.embed_dim: int = 128
 
-    def forward(self, x, hidden_state) -> tuple[torch.Tensor, torch.Tensor]:
-        x = self.i2h(x)
-        hidden_state = self.h2h(hidden_state)
-        hidden_state = torch.tanh(x + hidden_state)
-        out = self.h2o(hidden_state)
-        return out, hidden_state
+        self.embed = nn.Embedding(self.vocab_size, self.embed_dim)
+        self.i2h = nn.Linear(self.embed_dim,   self.hidden_size, bias=False)
+        self.h2h = nn.Linear(self.hidden_size, self.hidden_size)
+        self.h2o = nn.Linear(self.hidden_size, self.vocab_size)
 
-    def init_zero_hidden(self, batch=1) -> torch.Tensor:
-        return torch.zeros(batch, self.hidden_size, requires_grad=False)
+    def train_setup(self, prm: dict) -> None:
+        self.to(self.device)
+        self.loss_fn = nn.CrossEntropyLoss().to(self.device)
+        self.optimizer = torch.optim.SGD(self.parameters(),lr=prm["lr"], momentum=prm["momentum"],)
+
+    def _step(self, token_idx: Tensor, h_t: Tensor) -> tuple[Tensor, Tensor]:
+        x_t = self.embed(token_idx)                      # [B, E]
+        h_t = torch.tanh(self.i2h(x_t) + self.h2h(h_t))  # [B, H]
+        y_t = self.h2o(h_t)                              # [B, V]
+        return y_t, h_t
+
+    def forward(self, x_idx: Tensor, h_0: Tensor | None = None,) -> Tensor:
+        B, S = x_idx.shape
+        h_t = h_0 if h_0 is not None else torch.zeros(B, self.hidden_size, device=self.device)
+
+        logits = []
+        for t in range(S):
+            y_t, h_t = self._step(x_idx[:, t], h_t)     # y_t: [B, V]
+            logits.append(y_t)
+
+        logits = torch.stack(logits, dim=1)             # [B, S, V]
+        return logits.reshape(B * S, self.vocab_size)   # [B*S, V]
+
+    def learn(self, train_loader) -> None:
+        self.train()
+        for x_idx, targets in train_loader:             # x_idx: [B, S] ; targets: [B, S]
+            x_idx   = x_idx.to(self.device)
+            targets = targets.to(self.device)
+
+            self.optimizer.zero_grad()
+            logits = self(x_idx)                        # [B*S, V]
+            loss = self.loss_fn(logits, targets.reshape(-1))  # targets: [B*S]
+
+            loss.backward()
+            nn.utils.clip_grad_norm_(self.parameters(), 3.0)
+            self.optimizer.step()

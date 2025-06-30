@@ -8,7 +8,7 @@ import functools
 
 
 @functools.lru_cache(maxsize=10)
-def data(only_best_accuracy=False, task=None, dataset=None, metric=None, nn=None, epoch=None, cast_prm=True, max_rows=None) -> DataFrame:
+def data(only_best_accuracy=False, task=None, dataset=None, metric=None, nn=None, epoch=None, max_rows=None) -> DataFrame:
     """
     Get the NN model code and all related statistics as a pandas DataFrame.
 
@@ -27,15 +27,15 @@ def data(only_best_accuracy=False, task=None, dataset=None, metric=None, nn=None
           'nn', 'nn_code', 'epoch', 'accuracy', 'duration',
           'prm', and 'transform_code'.
     """
-    dt: tuple[dict, ...] = DB_Read.data(only_best_accuracy, task=task, dataset=dataset, metric=metric, nn=nn, epoch=epoch, cast_prm=cast_prm, max_rows=max_rows)
+    dt: tuple[dict, ...] = DB_Read.data(only_best_accuracy, task=task, dataset=dataset, metric=metric, nn=nn, epoch=epoch, max_rows=max_rows)
     return DataFrame.from_records(dt)
 
 
-def check_nn(nn_code: str, task: str, dataset: str, metric: str, prm: dict, save_to_db=True, prefix=None, save_path=None, export_onnx=False, epoch_duration_limit_sec=max_epoch_seconds) -> tuple[str, float, float]:
+def check_nn(nn_code: str, task: str, dataset: str, metric: str, prm: dict, save_to_db=True, prefix=None, save_path=None, export_onnx=False, epoch_duration_limit_sec=max_epoch_seconds) -> tuple[str, float, float, float]:
     """
     Train the new NN model with the provided hyperparameters (prm) and save it to the database if training is successful.
     for argument description see :ref:`ab.nn.util.db.Write.save_nn()`
-    :return: Automatically generated name of NN model and its accuracy.
+    :return: Automatically generated name of NN model, its accuracy, accuracy to time metric, and quality of the code metric.
     """
     if epoch_duration_limit_sec != max_epoch_seconds:
         Const.max_epoch_seconds = epoch_duration_limit_sec

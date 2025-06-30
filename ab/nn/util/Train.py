@@ -1,7 +1,6 @@
 import importlib
 import sys
 import time as time
-from os import remove
 from os.path import join
 from typing import Union
 
@@ -17,6 +16,7 @@ from ab.nn.util.Util import *
 from ab.nn.util.db.Calc import save_results
 from ab.nn.util.db.Read import supported_transformers
 
+debug = False
 
 def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, max_momentum, min_dropout, max_dropout,
                      min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained):
@@ -48,22 +48,10 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
         print(f"Initialize training with {prm_str[2:]}")
         # Load dataset
         out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
-        #
-        # # Initialize model and trainer
-        # if task == 'txt-generation':
-        #     # Dynamically import RNN or LSTM model
-        #     if nn.lower() == 'rnn':
-        #         from ab.nn.nn.RNN import Net as RNNNet
-        #         model = RNNNet(1, 256, len(train_set.chars), batch)
-        #     elif nn.lower() == 'lstm':
-        #         from ab.nn.nn.LSTM import Net as LSTMNet
-        #         model = LSTMNet(1, 256, len(train_set.chars), batch, num_layers=2)
-        #     else:
-        #         raise ValueError(f"Unsupported text generation model: {nn}")
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
                      num_workers, prms).train_n_eval(n_epochs)
     except Exception as e:
-        accuracy_duration = (0.0, 1)
+        accuracy_duration = 0.0, 0.0, 1
         if isinstance(e, OutOfMemoryError):
             if max_batch_binary_power_local <= min_batch_binary_power:
                 return accuracy_duration
@@ -71,10 +59,10 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
                 raise CudaOutOfMemory(batch)
         elif isinstance(e, AccuracyException):
             print(e.message)
-            return e.accuracy, e.duration
+            return e.accuracy, accuracy_to_time_metric(e.accuracy, minimum_accuracy, e.duration), e.duration
         elif isinstance(e, LearnTimeException):
             print(f"Estimated training time: {format_time(e.estimated_training_time)}, but limit {format_time(e.max_learn_seconds)}.")
-            return (e.max_learn_seconds / e.estimated_training_time) / 1e5, e.duration
+            return (e.max_learn_seconds / e.estimated_training_time) / 1e5, 0, e.duration
         else:
             print(f"error '{nn}': failed to train. Error: {e}")
             if fail_iterations < 0:
@@ -179,8 +167,7 @@ class Train:
                                         f"Accuracy is too low: {accuracy}."
                                         f" The minimum accepted accuracy for the '{self.config[1]}"
                                         f"' dataset is {self.minimum_accuracy}.")
-            prm = merge_prm(self.prm, {'duration': duration, 'accuracy': accuracy})
-            prm = merge_prm(self.prm, {'uid': uuid4(prm)})
+            prm = merge_prm(self.prm, {'uid': uuid4(self.prm), 'duration': duration, 'accuracy': accuracy})
             if self.save_to_db:
                 if self.is_code:  # We don't want the filename contain full codes
                     if self.save_path is None:
@@ -192,16 +179,17 @@ class Train:
                         self.save_path = model_stat_dir(self.config)
                     save_results(self.config + (epoch,), join(self.save_path, f"{epoch}.json"), prm)
                     DB_Write.save_results(self.config + (epoch,), prm)  # Separated from Calc.save_results()
-        return accuracy_to_time, duration
+        return accuracy, accuracy_to_time, duration
 
     def eval(self, test_loader):
         """Evaluation with standardized metric interface"""
-        for inputs, labels in test_loader:
-            print(f"[EVAL DEBUG] labels type: {type(labels)}")
-            if isinstance(labels, torch.Tensor):
-                print(f"[EVAL DEBUG] labels shape: {labels.shape}")
-            else:
-                print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
+        if debug:
+            for inputs, labels in test_loader:
+                print(f"[EVAL DEBUG] labels type: {type(labels)}")
+                if isinstance(labels, torch.Tensor):
+                    print(f"[EVAL DEBUG] labels shape: {labels.shape}")
+                else:
+                    print(f"[EVAL DEBUG] labels sample: {labels[:2]}")
         self.model.eval()
 
         # Reset the metric at the start of evaluation
@@ -269,14 +257,14 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
             is_code=True,
             save_path=save_path)
         epoch = prm['epoch']
-        result, duration = trainer.train_n_eval(epoch)
+        accuracy, accuracy_to_time, duration = trainer.train_n_eval(epoch)
         if save_to_db:
             # If the result meets the requirements, save the model to the database.
-            if good(result, minimum_accuracy, duration):
+            if good(accuracy, minimum_accuracy, duration):
                 model_name = DB_Write.save_nn(nn_code, task, dataset, metric, epoch, prm, force_name=model_name)
-                print(f"Model saved to database with accuracy: {result}")
+                print(f"Model saved to database with accuracy: {accuracy}")
             else:
-                print(f"Model accuracy {result} is below the minimum threshold {minimum_accuracy}. Not saved.")
+                print(f"Model accuracy {accuracy} is below the minimum threshold {minimum_accuracy}. Not saved.")
         if export_onnx:
             for input_tensor, _ in train_loader_f(train_set, 1, num_workers):
                 t = input_tensor.to(torch_device())
@@ -303,4 +291,4 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
         except NameError:
             pass
 
-    return model_name, result, res['score']
+    return model_name, accuracy, accuracy_to_time, res['score']

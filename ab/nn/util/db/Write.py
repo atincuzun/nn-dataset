@@ -57,12 +57,12 @@ def populate_code_table(table_name, cursor, name=None):
 
 def populate_prm_table(table_name, cursor, prm, uid):
     """
-    Insert every hyper-parameter in its native Python type.
+    Insert every hyperparameter in its native Python type.
     The target table layout is (uid TEXT, name TEXT, value).
     """
     for nm, value in prm.items():
         cursor.execute(
-            f"INSERT INTO {table_name} (uid, name, value) VALUES (?, ?, ?)",
+            f"INSERT OR IGNORE INTO {table_name} (uid, name, value) VALUES (?, ?, ?)",
             (uid, nm, value),
         )
 
@@ -74,10 +74,11 @@ def save_stat(config_ext: tuple[str, str, str, str, int], prm, cursor):
     extra_main_column_values = [prm.pop(nm, None) for nm in extra_main_columns]
     for nm in param_tables:
         populate_prm_table(nm, cursor, prm, uid)
+    all_values = [transform, uid, *config_ext, *extra_main_column_values]
     cursor.execute(f"""
     INSERT INTO stat (id, transform, prm, {', '.join(main_columns_ext + extra_main_columns)}) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (uid, transform, uid, *config_ext, *extra_main_column_values))
+    """, (uuid4(all_values), *all_values))
 
 
 def json_n_code_to_db():

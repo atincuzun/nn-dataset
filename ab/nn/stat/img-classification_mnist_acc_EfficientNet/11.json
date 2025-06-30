@@ -1,5 +1,15 @@
 [
     {
+        "accuracy": 0.9916,
+        "batch": 4,
+        "dropout": 0.3487510965468454,
+        "duration": 1475241007614,
+        "lr": 0.02392948768210865,
+        "momentum": 0.7480571720661273,
+        "transform": "echo_128_flip",
+        "uid": "87cca9fb923297aae45692f7ddcaabf9"
+    },
+    {
         "accuracy": 0.9893,
         "batch": 128,
         "dropout": 0.3880648139530964,
@@ -7,7 +17,7 @@
         "lr": 0.2525184583747904,
         "momentum": 0.6995441159550584,
         "transform": "norm",
-        "uid": "d63f1e9c-b214-4f13-9eac-b28c3f46e120"
+        "uid": "218ce9aecf6fa6708bc95ff3b7799e31"
     },
     {
         "accuracy": 0.9849,
@@ -17,7 +27,7 @@
         "lr": 0.3443773641008352,
         "momentum": 0.3964717091436609,
         "transform": "echo_256_flip",
-        "uid": "b3db4af2-9b96-4d0e-9909-313e522cd464"
+        "uid": "65fbdcc5f761020d3b0fa37182494513"
     },
     {
         "accuracy": 0.9697,
@@ -27,7 +37,7 @@
         "lr": 0.00013461062711316125,
         "momentum": 0.8380723106179484,
         "transform": "norm_256_flip",
-        "uid": "2432089c3de1ed56c5e0304e0c31f5ba"
+        "uid": "1aeb931928c28fd3d1bea3b6458647ae"
     },
     {
         "accuracy": 0.516,
@@ -37,7 +47,7 @@
         "lr": 0.0008251744207322931,
         "momentum": 0.1885991585312169,
         "transform": "echo_32_flip",
-        "uid": "709b1538-83b3-41e5-9502-762bfe5885e1"
+        "uid": "df740c01d4b4388ff344830fc1dea535"
     },
     {
         "accuracy": 0.4461,
@@ -47,7 +57,7 @@
         "lr": 0.0027338275927872684,
         "momentum": 0.19428755349659843,
         "transform": "norm_flip",
-        "uid": "f5c61cd8613db11e2ffa57273ec5c940"
+        "uid": "8a8018a1ed6ce5f88ca1815b0ce248ec"
     },
     {
         "accuracy": 0.2481,
@@ -57,6 +67,6 @@
         "lr": 0.0005095343581118018,
         "momentum": 0.006087377946953354,
         "transform": "norm_64_flip",
-        "uid": "965efd7a-1e04-49e7-a941-9b0c07d1bbdf"
+        "uid": "eb8f41bba2c1b1af1f4f6ff3625f6fae"
     }
 ]
