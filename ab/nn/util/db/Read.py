@@ -231,7 +231,7 @@ def supported_transformers() -> list[str]:
     return query_cols_rows("SELECT name FROM transform")[0]
 
 
-def unique_configs(patterns: list[str, ...]) -> list[list[str]]:
+def unique_configs(patterns: list[tuple[str, ...]]) -> list[list[str]]:
     """
     Returns a list of unique configuration strings from the database that match at least one of the input patterns.
     
