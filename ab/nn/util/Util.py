@@ -221,5 +221,6 @@ def args():
                         help="Number of data loader workers.")
     parser.add_argument('--pretrained', type=int, choices=[1, 0], default=default_pretrained,
                         help='Control pretrained weights usage: 1 (always use), 0 (never use), or default (let Optuna decide)')
-
+    parser.add_argument('--epoch_limit_minutes', type=int, default=default_epoch_limit_minutes,
+                        help=f'Maximum duration per training epoch, minutes; default {default_epoch_limit_minutes} minutes')
     return parser.parse_args()

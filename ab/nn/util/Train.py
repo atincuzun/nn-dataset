@@ -19,7 +19,7 @@ from ab.nn.util.db.Read import supported_transformers
 debug = False
 
 def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, max_momentum, min_dropout, max_dropout,
-                     min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained):
+                     min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs, pretrained, epoch_limit_minutes):
     task, dataset_name, metric, nn = config
     try:
         # Load model
@@ -48,7 +48,7 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
         # Load dataset
         out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
-                     num_workers, prms).train_n_eval(n_epochs)
+                     num_workers, prms).train_n_eval(n_epochs, epoch_limit_minutes)
     except Exception as e:
         accuracy_duration = 0.0, 0.0, 1
         if isinstance(e, OutOfMemoryError):
@@ -144,7 +144,7 @@ class Train:
             raise ValueError(f"Metric '{metric_name}' not found. Ensure a corresponding file and function exist. Ensure the metric module has create_metric()") \
                 from e
 
-    def train_n_eval(self, num_epochs):
+    def train_n_eval(self, num_epochs, epoch_limit_minutes):
         """ Training and evaluation """
 
         start_time = time.time_ns()
@@ -154,7 +154,7 @@ class Train:
         for epoch in range(1, num_epochs + 1):
             print(f"epoch {epoch}", flush=True)
             self.model.train()
-            self.model.learn(DataRoll(self.train_loader))
+            self.model.learn(DataRoll(self.train_loader, epoch_limit_minutes))
 
             accuracy = self.eval(self.test_loader)
             accuracy = 0.0 if math.isnan(accuracy) or math.isinf(accuracy) else accuracy
@@ -206,7 +206,7 @@ class Train:
         return self.metric_function.result()
 
 
-def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False):
+def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False, epoch_limit_minutes=default_epoch_limit_minutes):
     """
     train the model with the given code and hyperparameters and evaluate it.
 
@@ -256,7 +256,7 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
             is_code=True,
             save_path=save_path)
         epoch = prm['epoch']
-        accuracy, accuracy_to_time, duration = trainer.train_n_eval(epoch)
+        accuracy, accuracy_to_time, duration = trainer.train_n_eval(epoch, epoch_limit_minutes)
         if save_to_db:
             # If the result meets the requirements, save the model to the database.
             if good(accuracy, minimum_accuracy, duration):

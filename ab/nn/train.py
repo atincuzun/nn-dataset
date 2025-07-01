@@ -14,7 +14,7 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
          min_momentum: float = default_min_momentum, max_momentum: float = default_max_momentum,
          min_dropout: float = default_min_dropout, max_dropout: float = default_max_dropout,
          transform: str | tuple = None, nn_fail_attempts: int = default_nn_fail_attempts, random_config_order: bool = default_random_config_order,
-         num_workers: int = default_num_workers, pretrained: int = default_pretrained):
+         num_workers: int = default_num_workers, pretrained: int = default_pretrained, epoch_limit_minutes: int = default_epoch_limit_minutes):
     """
     Main function for training models using Optuna optimization.
     :param config: Configuration specifying the model training pipelines. The default value for all configurations.
@@ -33,6 +33,7 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
     :param random_config_order: If random shuffling of the config list is required.
     :param num_workers: Number of data loader workers.
     :param pretrained: Control use of NN pretrained weights: 1 (always use), 0 (never use), or default (let Optuna decide).
+    :param epoch_limit_minutes: Maximum duration per training epoch, minutes.
     """
 
     validate_prm(min_batch_binary_power, max_batch_binary_power, min_learning_rate, max_learning_rate, min_momentum, max_momentum, min_dropout, max_dropout)
@@ -72,7 +73,7 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
                             accuracy, accuracy_to_time, duration = optuna_objective(trial, sub_config, num_workers, min_learning_rate, max_learning_rate,
                                                                                     min_momentum, max_momentum, min_dropout, max_dropout,
                                                                                     min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs,
-                                                                                    pretrained)
+                                                                                    pretrained, epoch_limit_minutes)
                             if good(accuracy, min_accuracy(dataset), duration):
                                 fail_iterations = nn_fail_attempts
                             return accuracy
@@ -101,5 +102,5 @@ if __name__ == "__main__":
     a = args()
     main(
         a.config, a.epochs, a.trials, a.min_batch_binary_power, a.max_batch_binary_power,
-        a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.transform,
-        a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained)
+        a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.min_dropout, a.max_dropout, a.transform,
+        a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained, a.epoch_limit_minutes)
