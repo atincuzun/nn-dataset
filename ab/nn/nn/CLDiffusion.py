@@ -217,7 +217,13 @@ class Net(nn.Module):
         self.noise_scheduler.set_timesteps(num_inference_steps)
 
         for t in self.noise_scheduler.timesteps:
-            noise_pred = self.unet(latents, t, text_embeddings, return_dict=False)[0]
+            unet_output = self.unet(
+                sample=latents,
+                timestep=t,
+                encoder_hidden_states=text_embeddings,
+                return_dict=True
+            )
+            noise_pred = unet_output.sample
             latents = self.noise_scheduler.step(noise_pred, t, latents).prev_sample
 
         latents = latents / self.scale_factor
@@ -229,52 +235,54 @@ class Net(nn.Module):
 
     def evaluate(self, test_data, metric):
         """
-        This is the core evaluation interface for the LEMUR framework, updated to
-        calculate both FID and CLIP scores.
+        This is the core evaluation interface for the LEMUR framework. It uses
+        the single metric object provided by the `run.py` script.
         """
-        try:
-            from ab.nn.metric.fid import create_metric as create_fid_metric
-            from ab.nn.metric.clip import create_metric as create_clip_metric
-        except ImportError as e:
-            raise ImportError(
-                f"Could not import metric factories. Ensure fid.py and clip.py are in ab/nn/metric/. Error: {e}")
-
-        print("\n[Evaluation] Starting evaluation phase for FID and CLIP scores...")
+        print(f"\n[Evaluation] Starting evaluation phase with metric: {type(metric).__name__}...")
         self.eval()
 
-        # Instantiate both metric trackers
-        fid_metric = create_fid_metric(device=self.device)
-        clip_metric = create_clip_metric(device=self.device)
+        # The metric object is already instantiated by the framework. Reset it.
+        metric.reset()
 
-        eval_samples_limit = 256
-        print(f"[Evaluation] Will process up to {eval_samples_limit} samples.")
+        eval_samples_limit = 256  # Limit samples to speed up evaluation
+        processed_samples = 0
 
         with torch.no_grad():
             for i, (real_images, text_prompts) in enumerate(test_data):
-                if fid_metric.num_samples >= eval_samples_limit:
+                if processed_samples >= eval_samples_limit:
                     break
 
                 # 1. Generate fake images from the text prompts
                 fake_images = self.generate(text_prompts)
 
-                # 2. Feed the FID metric (fake vs. real images)
-                fid_metric(fake_images, real_images)
+                # 2. Feed the metric with the correct data
+                #    The metric.__call__ method will handle different types of input.
+                #    For CLIP, it needs (fake_images, text_prompts).
+                #    For FID, it needs (fake_images, real_images).
+                #    We can check the metric type to be explicit.
 
-                # 3. Feed the CLIP metric (fake images vs. text prompts)
-                clip_metric(fake_images, text_prompts)
+                # The metric name is available in the framework's configuration
+                metric_name = self.prm.get('metric', 'clip')  # Default to clip if not specified
 
-        print(f"[Evaluation] Processed {fid_metric.num_samples} images for scoring.")
+                if 'clip' in metric_name:
+                    metric(fake_images, text_prompts)
+                elif 'fid' in metric_name:
+                    metric(fake_images, real_images)
+                else:
+                    # Default behavior or raise an error for unsupported metrics
+                    print(
+                        f"[Evaluation WARN] Metric '{metric_name}' not explicitly handled. Defaulting to (preds, labels) call.")
+                    metric(fake_images, real_images)
 
-        # Get the final dictionary of scores from both metrics
-        fid_results = fid_metric.get_all()
-        clip_results = clip_metric.get_all()
+                processed_samples += len(fake_images)
 
-        # Combine the results into a single dictionary
-        final_results = {**fid_results, **clip_results}
+        print(f"[Evaluation] Processed {processed_samples} images for scoring.")
 
-        print(f"[Evaluation] Finished. Results: {final_results}")
+        # Get the final dictionary of scores from the metric object
+        results = metric.get_all()
+        print(f"[Evaluation] Finished. Results: {results}")
 
-        return final_results
+        return results
 
 
 def supported_hyperparameters():
