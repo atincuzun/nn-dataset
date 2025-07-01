@@ -30,7 +30,6 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
             match prm:
                 case 'lr':
                     prms[prm] = trial.suggest_float(prm, min_lr, max_lr, log=True)
-                    prms[prm] = trial.suggest_float(prm, min_lr, max_lr, log=True)
                 case 'momentum':
                     prms[prm] = trial.suggest_float(prm, min_momentum, max_momentum)
                 case 'dropout':
