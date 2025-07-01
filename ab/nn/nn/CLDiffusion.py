@@ -1,7 +1,8 @@
 # File: CLDiffusion.py
 # Location: ab/nn/nn/
-# Description: A self-contained, end-to-end text-to-image model module for the LEMUR framework.
-# This version includes internal default parameters to run without an external config file.
+# Description: The final, self-contained, end-to-end text-to-image model module
+# for the LEMUR framework, including a correctly implemented dual-metric
+# evaluation method for both FID and CLIP scores.
 
 import os
 import random
@@ -16,19 +17,17 @@ import numpy as np
 from PIL import Image
 
 # Dependencies required by the model. Ensure they are installed in your environment.
-# pip install diffusers transformers albumentations
+# pip install diffusers transformers
 from diffusers import UNet2DConditionModel, DDPMScheduler
 from transformers import AutoTokenizer, AutoModel
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
 
 
 class Net(nn.Module):
     """
     A single, self-contained module for a text-to-image diffusion model.
-    This class encapsulates all necessary components (VAE, TextEncoder, U-Net) and
-    includes self-configuration logic to run within the LEMUR framework without
-    an external config file.
+    This class encapsulates all necessary components (VAE, TextEncoder, U-Net),
+    includes self-configuration logic, and a correctly implemented evaluation
+    method for both FID and CLIP scores.
     """
 
     # ===================================================================
@@ -129,7 +128,7 @@ class Net(nn.Module):
             default_prm = {
                 'lr': prm.get('lr', 1e-5),
                 'batch': prm.get('batch', 4),
-                'momentum': prm.get('momentum', 0.9),  # Added momentum
+                'momentum': prm.get('momentum', 0.9),
                 'image_size': 128,
                 'num_train_timesteps': 1000,
                 'scale_factor': 0.5,
@@ -171,7 +170,6 @@ class Net(nn.Module):
     def train_setup(self, prm):
         """Initializes the optimizer and loss criterion."""
         all_parameters = itertools.chain(self.vae.parameters(), self.text_model.parameters(), self.unet.parameters())
-        # Use SGD to correctly handle the 'momentum' parameter requested.
         self.optimizer = torch.optim.SGD(all_parameters, lr=self.prm['lr'], momentum=self.prm.get('momentum', 0.9))
         self.criterion = nn.MSELoss()
 
@@ -188,10 +186,8 @@ class Net(nn.Module):
             timesteps = torch.randint(0, self.noise_scheduler.config.num_train_timesteps, (latents.shape[0],),
                                       device=self.device, dtype=torch.int64)
             noisy_latents = self.noise_scheduler.add_noise(latents, noise, timesteps)
-            text_embeddings, attn_mask = self.text_model(text_prompts)
+            text_embeddings, _ = self.text_model(text_prompts)
 
-            # --- FINAL FIX: Using explicit keyword arguments and removing the problematic attention mask ---
-            # This is the most robust way to call the U-Net and prevents internal argument mismatches.
             unet_output = self.unet(
                 sample=noisy_latents,
                 timestep=timesteps,
@@ -206,9 +202,83 @@ class Net(nn.Module):
             total_loss += loss.item()
         return total_loss / len(train_data) if len(train_data) > 0 else 0.0
 
+    @torch.no_grad()
+    def generate(self, text_prompts, num_inference_steps=50):
+        """
+        Helper method to generate images from a list of text prompts.
+        Returns a list of PIL Images.
+        """
+        self.eval()
+        latents = torch.randn(
+            (len(text_prompts), self.unet.config.in_channels, self.vae.latent_shape[1], self.vae.latent_shape[2]),
+            device=self.device,
+        )
+        text_embeddings, _ = self.text_model(text_prompts)
+        self.noise_scheduler.set_timesteps(num_inference_steps)
+
+        for t in self.noise_scheduler.timesteps:
+            noise_pred = self.unet(latents, t, text_embeddings, return_dict=False)[0]
+            latents = self.noise_scheduler.step(noise_pred, t, latents).prev_sample
+
+        latents = latents / self.scale_factor
+        images = self.vae.decode(latents)
+        images = (images / 2 + 0.5).clamp(0, 1)
+        images = images.cpu().permute(0, 2, 3, 1).numpy()
+        pil_images = [Image.fromarray((image * 255).round().astype("uint8")) for image in images]
+        return pil_images
+
+    def evaluate(self, test_data, metric):
+        """
+        This is the core evaluation interface for the LEMUR framework, updated to
+        calculate both FID and CLIP scores.
+        """
+        try:
+            from ab.nn.metric.fid import create_metric as create_fid_metric
+            from ab.nn.metric.clip import create_metric as create_clip_metric
+        except ImportError as e:
+            raise ImportError(
+                f"Could not import metric factories. Ensure fid.py and clip.py are in ab/nn/metric/. Error: {e}")
+
+        print("\n[Evaluation] Starting evaluation phase for FID and CLIP scores...")
+        self.eval()
+
+        # Instantiate both metric trackers
+        fid_metric = create_fid_metric(device=self.device)
+        clip_metric = create_clip_metric(device=self.device)
+
+        eval_samples_limit = 256
+        print(f"[Evaluation] Will process up to {eval_samples_limit} samples.")
+
+        with torch.no_grad():
+            for i, (real_images, text_prompts) in enumerate(test_data):
+                if fid_metric.num_samples >= eval_samples_limit:
+                    break
+
+                # 1. Generate fake images from the text prompts
+                fake_images = self.generate(text_prompts)
+
+                # 2. Feed the FID metric (fake vs. real images)
+                fid_metric(fake_images, real_images)
+
+                # 3. Feed the CLIP metric (fake images vs. text prompts)
+                clip_metric(fake_images, text_prompts)
+
+        print(f"[Evaluation] Processed {fid_metric.num_samples} images for scoring.")
+
+        # Get the final dictionary of scores from both metrics
+        fid_results = fid_metric.get_all()
+        clip_results = clip_metric.get_all()
+
+        # Combine the results into a single dictionary
+        final_results = {**fid_results, **clip_results}
+
+        print(f"[Evaluation] Finished. Results: {final_results}")
+
+        return final_results
+
 
 def supported_hyperparameters():
-    """Declares all parameters the Net class uses."""
-    # Simplified to only include the tunable parameters as requested by the user.
-    # The self-configuring __init__ handles the other architectural parameters.
+    """
+    Declares the hyperparameters that can be tuned by the LEMUR framework.
+    """
     return {'lr', 'momentum'}
