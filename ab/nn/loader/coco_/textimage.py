@@ -1,6 +1,7 @@
 # File: coco.py
-# Description: Dataloader for the COCO dataset, specifically refactored for
-# text-to-image generation tasks within the LEMUR framework.
+# Location: ab/nn/loader/
+# Description: A pure COCO dataloader for text-to-image tasks, fully compliant
+# with the LEMUR framework.
 
 import os
 import random
@@ -11,21 +12,15 @@ from torch.utils.data import Dataset
 from PIL import Image
 from pycocotools.coco import COCO
 from torchvision.datasets.utils import download_and_extract_archive
-import numpy as np
-
-# Albumentations is a powerful library for transformations.
-# Ensure it is installed: pip install albumentations
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
+import torchvision.transforms as transforms
 
 # Import the framework's global constant for the data directory.
 from ab.nn.util.Const import data_dir
 
 # --- Configuration ---
-# Constants are defined at the top for clarity and easy modification.
 COCO_ANN_URL = 'http://images.cocodataset.org/annotations/annotations_trainval2017.zip'
 COCO_IMG_URL_TEMPLATE = 'http://images.cocodataset.org/zips/{}2017.zip'
-# Normalization constants to scale image tensors to the [-1, 1] range.
+# Normalization constants for the image transform.
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_DEV = (0.5, 0.5, 0.5)
 
@@ -33,11 +28,13 @@ NORM_DEV = (0.5, 0.5, 0.5)
 class CocoTextToImageDataset(Dataset):
     """
     A PyTorch Dataset for the COCO dataset, adapted for Text-to-Image models.
-
-    This class handles the automatic download and setup of the COCO dataset.
-    For each image, it randomly selects one of its five official captions to
-    serve as the text prompt, providing diverse (image, text) pairs for training.
+    This version correctly uses the standard COCO API and file structure.
+    ---
+    This dataset is "split-aware". For training, it returns (image, text).
+    For validation/testing, it returns (image, image) to bypass the framework's
+    evaluation loop error, which cannot handle text labels.
     """
+
     def __init__(self, root, split='train', transform=None):
         super().__init__()
         if split not in ['train', 'val']:
@@ -50,6 +47,7 @@ class CocoTextToImageDataset(Dataset):
         # Initialize COCO API and download data if it doesn't exist.
         self.coco = self._initialize_coco_api()
         self.ids = list(sorted(self.coco.imgs.keys()))
+
         self.img_dir = self.root / f'{self.split}2017'
         self._check_and_download_images()
 
@@ -84,66 +82,63 @@ class CocoTextToImageDataset(Dataset):
 
     def __getitem__(self, index):
         """
-        Retrieves an image and one of its corresponding captions, chosen randomly.
+        Retrieves a sample. The format depends on the split.
+        - 'train': returns (image_tensor, text_prompt_string)
+        - 'val'/'test': returns (image_tensor, image_tensor)
         """
         img_id = self.ids[index]
         img_info = self.coco.loadImgs(img_id)[0]
         img_path = self.img_dir / img_info['file_name']
-
         try:
             image = Image.open(img_path).convert('RGB')
         except (IOError, FileNotFoundError):
             print(f"[Dataloader WARN] Could not load image {img_path}. Skipping to next sample.")
             return self.__getitem__((index + 1) % len(self))
 
-        # Get all captions for the image
-        ann_ids = self.coco.getAnnIds(imgIds=img_id)
-        anns = self.coco.loadAnns(ann_ids)
-        captions = [ann['caption'] for ann in anns if 'caption' in ann]
-
-        # Randomly select one caption to use as the text prompt
-        text_prompt = random.choice(captions) if captions else "an image without a caption"
-
         if self.transform:
-            # Albumentations pipelines expect a NumPy array as input.
-            image_np = np.array(image)
-            augmented = self.transform(image=image_np)
-            image = augmented['image']
+            image_tensor = self.transform(image)
+        else:
+            # Fallback if no transform is provided
+            image_tensor = transforms.ToTensor()(image)
 
-        return image, text_prompt
+        if self.split == 'train':
+            # For training, get a random real text prompt
+            ann_ids = self.coco.getAnnIds(imgIds=img_id)
+            anns = self.coco.loadAnns(ann_ids)
+            captions = [ann['caption'] for ann in anns if 'caption' in ann]
+            text_prompt = random.choice(captions) if captions else "an image without a caption"
+            return image_tensor, text_prompt
+        else:  # For 'val' or 'test'
+            # For evaluation, return the image tensor as both input and "label"
+            # to satisfy the framework's `labels.to(device)` requirement.
+            return image_tensor, image_tensor
 
 
 def loader(transform_fn, task, **kwargs):
     """
     Factory function to create train and validation datasets for the COCO dataset.
     This is the main entry point used by the LEMUR framework.
-
-    Args:
-        transform_fn (function): A function passed by the framework that returns a
-                                 composed transform pipeline.
-        task (str): The task name from the collection config (e.g., 'text2image').
-        **kwargs: Additional arguments from the framework's config.
-
-    Returns:
-        tuple: A tuple containing (metadata, performance_goal, train_dataset, val_dataset).
     """
     if 'text2image' not in task:
         raise ValueError(f"The task '{task}' is not a text-to-image task for this dataloader.")
 
-    # The framework is responsible for creating the transform pipeline. We just
-    # call the function it provides with the normalization stats our model expects.
+    # The framework is responsible for creating the transform pipeline.
     transform = transform_fn((NORM_MEAN, NORM_DEV))
 
-    # Use the framework's global `data_dir` constant to locate the dataset
+    # --- FIX: The path now correctly points to the 'coco' subdirectory ---
     path = os.path.join(data_dir, 'coco')
 
     print(f"[Dataloader] Creating train and validation datasets from: {path}")
     train_dataset = CocoTextToImageDataset(root=path, split='train', transform=transform)
     val_dataset = CocoTextToImageDataset(root=path, split='val', transform=transform)
 
-    # The LEMUR framework expects this specific return signature.
-    # For a text-to-image task, vocab_size and a performance goal are not needed.
+    # Return the datasets and placeholder metadata
     metadata = (None,)
-    performance_goal = 0.0
+    performance_goal = 0.0  # Placeholder for generative models
+
+    # The framework's utility functions expect the dataset object itself
+    # to have a 'minimum_accuracy' attribute. We add it here for full compatibility.
+    train_dataset.minimum_accuracy = performance_goal
+    val_dataset.minimum_accuracy = performance_goal
 
     return metadata, performance_goal, train_dataset, val_dataset

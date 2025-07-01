@@ -1,8 +1,7 @@
-# File: CLDiffusion.py
+# File: VQGAN_CLIP.py
 # Location: ab/nn/nn/
-# Description: The final, self-contained, end-to-end text-to-image model module
-# for the LEMUR framework, including a correctly implemented dual-metric
-# evaluation method for both FID and CLIP scores.
+# Description: A robust and simpler text-to-image model using a pre-trained VQGAN
+# and a trainable Transformer, designed for stability within the LEMUR framework.
 
 import os
 import random
@@ -17,128 +16,45 @@ import numpy as np
 from PIL import Image
 
 # Dependencies required by the model. Ensure they are installed in your environment.
-# pip install diffusers transformers
-from diffusers import UNet2DConditionModel, DDPMScheduler
-from transformers import AutoTokenizer, AutoModel
+# pip install transformers accelerate
+from transformers import VQGANModel, CLIPTextModel, CLIPTokenizer, GPT2LMHeadModel, GPT2Config
+
+# --- Import metric classes for type checking in the evaluate method ---
+try:
+    from ab.nn.metric.clip import CLIPMetric
+    # FIDMetric is no longer used in this version
+    # from ab.nn.metric.fid import FIDMetric
+except ImportError:
+    print("[VQGAN_CLIP WARN] Could not import metric classes. Evaluation might fail if run in the framework.")
+    CLIPMetric = None
+    # FIDMetric = None # No longer needed
 
 
 class Net(nn.Module):
     """
-    A single, self-contained module for a text-to-image diffusion model.
-    This class encapsulates all necessary components (VAE, TextEncoder, U-Net),
-    includes self-configuration logic, and a correctly implemented evaluation
-    method for both FID and CLIP scores.
+    A text-to-image model using a frozen, pre-trained VQGAN and a trainable
+    Transformer (GPT-2 style) to generate images from text prompts.
     """
-
-    # ===================================================================
-    # │ NESTED MODEL DEFINITIONS (VAE and TextEncoder)                  │
-    # ===================================================================
-    class VAE(nn.Module):
-        """ Full VAE architecture. """
-
-        def __init__(self, output_channels=3, img_size=128, num_channels=32, num_layers=3, latent_variable_channels=4,
-                     num_layers_per_block=2, final_act='tanh'):
-            super().__init__()
-            self.output_channels, self.img_size, self.num_channels, self.num_layers, self.latent_variable_channels, self.num_layers_per_block = output_channels, img_size, num_channels, num_layers, latent_variable_channels, num_layers_per_block
-            dim = int(self.img_size * (0.5 ** self.num_layers));
-            self.latent_shape = (self.latent_variable_channels, dim, dim)
-            encoders_list, batch_norms_enc_list, encoder_res_list, channel_sizes = [], [], [], [output_channels]
-            for i in range(self.num_layers):
-                channel_sizes.append(self.num_channels if i == 0 else channel_sizes[-1] * 2)
-                enc_list_in_block = [
-                    nn.Conv2d(channel_sizes[i], channel_sizes[i + 1], 4, 2, 1) if j == 0 else nn.Conv2d(
-                        channel_sizes[i + 1], channel_sizes[i + 1], 4, 1, 'same') for j in range(num_layers_per_block)]
-                encoders_list.append(nn.ModuleList(enc_list_in_block));
-                encoder_res_list.append(nn.Conv2d(channel_sizes[i], channel_sizes[i + 1], 4, 2, 1));
-                batch_norms_enc_list.append(nn.BatchNorm2d(channel_sizes[i + 1]))
-            self.conv_encoders, self.encoder_res, self.batch_norms_enc = nn.ModuleList(encoders_list), nn.ModuleList(
-                encoder_res_list), nn.ModuleList(batch_norms_enc_list)
-            self.conv_mean, self.conv_std = nn.Conv2d(channel_sizes[-1], latent_variable_channels, 4, 1,
-                                                      "same"), nn.Conv2d(channel_sizes[-1], latent_variable_channels, 4,
-                                                                         1, "same")
-            self.first_upsample = nn.ModuleList([nn.Conv2d(latent_variable_channels, channel_sizes[-1], 4, 1, 'same'),
-                                                 nn.Conv2d(channel_sizes[-1], channel_sizes[-1], 4, 1, 'same')])
-            upsamplers_list, paddings_list, conv_decoders_list, batch_norms_dec_list, decoder_res_list = [], [], [], [], []
-            for i in reversed(range(2, len(channel_sizes))):
-                upsamplers_list.append(nn.UpsamplingNearest2d(scale_factor=2));
-                paddings_list.append(nn.ReplicationPad2d(1))
-                conv_layers = [nn.Conv2d(channel_sizes[i], channel_sizes[i - 1], 3, 1) if j == 0 else nn.Conv2d(
-                    channel_sizes[i - 1], channel_sizes[i - 1], 3, 1, "same") for j in range(num_layers_per_block)]
-                decoder_res_list.append(nn.Conv2d(channel_sizes[i], channel_sizes[i - 1], 3, 1));
-                conv_decoders_list.append(nn.ModuleList(conv_layers));
-                batch_norms_dec_list.append(nn.BatchNorm2d(channel_sizes[i - 1], 1e-3))
-            upsamplers_list.append(nn.UpsamplingNearest2d(scale_factor=2));
-            paddings_list.append(nn.ReplicationPad2d(1));
-            conv_decoders_list.append(nn.Conv2d(channel_sizes[1], output_channels, 3, 1))
-            self.upsamplers, self.paddings, self.conv_decoders, self.batch_norms_dec, self.res_decoders = nn.ModuleList(
-                upsamplers_list), nn.ModuleList(paddings_list), nn.ModuleList(conv_decoders_list), nn.ModuleList(
-                batch_norms_dec_list), nn.ModuleList(decoder_res_list)
-            self.leakyrelu, self.relu, self.final_act_fn = nn.LeakyReLU(
-                0.2), nn.ReLU(), nn.Sigmoid() if final_act == "sigmoid" else nn.Tanh() if final_act == "tanh" else lambda \
-                x: x
-
-        def encode(self, x):
-            for i in range(len(self.conv_encoders)):
-                res = self.encoder_res[i](x)
-                for j, layer in enumerate(self.conv_encoders[i]): x = layer(x); x = self.leakyrelu(x) if j != len(
-                    self.conv_encoders[i]) - 1 else x
-                x = self.relu(self.batch_norms_enc[i](x) + res)
-            return self.conv_mean(x), self.conv_std(x)
-
-        def decode(self, z):
-            for layer in self.first_upsample: z = self.leakyrelu(layer(z))
-            for i in range(len(self.upsamplers) - 1):
-                z = self.paddings[i](self.upsamplers[i](z));
-                res = self.res_decoders[i](z)
-                for j, layer in enumerate(self.conv_decoders[i]): z = layer(z); z = self.leakyrelu(z) if j != len(
-                    self.conv_decoders[i]) - 1 else z
-                z += res
-            return self.final_act_fn(self.conv_decoders[-1](self.paddings[-1](self.upsamplers[-1](z))))
-
-    class TextEncoder(nn.Module):
-        """ Full TextEncoder architecture. """
-
-        def __init__(self, out_size=1280):
-            super().__init__()
-            self.text_model = AutoModel.from_pretrained("distilbert-base-uncased")
-            self.tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-            for name, params in self.text_model.named_parameters():
-                params.requires_grad = "transformer.layer.5" in name
-            self.text_linear_layer = nn.Linear(768, out_size)
-
-        def forward(self, text):
-            device = self.text_linear_layer.weight.device
-            inputs = self.tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-            text_embeddings = self.text_model(inputs.input_ids.to(device),
-                                              attention_mask=inputs.attention_mask.to(device)).last_hidden_state
-            return self.text_linear_layer(text_embeddings), inputs.attention_mask.to(device)
 
     def __init__(self, in_shape, out_shape, prm, device):
         """
-        Initializes the complete model. Includes logic to apply a default
-        configuration if the framework provides random search parameters.
+        Initializes the complete model.
         """
         super().__init__()
 
+        # --- Self-Configuration Logic ---
+        # Detects if the framework is in random search mode and applies a valid default config.
         is_random_search = not isinstance(prm.get('image_size'), int)
-
         if is_random_search:
-            print("\n[CLDiffusion WARNING] Framework in default search mode. Applying internal configuration.")
-
+            print("\n[VQGAN_CLIP WARNING] Framework in default search mode. Applying internal configuration.")
             default_prm = {
-                'lr': prm.get('lr', 1e-5),
+                'lr': prm.get('lr', 5e-5),
                 'batch': prm.get('batch', 4),
                 'momentum': prm.get('momentum', 0.9),
-                'image_size': 128,
-                'num_train_timesteps': 1000,
-                'scale_factor': 0.5,
-                'vae_latent_channels': 4,
-                'vae_num_layers': 3,
-                'layers_per_block': 2,
-                'block_out_channels': [64, 128, 256],
-                'down_block_types': ["DownBlock2D", "CrossAttnDownBlock2D", "CrossAttnDownBlock2D"],
-                'up_block_types': ["CrossAttnUpBlock2D", "CrossAttnUpBlock2D", "UpBlock2D"],
-                'cross_attention_dim': 1280,
+                'image_size': 256,  # VQGAN works best with 256x256 images
+                'transformer_layers': 8,
+                'transformer_heads': 8,
+                'transformer_embed_dim': 768,
             }
             prm = default_prm
 
@@ -146,147 +62,167 @@ class Net(nn.Module):
         self.device = device
         self.in_shape = in_shape
 
-        print("[CLDiffusion INFO] Initializing model with parameters:", json.dumps(self.prm, indent=2, default=str))
+        print("[VQGAN_CLIP INFO] Initializing model with parameters:", json.dumps(self.prm, indent=2, default=str))
 
-        self.vae = self.VAE(img_size=self.prm['image_size'], num_layers=self.prm['vae_num_layers'],
-                            latent_variable_channels=self.prm['vae_latent_channels']).to(device)
-        self.text_model = self.TextEncoder(out_size=self.prm['cross_attention_dim']).to(device)
+        # --- 1. Load Frozen, Pre-trained Components ---
+        print("[VQGAN_CLIP INFO] Loading pre-trained VQGAN model...")
+        self.vqgan = VQGANModel.from_pretrained("CompVis/vqgan-f16-16384").to(device)
+        self.vqgan.eval()
+        for param in self.vqgan.parameters():
+            param.requires_grad = False
 
-        self.unet = UNet2DConditionModel(
-            sample_size=self.vae.latent_shape[1],
-            in_channels=self.vae.latent_shape[0],
-            out_channels=self.vae.latent_shape[0],
-            down_block_types=tuple(self.prm['down_block_types']),
-            up_block_types=tuple(self.prm['up_block_types']),
-            block_out_channels=tuple(self.prm['block_out_channels']),
-            layers_per_block=self.prm['layers_per_block'],
-            cross_attention_dim=self.prm['cross_attention_dim']
-        ).to(device)
+        print("[VQGAN_CLIP INFO] Loading pre-trained CLIP text model...")
+        self.clip_text_model = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
+        self.clip_tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
+        self.clip_text_model.eval()
+        for param in self.clip_text_model.parameters():
+            param.requires_grad = False
 
-        self.noise_scheduler = DDPMScheduler(num_train_timesteps=self.prm['num_train_timesteps'],
-                                             beta_schedule="squaredcos_cap_v2")
-        self.scale_factor = self.prm['scale_factor']
+        # --- 2. Initialize the Trainable Transformer ---
+        # This is the only part of the model that will be trained.
+        # It's a GPT-2 style model that will learn to generate VQGAN codes.
+        print("[VQGAN_CLIP INFO] Initializing trainable Transformer...")
+        # The vocabulary size is the number of codes in the VQGAN's codebook.
+        config = GPT2Config(
+            vocab_size=self.vqgan.config.num_embeddings,
+            n_positions=self.vqgan.config.num_patches + 1,
+            n_layer=self.prm['transformer_layers'],
+            n_head=self.prm['transformer_heads'],
+            n_embd=self.prm['transformer_embed_dim'],
+            # We add the CLIP embedding dimension for cross-attention
+            add_cross_attention=True,
+        )
+        self.transformer = GPT2LMHeadModel(config).to(device)
+
+        # A projection layer to match CLIP's output dimension to the Transformer's
+        self.clip_projection = nn.Linear(self.clip_text_model.config.hidden_size, config.n_embd).to(device)
 
     def train_setup(self, prm):
-        """Initializes the optimizer and loss criterion."""
-        all_parameters = itertools.chain(self.vae.parameters(), self.text_model.parameters(), self.unet.parameters())
-        self.optimizer = torch.optim.SGD(all_parameters, lr=self.prm['lr'], momentum=self.prm.get('momentum', 0.9))
-        self.criterion = nn.MSELoss()
+        """Initializes the optimizer and loss criterion for the trainable parts."""
+        # We only train the Transformer and the projection layer.
+        trainable_params = itertools.chain(self.transformer.parameters(), self.clip_projection.parameters())
+        self.optimizer = torch.optim.AdamW(trainable_params, lr=self.prm['lr'])
+        # The task is to predict the next code, so we use CrossEntropyLoss.
+        self.criterion = nn.CrossEntropyLoss()
 
     def learn(self, train_data):
         """Implements the training pipeline for one epoch."""
-        self.train()
+        self.transformer.train()
+        self.clip_projection.train()
         total_loss = 0.0
-        for imgs, text_prompts in train_data:
-            imgs = imgs.to(self.device)
+
+        for real_images, text_prompts in train_data:
+            real_images = real_images.to(self.device)
             self.optimizer.zero_grad()
-            latents, _ = self.vae.encode(imgs)
-            latents = latents * self.scale_factor
-            noise = torch.randn_like(latents)
-            timesteps = torch.randint(0, self.noise_scheduler.config.num_train_timesteps, (latents.shape[0],),
-                                      device=self.device, dtype=torch.int64)
-            noisy_latents = self.noise_scheduler.add_noise(latents, noise, timesteps)
-            text_embeddings, _ = self.text_model(text_prompts)
 
-            unet_output = self.unet(
-                sample=noisy_latents,
-                timestep=timesteps,
-                encoder_hidden_states=text_embeddings,
-                return_dict=True
+            with torch.no_grad():
+                # 1. Encode real images into discrete VQGAN codes (our target sequence)
+                # We expect the dataloader to normalize images to [-1, 1]
+                latents = self.vqgan.encode(real_images).latents
+                image_codes = self.vqgan.quantize(latents).indices.flatten(1)
+
+                # 2. Encode text prompts using CLIP
+                text_inputs = self.clip_tokenizer(text_prompts, return_tensors="pt", padding=True, truncation=True).to(
+                    self.device)
+                text_features = self.clip_text_model(**text_inputs).last_hidden_state
+
+                # 3. Project CLIP features to match transformer dimension
+                encoder_hidden_states = self.clip_projection(text_features)
+
+            # Prepare inputs for the Transformer
+            # The target is the sequence of image codes
+            labels = image_codes
+            # The input to the transformer is the same sequence, shifted by one
+            input_ids = torch.cat((torch.full((labels.size(0), 1), self.transformer.config.vocab_size - 1,
+                                              dtype=torch.long, device=self.device), labels[:, :-1]), dim=1)
+
+            # 4. Forward pass through the Transformer
+            outputs = self.transformer(
+                input_ids=input_ids,
+                encoder_hidden_states=encoder_hidden_states,
+                labels=labels
             )
-            noise_pred = unet_output.sample
 
-            loss = self.criterion(noise_pred, noise)
+            # 5. Calculate loss
+            loss = outputs.loss
+            assert loss is not None, "Transformer returned None for loss."
+
             loss.backward()
             self.optimizer.step()
             total_loss += loss.item()
+
         return total_loss / len(train_data) if len(train_data) > 0 else 0.0
 
     @torch.no_grad()
-    def generate(self, text_prompts, num_inference_steps=50):
-        """
-        Helper method to generate images from a list of text prompts.
-        Returns a list of PIL Images.
-        """
+    def generate(self, text_prompts, num_inference_steps=256):
+        """Helper method to generate images from text prompts."""
         self.eval()
-        latents = torch.randn(
-            (len(text_prompts), self.unet.config.in_channels, self.vae.latent_shape[1], self.vae.latent_shape[2]),
-            device=self.device,
+
+        # 1. Get text embeddings from CLIP
+        text_inputs = self.clip_tokenizer(text_prompts, return_tensors="pt", padding=True, truncation=True).to(
+            self.device)
+        text_features = self.clip_text_model(**text_inputs).last_hidden_state
+        encoder_hidden_states = self.clip_projection(text_features)
+
+        # 2. Generate image codes using the Transformer autoregressively
+        # Start with a beginning-of-sequence token
+        input_ids = torch.full((len(text_prompts), 1), self.transformer.config.vocab_size - 1, dtype=torch.long,
+                               device=self.device)
+
+        generated_codes = self.transformer.generate(
+            input_ids,
+            max_length=self.vqgan.config.num_patches + 1,
+            do_sample=True,
+            top_k=50,
+            top_p=0.95,
+            encoder_hidden_states=encoder_hidden_states
         )
-        text_embeddings, _ = self.text_model(text_prompts)
-        self.noise_scheduler.set_timesteps(num_inference_steps)
 
-        for t in self.noise_scheduler.timesteps:
-            unet_output = self.unet(
-                sample=latents,
-                timestep=t,
-                encoder_hidden_states=text_embeddings,
-                return_dict=True
-            )
-            noise_pred = unet_output.sample
-            latents = self.noise_scheduler.step(noise_pred, t, latents).prev_sample
+        # Remove the starting token
+        generated_codes = generated_codes[:, 1:]
 
-        latents = latents / self.scale_factor
-        images = self.vae.decode(latents)
+        # 3. Decode the generated codes into an image with the VQGAN
+        latents = self.vqgan.dequantize(generated_codes)
+        images = self.vqgan.decode(latents).sample
+
+        # Post-process images
         images = (images / 2 + 0.5).clamp(0, 1)
         images = images.cpu().permute(0, 2, 3, 1).numpy()
         pil_images = [Image.fromarray((image * 255).round().astype("uint8")) for image in images]
         return pil_images
 
     def evaluate(self, test_data, metric):
-        """
-        This is the core evaluation interface for the LEMUR framework. It uses
-        the single metric object provided by the `run.py` script.
-        """
+        """The core evaluation interface for the LEMUR framework, simplified for CLIP score."""
         print(f"\n[Evaluation] Starting evaluation phase with metric: {type(metric).__name__}...")
         self.eval()
-
-        # The metric object is already instantiated by the framework. Reset it.
         metric.reset()
-
-        eval_samples_limit = 256  # Limit samples to speed up evaluation
+        eval_samples_limit = 64  # Keep this lower as generation can be slow
         processed_samples = 0
 
         with torch.no_grad():
             for i, (real_images, text_prompts) in enumerate(test_data):
-                if processed_samples >= eval_samples_limit:
-                    break
+                if processed_samples >= eval_samples_limit: break
 
-                # 1. Generate fake images from the text prompts
+                # Generate fake images from the text prompts
                 fake_images = self.generate(text_prompts)
 
-                # 2. Feed the metric with the correct data
-                #    The metric.__call__ method will handle different types of input.
-                #    For CLIP, it needs (fake_images, text_prompts).
-                #    For FID, it needs (fake_images, real_images).
-                #    We can check the metric type to be explicit.
-
-                # The metric name is available in the framework's configuration
-                metric_name = self.prm.get('metric', 'clip')  # Default to clip if not specified
-
-                if 'clip' in metric_name:
+                # This method now only expects to be called with a CLIPMetric object.
+                # The framework ensures this when you run with `..._clip` in the collection name.
+                if CLIPMetric is not None and isinstance(metric, CLIPMetric):
                     metric(fake_images, text_prompts)
-                elif 'fid' in metric_name:
-                    metric(fake_images, real_images)
                 else:
-                    # Default behavior or raise an error for unsupported metrics
-                    print(
-                        f"[Evaluation WARN] Metric '{metric_name}' not explicitly handled. Defaulting to (preds, labels) call.")
-                    metric(fake_images, real_images)
+                    print(f"[Evaluation WARN] Metric type '{type(metric).__name__}' is not CLIPMetric. Skipping.")
 
                 processed_samples += len(fake_images)
 
         print(f"[Evaluation] Processed {processed_samples} images for scoring.")
-
-        # Get the final dictionary of scores from the metric object
         results = metric.get_all()
         print(f"[Evaluation] Finished. Results: {results}")
 
-        return results
+        # The framework expects a single float value for optimization.
+        return metric.result()
 
 
 def supported_hyperparameters():
-    """
-    Declares the hyperparameters that can be tuned by the LEMUR framework.
-    """
+    """Declares the hyperparameters that can be tuned by the LEMUR framework."""
     return {'lr', 'momentum'}
