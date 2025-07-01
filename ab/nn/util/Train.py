@@ -60,8 +60,8 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
             print(e.message)
             return e.accuracy, accuracy_to_time_metric(e.accuracy, minimum_accuracy, e.duration), e.duration
         elif isinstance(e, LearnTimeException):
-            print(f"Estimated training time: {format_time(e.estimated_training_time)}, but limit {format_time(e.max_learn_seconds)}.")
-            return (e.max_learn_seconds / e.estimated_training_time) / 1e5, 0, e.duration
+            print(f"Estimated training time, minutes: {format_time(e.estimated_training_time)}, but limit {format_time(e.epoch_limit_minutes)}.")
+            return (e.epoch_limit_minutes / e.estimated_training_time) / 1e5, 0, e.duration
         else:
             print(f"error '{nn}': failed to train. Error: {e}")
             if fail_iterations < 0:

@@ -21,7 +21,7 @@ class AccuracyException(Exception):
 
 
 class LearnTimeException(Exception):
-    def __init__(self, estimated_training_time, max_learn_seconds, duration):
+    def __init__(self, estimated_training_time, epoch_limit_minutes, duration):
         self.estimated_training_time = estimated_training_time
-        self.max_learn_seconds = max_learn_seconds
+        self.epoch_limit_minutes = epoch_limit_minutes
         self.duration = duration
