@@ -45,6 +45,42 @@
         "uid": "87061f9439af708cf3e21610facc4d19"
     },
     {
+        "accuracy": 0.13326046767008584,
+        "batch": 256,
+        "duration": 11441700087661,
+        "lr": 6.35067948688867e-05,
+        "momentum": 0.06404162771596433,
+        "transform": "norm_128_flip",
+        "uid": "3eb81622d4bc49ad240f729f5a7fe5e3"
+    },
+    {
+        "accuracy": 0.11941000114809017,
+        "batch": 32,
+        "duration": 9453711021698,
+        "lr": 5.5763682888348274e-05,
+        "momentum": 0.34987525491728455,
+        "transform": "norm_128",
+        "uid": "e3453c25b61938d5abed453a251f0975"
+    },
+    {
+        "accuracy": 0.11460087151641067,
+        "batch": 32,
+        "duration": 10455721758373,
+        "lr": 0.00033038509813027175,
+        "momentum": 0.45382381209177536,
+        "transform": "echo_32_flip",
+        "uid": "c023fcbd7f5cae517d9949b4a1fc88a9"
+    },
+    {
+        "accuracy": 0.10804611315288457,
+        "batch": 128,
+        "duration": 14187147295422,
+        "lr": 9.447274543084505e-05,
+        "momentum": 0.03565223568465048,
+        "transform": "norm_64",
+        "uid": "a35705ea8fb99ad624ecd4f84631e920"
+    },
+    {
         "accuracy": 0.06682810080508414,
         "batch": 32,
         "duration": 12237741830420,
@@ -61,6 +97,15 @@
         "momentum": 0.8527788518175368,
         "transform": "norm_256",
         "uid": "4241acaf3e43614b11c0b9922003fb6a"
+    },
+    {
+        "accuracy": 0.009607067808822856,
+        "batch": 32,
+        "duration": 10376316679607,
+        "lr": 0.8893232015279219,
+        "momentum": 0.01182696614140255,
+        "transform": "echo_32_flip",
+        "uid": "e17489534052b97eb9cdc3c1ea3a771d"
     },
     {
         "accuracy": 0.009605647538328998,
@@ -88,6 +133,15 @@
         "momentum": 0.21074249220496966,
         "transform": "norm_32",
         "uid": "6fe456aa7c552fed3c145c9016e7b0cb"
+    },
+    {
+        "accuracy": 0.009583356843143737,
+        "batch": 128,
+        "duration": 13664368208375,
+        "lr": 0.10110455211946079,
+        "momentum": 0.26609026947214864,
+        "transform": "echo_64",
+        "uid": "fbd09e07d8f351947d65d2eae6057935"
     },
     {
         "accuracy": 0.009580225790529806,
