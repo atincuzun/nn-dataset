@@ -166,9 +166,10 @@ class Train:
                                         f"Accuracy is too low: {accuracy}."
                                         f" The minimum accepted accuracy for the '{self.config[1]}"
                                         f"' dataset is {self.minimum_accuracy}.")
-            prm = merge_prm(self.prm, {'uid': uuid4(self.prm), 'duration': duration, 'accuracy': accuracy})
+            only_prm = {k: v for k, v in self.prm.items() if  k not in {'uid', 'duration', 'accuracy', 'epoch'}}
+            prm = merge_prm(self.prm, {'uid': uuid4(only_prm), 'duration': duration, 'accuracy': accuracy})
             if self.save_to_db:
-                if self.is_code:  # We don't want the filename contain full codes
+                if self.is_code:  # We don't want the filename to contain full codes
                     if self.save_path is None:
                         print(f"[WARN]parameter `save_Path` set to null, the staticis will not be saved into a file.")
                     else:
