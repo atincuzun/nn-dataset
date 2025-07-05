@@ -1,5 +1,20 @@
 [
     {
+        "accuracy": 0.6380819082260132,
+        "batch": 2,
+        "center_sampling_radius": 0.08857500244022731,
+        "detections_per_img": 0.10195804628087224,
+        "duration": 19369113993673,
+        "lr": 0.00027147931738171643,
+        "momentum": 0.6590032766805667,
+        "nms_thresh": 0.7598720160270549,
+        "pretrained": 1.0,
+        "score_thresh": 0.10366082784433794,
+        "topk_candidates": 0.06693526677778305,
+        "transform": "soft_pad",
+        "uid": "dd7dd7460037f8cdb43d89209de7c0d6"
+    },
+    {
         "accuracy": 0.5658642053604126,
         "batch": 16,
         "center_sampling_radius": 0.4908194294288062,
@@ -27,7 +42,7 @@
         "score_thresh": 0.08828131724019095,
         "topk_candidates": 0.7143231241822533,
         "transform": "soft_pad",
-        "uid": "e20205bfe79e0576e0871853c5d08864"
+        "uid": "be4306c8890731c1458bc50f186b1f4e"
     },
     {
         "accuracy": 0.12677156925201416,
