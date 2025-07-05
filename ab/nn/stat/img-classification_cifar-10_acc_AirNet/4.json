@@ -6,7 +6,7 @@
         "lr": 0.1014511257734915,
         "momentum": 0.6099092391323409,
         "transform": "echo_128",
-        "uid": "794c436956142a0e49075a709d295ee6"
+        "uid": "2142e88fe8cee5daa47f661be5377b0e"
     },
     {
         "accuracy": 0.7443,
@@ -43,6 +43,24 @@
         "momentum": 0.48114909715795184,
         "transform": "norm",
         "uid": "3c73580c341086055eb77c1efd718c36"
+    },
+    {
+        "accuracy": 0.5882,
+        "batch": 4,
+        "duration": 318099571720,
+        "lr": 0.0006197074625281004,
+        "momentum": 0.656316033850926,
+        "transform": "norm",
+        "uid": "4c153bbb73185831736aa902fb9461c3"
+    },
+    {
+        "accuracy": 0.5435,
+        "batch": 64,
+        "duration": 10315547707,
+        "lr": 0.0006637671956796149,
+        "momentum": 0.7956246554002036,
+        "transform": "norm_32",
+        "uid": "2e103e4e92ac2f71f36744feeeb759d3"
     },
     {
         "accuracy": 0.5401,
@@ -90,6 +108,15 @@
         "uid": "459b24162677e809d403a8ff1ced6d4c"
     },
     {
+        "accuracy": 0.382,
+        "batch": 128,
+        "duration": 9238935369,
+        "lr": 0.00010370225890146935,
+        "momentum": 0.847872539885338,
+        "transform": "norm_32",
+        "uid": "816c33c1530d94d44acb298ea9e4ea7d"
+    },
+    {
         "accuracy": 0.3457,
         "batch": 1,
         "duration": 476803011513,
@@ -108,6 +135,15 @@
         "uid": "90a34f6c16e851acb100dc5907a66626"
     },
     {
+        "accuracy": 0.3113,
+        "batch": 128,
+        "duration": 9163275675,
+        "lr": 0.00018617944208976838,
+        "momentum": 0.42266425378100003,
+        "transform": "norm_32",
+        "uid": "2644f3bf5c47b42af2f3b0954757e672"
+    },
+    {
         "accuracy": 0.3014,
         "batch": 512,
         "duration": 5984035960,
@@ -115,6 +151,15 @@
         "momentum": 0.9615289952347973,
         "transform": "echo",
         "uid": "f28e683edde6aa38f938d13bfdf73024"
+    },
+    {
+        "accuracy": 0.2634,
+        "batch": 32,
+        "duration": 517468110508,
+        "lr": 2.335002488406157e-05,
+        "momentum": 0.2000826423975407,
+        "transform": "norm_256",
+        "uid": "852555c11711f4b3524b80879c18b2b2"
     },
     {
         "accuracy": 0.2056,
