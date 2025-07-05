@@ -20,5 +20,27 @@
         "momentum": 0.32249576474889874,
         "transform": "echo_128_flip",
         "uid": "1cc2e8c944a13394eabcffb73aba5fec"
+    },
+    {
+        "accuracy": 0.9410725261216963,
+        "batch": 64,
+        "dropout": 0.0674578243150819,
+        "dropout_aux": 0.7481602822195298,
+        "duration": 855880370995,
+        "lr": 0.10369501290845964,
+        "momentum": 0.5667071265968029,
+        "transform": "echo_128_flip",
+        "uid": "a8f44cdcf42f4ef1480cf0fa1586cfad"
+    },
+    {
+        "accuracy": 0.5830900430239705,
+        "batch": 4096,
+        "dropout": 0.4087966472917249,
+        "dropout_aux": 0.36401156795997835,
+        "duration": 341316123338,
+        "lr": 0.008783774514749466,
+        "momentum": 0.9893715695976854,
+        "transform": "norm_flip",
+        "uid": "d5b887e61b3ffaedda7ed822506b73c1"
     }
 ]
