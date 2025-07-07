@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.8132,
+        "batch": 64,
+        "duration": 711722094021,
+        "lr": 0.1014511257734915,
+        "momentum": 0.6099092391323409,
+        "transform": "echo_128",
+        "uid": "2142e88fe8cee5daa47f661be5377b0e"
+    },
+    {
         "accuracy": 0.7817,
         "batch": 128,
         "duration": 18649795258,
         "lr": 0.22281633488992622,
         "momentum": 0.6524748330865693,
         "transform": "echo",
-        "uid": "cb4abe9612daa99a66a8fd1a158cbc38"
+        "uid": "51835c9f6aad6d17c368e87af322bb0f"
+    },
+    {
+        "accuracy": 0.7678,
+        "batch": 512,
+        "duration": 26810104139,
+        "lr": 0.162696457317235,
+        "momentum": 0.813983213824771,
+        "transform": "norm_32",
+        "uid": "3f15fef3df67d30fa88a6e91278fe82f"
     },
     {
         "accuracy": 0.6952,
@@ -15,7 +33,16 @@
         "lr": 0.06276040074308879,
         "momentum": 0.7478815086222148,
         "transform": "norm_32",
-        "uid": "2ef461d6af43155b3398a752865bfb42"
+        "uid": "95212e81bc9b946ca57c1becd63a0809"
+    },
+    {
+        "accuracy": 0.6899,
+        "batch": 4,
+        "duration": 928670228053,
+        "lr": 0.0006197074625281004,
+        "momentum": 0.656316033850926,
+        "transform": "norm",
+        "uid": "4c153bbb73185831736aa902fb9461c3"
     },
     {
         "accuracy": 0.6845,
@@ -24,7 +51,7 @@
         "lr": 0.10558049467877136,
         "momentum": 0.48114909715795184,
         "transform": "norm",
-        "uid": "0fcc2a0384cf7dbf56a98dcc938fa18a"
+        "uid": "3c73580c341086055eb77c1efd718c36"
     },
     {
         "accuracy": 0.6646,
@@ -33,7 +60,7 @@
         "lr": 0.00993904336256402,
         "momentum": 0.322366564801722,
         "transform": "norm_128_flip",
-        "uid": "610a528017fc727e74d46d7fac0e3422"
+        "uid": "d550a05ee7c4fcec45ed0477d5cb5c53"
     },
     {
         "accuracy": 0.6586,
@@ -42,7 +69,25 @@
         "lr": 0.005129522952067677,
         "momentum": 0.24203947219518462,
         "transform": "norm_32",
-        "uid": "b37bae82e8660bc8d9cd52f3a2a60c83"
+        "uid": "288db9699933471aca7e150f041d35cc"
+    },
+    {
+        "accuracy": 0.6303,
+        "batch": 64,
+        "duration": 30443993430,
+        "lr": 0.0006637671956796149,
+        "momentum": 0.7956246554002036,
+        "transform": "norm_32",
+        "uid": "2e103e4e92ac2f71f36744feeeb759d3"
+    },
+    {
+        "accuracy": 0.5711,
+        "batch": 64,
+        "duration": 32335029395,
+        "lr": 0.001293356083280152,
+        "momentum": 0.033559279393802766,
+        "transform": "norm_32",
+        "uid": "730b45e7e68e5ff8072b09ff4399db2a"
     },
     {
         "accuracy": 0.4776,
@@ -51,7 +96,7 @@
         "lr": 0.000902490168322877,
         "momentum": 0.4374936087337805,
         "transform": "norm_299",
-        "uid": "e6ebee635a61b88dbb22d3a0fd4859d4"
+        "uid": "459b24162677e809d403a8ff1ced6d4c"
     },
     {
         "accuracy": 0.4235,
@@ -60,7 +105,7 @@
         "lr": 0.003076823770595887,
         "momentum": 0.012349634980593271,
         "transform": "echo",
-        "uid": "55b3eb7c5bc3259817a49485605eade3"
+        "uid": "90a34f6c16e851acb100dc5907a66626"
     },
     {
         "accuracy": 0.3337,
@@ -69,7 +114,16 @@
         "lr": 0.005060778559944889,
         "momentum": 0.908252988381435,
         "transform": "echo",
-        "uid": "8b9d6aecd69420d609325757930bf56b"
+        "uid": "fdc0db431d8c783e39600e441caf1664"
+    },
+    {
+        "accuracy": 0.314,
+        "batch": 32,
+        "duration": 1555479357175,
+        "lr": 2.335002488406157e-05,
+        "momentum": 0.2000826423975407,
+        "transform": "norm_256",
+        "uid": "852555c11711f4b3524b80879c18b2b2"
     },
     {
         "accuracy": 0.2879,
@@ -78,6 +132,6 @@
         "lr": 1.0530564333562261e-05,
         "momentum": 0.5891811893449823,
         "transform": "norm_32",
-        "uid": "15a5b5a4da0cd318866fce944950c6af"
+        "uid": "3747af6c6fa684ccfe6c24054d00c6c6"
     }
 ]

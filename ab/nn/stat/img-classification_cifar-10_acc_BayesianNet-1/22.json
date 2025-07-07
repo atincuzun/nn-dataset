@@ -1,12 +1,21 @@
 [
     {
+        "accuracy": 0.6823,
+        "batch": 8,
+        "duration": 1634567048780,
+        "lr": 0.197945561880702,
+        "momentum": 0.4899715223791913,
+        "transform": "echo_32",
+        "uid": "0e2d72aea2b4b4470b03f72fb54b0cb5"
+    },
+    {
         "accuracy": 0.6751,
         "batch": 32,
         "duration": 332844904654,
         "lr": 0.008103123364031036,
         "momentum": 0.9817140840744073,
         "transform": "echo",
-        "uid": "876200f0bf9b6fd00e0b23631fb2ddd5"
+        "uid": "33b616ccfe9e54b82f1a620d91cdcee0"
     },
     {
         "accuracy": 0.6721,
@@ -15,7 +24,7 @@
         "lr": 0.034861611841776746,
         "momentum": 0.35157405763458727,
         "transform": "norm",
-        "uid": "346652238195beaff59fd5c5cf2eed9b"
+        "uid": "1abeb86000657500b397492972b8d0ab"
     },
     {
         "accuracy": 0.6644,
@@ -24,7 +33,7 @@
         "lr": 0.0061,
         "momentum": 0.7549,
         "transform": "echo",
-        "uid": "8ebaf7812a0fdf541f9a52aa3ef70b06"
+        "uid": "d79a65560e193eeb0311d2719dd386cf"
     },
     {
         "accuracy": 0.6534,
@@ -33,7 +42,7 @@
         "lr": 0.0061,
         "momentum": 0.7549,
         "transform": "echo",
-        "uid": "bba7e618bc4aca08a71f6fdc3055d0aa"
+        "uid": "d79a65560e193eeb0311d2719dd386cf"
     },
     {
         "accuracy": 0.5282,
@@ -42,7 +51,16 @@
         "lr": 0.0004642441157747224,
         "momentum": 0.25037149093793476,
         "transform": "norm_flip",
-        "uid": "ca3fdb67be803ba08540aea54b238e53"
+        "uid": "a58a2fead64bf88949e28b25214fff54"
+    },
+    {
+        "accuracy": 0.4839,
+        "batch": 2048,
+        "duration": 560397402310,
+        "lr": 0.07742902898646249,
+        "momentum": 0.1907725575050564,
+        "transform": "norm_32",
+        "uid": "6c7bcaf1c5549d7c912a9291ab9839ad"
     },
     {
         "accuracy": 0.2523,
@@ -51,7 +69,7 @@
         "lr": 0.0029108399425003513,
         "momentum": 0.11486523169870655,
         "transform": "norm_32",
-        "uid": "021db887c1d71ce9ff720c4b54de6142"
+        "uid": "3496d9bdbf0aeaf3fb07a487ae6acdc6"
     },
     {
         "accuracy": 0.1981,
@@ -60,6 +78,6 @@
         "lr": 2.6298587460641664e-05,
         "momentum": 0.7928141032165655,
         "transform": "norm_32",
-        "uid": "5913b7fcbf8ef2fb626ab2a6856c3416"
+        "uid": "4fffc754655ad14271b61327b96f9def"
     }
 ]

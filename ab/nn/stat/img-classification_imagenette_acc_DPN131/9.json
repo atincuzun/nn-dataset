@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.5905732484076434,
+        "batch": 32,
+        "duration": 1154007694954,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
+        "accuracy": 0.4980891719745223,
+        "batch": 32,
+        "duration": 1837636865842,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
         "accuracy": 0.37910828025477705,
         "batch": 32,
         "duration": 939258339639,
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "88cb6738b50d6e5f2e12cd9f5ecbd5ea"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
     },
     {
         "accuracy": 0.3742675159235669,
@@ -15,7 +33,7 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "6c5a1b72cdb9caa31182cc035197a302"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
     },
     {
         "accuracy": 0.3638216560509554,
@@ -24,7 +42,7 @@
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "fe0c4d88508b1540ee6e1b5ba2adbea8"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
     },
     {
         "accuracy": 0.3159235668789809,
@@ -33,6 +51,15 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "1ff05828371b807a4273d9f26fa22d7b"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
+    },
+    {
+        "accuracy": 0.30394904458598726,
+        "batch": 1,
+        "duration": 1214482672844,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     }
 ]

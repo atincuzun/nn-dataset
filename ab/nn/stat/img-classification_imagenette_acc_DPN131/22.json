@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.630063694267516,
+        "batch": 32,
+        "duration": 2785257446979,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
+        "accuracy": 0.5765605095541402,
+        "batch": 32,
+        "duration": 4492619252157,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
         "accuracy": 0.4407643312101911,
         "batch": 4,
         "duration": 2258803738257,
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "f22655458b630acfe294fd903a9dd7eb"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
     },
     {
         "accuracy": 0.4257324840764331,
@@ -15,7 +33,16 @@
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "e411593cf1af32bbf373f6be7128d833"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
+    },
+    {
+        "accuracy": 0.3765605095541401,
+        "batch": 1,
+        "duration": 2896769793630,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     },
     {
         "accuracy": 0.36662420382165606,
@@ -24,7 +51,7 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "a386b82e5e736dfc99ac43ed099b0577"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
     },
     {
         "accuracy": 0.14267515923566879,
@@ -33,6 +60,6 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "9dfa45d8bccabfb6b6c055164a57f885"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
     }
 ]

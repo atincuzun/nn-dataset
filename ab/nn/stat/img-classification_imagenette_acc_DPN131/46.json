@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.7194904458598727,
+        "batch": 32,
+        "duration": 5625772744806,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
+        "accuracy": 0.655031847133758,
+        "batch": 32,
+        "duration": 9251552358023,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
         "accuracy": 0.495031847133758,
         "batch": 4,
         "duration": 4724321829344,
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "69da34dcbc46ec9ab4f0401ee39452de"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
     },
     {
         "accuracy": 0.4779617834394905,
@@ -15,7 +33,7 @@
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "c9bf0f438d11af4fb2cc970c28b6ef75"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
     },
     {
         "accuracy": 0.4315923566878981,
@@ -24,7 +42,7 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "3926647f9f9bd8e1145dba05a99ef611"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
     },
     {
         "accuracy": 0.41273885350318473,
@@ -33,6 +51,15 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "afac5d32d8ed9d86b0a6d4f48f5c5e92"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
+    },
+    {
+        "accuracy": 0.36178343949044584,
+        "batch": 1,
+        "duration": 5603988962061,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     }
 ]

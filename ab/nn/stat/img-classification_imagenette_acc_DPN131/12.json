@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.6361783439490446,
+        "batch": 32,
+        "duration": 1550573765786,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
+        "accuracy": 0.5174522292993631,
+        "batch": 32,
+        "duration": 2466618894081,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
         "accuracy": 0.3961783439490446,
         "batch": 32,
         "duration": 1252558189561,
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "bd81f8f1233fb1219f312639eb26c5e9"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
     },
     {
         "accuracy": 0.3610191082802548,
@@ -15,7 +33,16 @@
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "8d2cc2788bc15a90b3f79835f4d57bb7"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
+    },
+    {
+        "accuracy": 0.3378343949044586,
+        "batch": 1,
+        "duration": 1603278082484,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     },
     {
         "accuracy": 0.3243312101910828,
@@ -24,7 +51,7 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "b3fa71e8c9fec7aadd4cdd68f2ee93f9"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
     },
     {
         "accuracy": 0.28535031847133757,
@@ -33,6 +60,6 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "1c2fe9e15e68635949e188389c5f035e"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
     }
 ]

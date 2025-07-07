@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.8048,
+        "batch": 64,
+        "duration": 573100276716,
+        "lr": 0.1014511257734915,
+        "momentum": 0.6099092391323409,
+        "transform": "echo_128",
+        "uid": "2142e88fe8cee5daa47f661be5377b0e"
+    },
+    {
+        "accuracy": 0.756,
+        "batch": 512,
+        "duration": 19815418453,
+        "lr": 0.162696457317235,
+        "momentum": 0.813983213824771,
+        "transform": "norm_32",
+        "uid": "3f15fef3df67d30fa88a6e91278fe82f"
+    },
+    {
         "accuracy": 0.754,
         "batch": 128,
         "duration": 13914706415,
         "lr": 0.22281633488992622,
         "momentum": 0.6524748330865693,
         "transform": "echo",
-        "uid": "7a2667a5b54199da8d7d846e79d00d71"
+        "uid": "51835c9f6aad6d17c368e87af322bb0f"
     },
     {
         "accuracy": 0.6818,
@@ -15,7 +33,16 @@
         "lr": 0.06276040074308879,
         "momentum": 0.7478815086222148,
         "transform": "norm_32",
-        "uid": "fefd17630277acd16c8e5d31c7f9f968"
+        "uid": "95212e81bc9b946ca57c1becd63a0809"
+    },
+    {
+        "accuracy": 0.6615,
+        "batch": 4,
+        "duration": 698965734707,
+        "lr": 0.0006197074625281004,
+        "momentum": 0.656316033850926,
+        "transform": "norm",
+        "uid": "4c153bbb73185831736aa902fb9461c3"
     },
     {
         "accuracy": 0.6558,
@@ -24,7 +51,7 @@
         "lr": 0.005129522952067677,
         "momentum": 0.24203947219518462,
         "transform": "norm_32",
-        "uid": "4a54b61b4a01ec9c713a94f138c51777"
+        "uid": "288db9699933471aca7e150f041d35cc"
     },
     {
         "accuracy": 0.6558,
@@ -33,7 +60,7 @@
         "lr": 0.10558049467877136,
         "momentum": 0.48114909715795184,
         "transform": "norm",
-        "uid": "9c34e40565aec5110c4330ae01baa65c"
+        "uid": "3c73580c341086055eb77c1efd718c36"
     },
     {
         "accuracy": 0.6258,
@@ -42,7 +69,25 @@
         "lr": 0.00993904336256402,
         "momentum": 0.322366564801722,
         "transform": "norm_128_flip",
-        "uid": "b5debb87cb277514c12748bcf74cfdc3"
+        "uid": "d550a05ee7c4fcec45ed0477d5cb5c53"
+    },
+    {
+        "accuracy": 0.6146,
+        "batch": 64,
+        "duration": 22980680841,
+        "lr": 0.0006637671956796149,
+        "momentum": 0.7956246554002036,
+        "transform": "norm_32",
+        "uid": "2e103e4e92ac2f71f36744feeeb759d3"
+    },
+    {
+        "accuracy": 0.5457,
+        "batch": 64,
+        "duration": 24448613549,
+        "lr": 0.001293356083280152,
+        "momentum": 0.033559279393802766,
+        "transform": "norm_32",
+        "uid": "730b45e7e68e5ff8072b09ff4399db2a"
     },
     {
         "accuracy": 0.4674,
@@ -51,7 +96,7 @@
         "lr": 0.000902490168322877,
         "momentum": 0.4374936087337805,
         "transform": "norm_299",
-        "uid": "62c417faf196216dd9aa9c339cf0a009"
+        "uid": "459b24162677e809d403a8ff1ced6d4c"
     },
     {
         "accuracy": 0.3995,
@@ -60,7 +105,7 @@
         "lr": 0.003076823770595887,
         "momentum": 0.012349634980593271,
         "transform": "echo",
-        "uid": "6143cca7ca5b7003193cdeb019f7ab24"
+        "uid": "90a34f6c16e851acb100dc5907a66626"
     },
     {
         "accuracy": 0.3679,
@@ -69,7 +114,16 @@
         "lr": 0.005060778559944889,
         "momentum": 0.908252988381435,
         "transform": "echo",
-        "uid": "4af7e8493c99839570e4d5b4e410b6b9"
+        "uid": "fdc0db431d8c783e39600e441caf1664"
+    },
+    {
+        "accuracy": 0.2992,
+        "batch": 32,
+        "duration": 1165357709303,
+        "lr": 2.335002488406157e-05,
+        "momentum": 0.2000826423975407,
+        "transform": "norm_256",
+        "uid": "852555c11711f4b3524b80879c18b2b2"
     },
     {
         "accuracy": 0.2673,
@@ -78,6 +132,6 @@
         "lr": 1.0530564333562261e-05,
         "momentum": 0.5891811893449823,
         "transform": "norm_32",
-        "uid": "f7d5dbd1d6dced8a0b17b0545fee06bd"
+        "uid": "3747af6c6fa684ccfe6c24054d00c6c6"
     }
 ]

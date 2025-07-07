@@ -37,7 +37,6 @@ def data(
     metric: str | None = None,
     nn: str | None = None,
     epoch: int | None = None,
-    cast_prm: bool = True,
     max_rows: int | None = None,
 ) -> tuple[
     dict[str, int | float | str | dict[str, int | float | str]], ...
@@ -126,11 +125,11 @@ def data(
         rows = cur.fetchall()
         columns = [c[0] for c in cur.description]
 
-        if not rows:  # short-circuit for empty result
+        if not rows:  # short-circuit for an empty result
             return tuple()
 
-        # Bulk-load *all* hyper-parameters for the retrieved stat_ids
-        stat_id_idx = columns.index("stat_id")
+        # Bulk-load *all* hyperparameters for the retrieved stat_ids
+        stat_id_idx = columns.index("stat_prm")
         uids = [r[stat_id_idx] for r in rows]
 
         from collections import defaultdict
@@ -152,13 +151,13 @@ def data(
         results: list[dict] = []
         for r in rows:
             rec = dict(zip(columns, r))
-            uid = rec.pop("stat_id")
-            rec["prm"] = prm_by_uid.get(uid, {})
-            rec.pop("stat_prm", None)
-            rec.pop("transform", None)
+            uid = rec['stat_prm']
+            rec['prm'] = prm_by_uid.get(uid, {})
+            rec.pop('stat_id', None)
+            rec.pop('transform', None)
             # ensure epoch is int
             try:
-                rec["epoch"] = int(rec["epoch"])
+                rec['epoch'] = int(rec['epoch'])
             except (ValueError, TypeError):
                 pass
             results.append(rec)
@@ -232,7 +231,7 @@ def supported_transformers() -> list[str]:
     return query_cols_rows("SELECT name FROM transform")[0]
 
 
-def unique_configs(patterns: list[str, ...]) -> list[list[str]]:
+def unique_configs(patterns: list[tuple[str, ...]]) -> list[list[str]]:
     """
     Returns a list of unique configuration strings from the database that match at least one of the input patterns.
     

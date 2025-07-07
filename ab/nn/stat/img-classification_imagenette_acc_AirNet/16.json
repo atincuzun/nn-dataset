@@ -6,7 +6,16 @@
         "lr": 0.020655231412741077,
         "momentum": 0.9372350978458208,
         "transform": "echo_256",
-        "uid": "ea66bdaf1b139a16af0f50a52d10a237"
+        "uid": "43b7d17066e0f057045fec963f1b8d85"
+    },
+    {
+        "accuracy": 0.750063694267516,
+        "batch": 32,
+        "duration": 2652188825558,
+        "lr": 0.1516096348517409,
+        "momentum": 0.7182031079294734,
+        "transform": "echo_256",
+        "uid": "df1608d57a527b00008d9aae8c6cce44"
     },
     {
         "accuracy": 0.685859872611465,
@@ -15,7 +24,34 @@
         "lr": 0.029845051862126114,
         "momentum": 0.430403359659812,
         "transform": "echo_64_flip",
-        "uid": "2d0306aedb9e19446e0370154f22bc44"
+        "uid": "a9ca63f1175b2df2289ff24ee80a377a"
+    },
+    {
+        "accuracy": 0.630828025477707,
+        "batch": 4,
+        "duration": 2267762082272,
+        "lr": 0.037086809965667225,
+        "momentum": 0.7174253991344275,
+        "transform": "norm_32",
+        "uid": "7874cd625552fddff0d658a054488268"
+    },
+    {
+        "accuracy": 0.6137579617834394,
+        "batch": 128,
+        "duration": 1634751968831,
+        "lr": 0.10038180618311227,
+        "momentum": 0.007974377016085499,
+        "transform": "norm_32_flip",
+        "uid": "80a75f6eede017d867b479202b04bc89"
+    },
+    {
+        "accuracy": 0.544203821656051,
+        "batch": 4,
+        "duration": 851481548783,
+        "lr": 0.0003733274853682415,
+        "momentum": 0.5938875138383077,
+        "transform": "echo_256_flip",
+        "uid": "bb9ccaea4dba6506d310bf82f7532303"
     },
     {
         "accuracy": 0.529171974522293,
@@ -24,6 +60,15 @@
         "lr": 0.002680908383202277,
         "momentum": 0.16489931950778391,
         "transform": "norm_32",
-        "uid": "b5b7d29373eff0e87f4a4c8ac33a0b08"
+        "uid": "4da2b40135c5d7fcdf8351465a070b30"
+    },
+    {
+        "accuracy": 0.2774522292993631,
+        "batch": 2,
+        "duration": 2200551271584,
+        "lr": 2.2036715948289827e-05,
+        "momentum": 0.7869303006359778,
+        "transform": "echo_32_flip",
+        "uid": "494499113e35348736b373702165c616"
     }
 ]

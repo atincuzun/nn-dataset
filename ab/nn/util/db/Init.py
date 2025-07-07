@@ -49,7 +49,8 @@ def init_db():
     for nm in param_tables:
         create_param_table(nm, cursor)
         # NEW: index for fast uid look-ups
-        cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{nm}_uid ON {nm}(uid);")
+        cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{nm}_uid ON {nm}(uid, name, value);")
+
 
     # Create main stat tables
     for nm in main_tables:

@@ -1,0 +1,50 @@
+[
+    {
+        "accuracy": 0.08254171907901764,
+        "batch": 4,
+        "bg_iou_thresh": 0.0098788464640025,
+        "detections_per_img": 0.5028426902523031,
+        "duration": 23983696947365,
+        "fg_iou_thresh": 0.0877142379781054,
+        "lr": 0.005466698830967773,
+        "momentum": 0.191515629749478,
+        "nms_thresh": 0.20749382071730726,
+        "pretrained": 1.0,
+        "score_thresh": 0.9633232766516151,
+        "topk_candidates": 0.736980242362787,
+        "transform": "soft_pad",
+        "uid": "23c37bdbc8f2dcdd7d8e5d1fe1e5d27b"
+    },
+    {
+        "accuracy": 0.06482206284999847,
+        "batch": 32,
+        "bg_iou_thresh": 0.2649573406933998,
+        "detections_per_img": 0.9558145824471088,
+        "duration": 16924463293934,
+        "fg_iou_thresh": 0.45133051407050406,
+        "lr": 0.0011056243885097323,
+        "momentum": 0.9617770662827498,
+        "nms_thresh": 0.34534133938397915,
+        "pretrained": 1.0,
+        "score_thresh": 0.9814859531069647,
+        "topk_candidates": 0.9032392082294399,
+        "transform": "soft_pad",
+        "uid": "28b97036538f8d3f81b9711e80270bf1"
+    },
+    {
+        "accuracy": 0.03230232372879982,
+        "batch": 2,
+        "bg_iou_thresh": 0.02828946963643153,
+        "detections_per_img": 0.8932491642228086,
+        "duration": 32640832499728,
+        "fg_iou_thresh": 0.9261042660419806,
+        "lr": 0.0013181714774535306,
+        "momentum": 0.8307487328053917,
+        "nms_thresh": 0.7977252979734234,
+        "pretrained": 1.0,
+        "score_thresh": 0.43769474766114347,
+        "topk_candidates": 0.13099158931912647,
+        "transform": "soft_pad",
+        "uid": "d42ad3ed67a5aea2898b02278dc9e45f"
+    }
+]

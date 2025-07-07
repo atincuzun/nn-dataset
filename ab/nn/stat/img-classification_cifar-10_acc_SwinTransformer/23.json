@@ -9,7 +9,7 @@
         "momentum": 0.5706754842287648,
         "stochastic_depth_prob": 0.779033118363944,
         "transform": "norm_64",
-        "uid": "083e5399104a2c95c830d0f7d553a3f5"
+        "uid": "5ed119097c07d2d962a8bc5a598bfb86"
     },
     {
         "accuracy": 0.6979,
@@ -21,7 +21,7 @@
         "momentum": 0.981408427800514,
         "stochastic_depth_prob": 0.9564856859504713,
         "transform": "echo",
-        "uid": "bcc136a241240ac944ee2807fbd88893"
+        "uid": "639dc046f628e82be6e3bebdef19045b"
     },
     {
         "accuracy": 0.6333,
@@ -33,7 +33,31 @@
         "momentum": 0.4862819925242695,
         "stochastic_depth_prob": 0.8991492615149301,
         "transform": "norm_256_flip",
-        "uid": "aa260d4687bbcae7f66519b86aeecec4"
+        "uid": "1946549468c236087668f540065b226d"
+    },
+    {
+        "accuracy": 0.5747,
+        "attention_dropout": 0.9187159024108219,
+        "batch": 32,
+        "dropout": 0.3954079407919845,
+        "duration": 2658697935638,
+        "lr": 0.008917044271804784,
+        "momentum": 0.6966934381397684,
+        "stochastic_depth_prob": 0.9775429107270996,
+        "transform": "echo_128",
+        "uid": "5161760a324e2dbb07be155a463dd268"
+    },
+    {
+        "accuracy": 0.5122,
+        "attention_dropout": 0.9886311296596065,
+        "batch": 512,
+        "dropout": 0.23423025632044392,
+        "duration": 504695451892,
+        "lr": 0.0002207878838131971,
+        "momentum": 0.9631104285469112,
+        "stochastic_depth_prob": 0.37585819674723164,
+        "transform": "echo_32",
+        "uid": "bc83406e48c49d99ee843512655f09e2"
     },
     {
         "accuracy": 0.4254,
@@ -45,7 +69,7 @@
         "momentum": 0.3187627560892834,
         "stochastic_depth_prob": 0.1563557457856236,
         "transform": "echo",
-        "uid": "f2f5c1cf1d3b16c7d9e1276df773342b"
+        "uid": "7347d0c043997bfaf49bfacf88f83472"
     },
     {
         "accuracy": 0.2833,
@@ -57,6 +81,6 @@
         "momentum": 0.6573264899946673,
         "stochastic_depth_prob": 0.8555544237800722,
         "transform": "norm_128_flip",
-        "uid": "147020ff18417f701d3aeb40694627ed"
+        "uid": "305780412c2690f49bd004ce5f7cd204"
     }
 ]

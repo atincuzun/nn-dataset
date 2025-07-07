@@ -7,7 +7,7 @@
         "lr": 0.2525184583747904,
         "momentum": 0.6995441159550584,
         "transform": "norm",
-        "uid": "2f934bbb5a26a27c498069ee8106b905"
+        "uid": "218ce9aecf6fa6708bc95ff3b7799e31"
     },
     {
         "accuracy": 0.9922,
@@ -17,7 +17,7 @@
         "lr": 0.3443773641008352,
         "momentum": 0.3964717091436609,
         "transform": "echo_256_flip",
-        "uid": "4d3d5903293f3de5570dcb7093013d3a"
+        "uid": "65fbdcc5f761020d3b0fa37182494513"
     },
     {
         "accuracy": 0.992,
@@ -27,7 +27,17 @@
         "lr": 0.02392948768210865,
         "momentum": 0.7480571720661273,
         "transform": "echo_128_flip",
-        "uid": "b81392b3524fe5c6ad532c70b4bb8c5c"
+        "uid": "87cca9fb923297aae45692f7ddcaabf9"
+    },
+    {
+        "accuracy": 0.986,
+        "batch": 512,
+        "dropout": 0.35701053508906117,
+        "duration": 274645390864,
+        "lr": 0.084030952377043,
+        "momentum": 0.5368495287960663,
+        "transform": "echo_32_flip",
+        "uid": "a784fd713c2a700628f59b8ebd4485f1"
     },
     {
         "accuracy": 0.9828,
@@ -37,7 +47,7 @@
         "lr": 0.00013461062711316125,
         "momentum": 0.8380723106179484,
         "transform": "norm_256_flip",
-        "uid": "88396a5e0dede3edc920c8a30bdd54d3"
+        "uid": "1aeb931928c28fd3d1bea3b6458647ae"
     },
     {
         "accuracy": 0.7221,
@@ -47,7 +57,7 @@
         "lr": 0.0008251744207322931,
         "momentum": 0.1885991585312169,
         "transform": "echo_32_flip",
-        "uid": "088622d9ccb0fe56471ab45b064c66c3"
+        "uid": "df740c01d4b4388ff344830fc1dea535"
     },
     {
         "accuracy": 0.5997,
@@ -57,7 +67,7 @@
         "lr": 0.0027338275927872684,
         "momentum": 0.19428755349659843,
         "transform": "norm_flip",
-        "uid": "c7cd8fb4e632f9564c6e7c249b2ac4fe"
+        "uid": "8a8018a1ed6ce5f88ca1815b0ce248ec"
     },
     {
         "accuracy": 0.3772,
@@ -67,6 +77,6 @@
         "lr": 0.0005095343581118018,
         "momentum": 0.006087377946953354,
         "transform": "norm_64_flip",
-        "uid": "3dfcd6b6cda57ce634593b048c6b3cc0"
+        "uid": "eb8f41bba2c1b1af1f4f6ff3625f6fae"
     }
 ]

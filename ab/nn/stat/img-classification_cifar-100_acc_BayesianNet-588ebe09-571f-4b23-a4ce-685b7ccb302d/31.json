@@ -9,6 +9,30 @@
         "random_rho_initial": 0.21440000217184263,
         "random_sigma": 0.3617092777804811,
         "transform": "norm_32",
-        "uid": "75cc4cfd842a1b06d1c42a96530dd56c"
+        "uid": "aca2609f7b63708f17dabb0087202faf"
+    },
+    {
+        "accuracy": 0.249,
+        "batch": 64,
+        "duration": 299830473645,
+        "lr": 0.004884213502559293,
+        "momentum": 0.5094950471825024,
+        "random_beta": 0.20414880145362424,
+        "random_rho_initial": 0.7895875903020859,
+        "random_sigma": 0.6102190730178747,
+        "transform": "norm_32_flip",
+        "uid": "89989747af02adfb200007d353146356"
+    },
+    {
+        "accuracy": 0.2362,
+        "batch": 128,
+        "duration": 538265785503,
+        "lr": 0.22553094439783977,
+        "momentum": 0.33753342761464766,
+        "random_beta": 0.6209016591499892,
+        "random_rho_initial": 0.5698404180822906,
+        "random_sigma": 0.221744031319155,
+        "transform": "echo_32",
+        "uid": "a1756158d08eebca941fc80500e0fc61"
     }
 ]

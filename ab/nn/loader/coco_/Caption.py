@@ -5,6 +5,7 @@ import requests
 from collections import Counter
 
 import torch
+import nltk
 from torch.utils.data import Dataset
 from PIL import Image
 from pycocotools.coco import COCO
@@ -19,11 +20,12 @@ coco_img_url = 'http://images.cocodataset.org/zips/{}2017.zip'
 
 __norm_mean = (104.01362025, 114.03422265, 119.9165958)
 __norm_dev = (73.6027665, 69.89082075, 70.9150767)
-minimum_bleu = 0.001
+MINIMUM_ACCURACY = 0.001
 
 class COCOCaptionDataset(Dataset):
     def __init__(self, transform, root, split='train', word2idx=None, idx2word=None):
         super().__init__()
+        nltk.download('punkt_tab')
         valid_splits = ['train', 'val']
         if split not in valid_splits:
             raise ValueError(f"Invalid split: {split}. Must be 'train' or 'val'.")
@@ -199,4 +201,4 @@ def loader(transform_fn, task):
     except Exception:
         pass
 
-    return (vocab_size,), minimum_bleu, train_dataset, val_dataset
+    return (vocab_size,), MINIMUM_ACCURACY, train_dataset, val_dataset

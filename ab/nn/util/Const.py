@@ -18,7 +18,7 @@ default_nn_fail_attempts = 30
 default_num_workers = 2
 default_random_config_order = False
 
-max_epoch_seconds = 30 * 60
+default_epoch_limit_minutes = 30 # minutes
 
 base_module = 'ab'
 to_nn = (base_module, 'nn')

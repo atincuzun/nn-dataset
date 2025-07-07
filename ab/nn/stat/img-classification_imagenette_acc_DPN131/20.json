@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.5785987261146497,
+        "batch": 32,
+        "duration": 4088155086709,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
+        "accuracy": 0.5765605095541402,
+        "batch": 32,
+        "duration": 2557785905789,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
         "accuracy": 0.42420382165605097,
         "batch": 32,
         "duration": 2088180602809,
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "878a9d0255293310de292b37f2de08cd"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
     },
     {
         "accuracy": 0.4206369426751592,
@@ -15,7 +33,16 @@
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "af72aa22f4ca8b684f6ebfcd49b432e0"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
+    },
+    {
+        "accuracy": 0.3768152866242038,
+        "batch": 1,
+        "duration": 2592782123026,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     },
     {
         "accuracy": 0.36585987261146496,
@@ -24,7 +51,7 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "7bbc2cf7c8a9bd0d2302e5bd1e1f7226"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
     },
     {
         "accuracy": 0.15796178343949044,
@@ -33,6 +60,6 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "1e8c35e7dadf56f4aa1a9bd7f5cf6dba"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
     }
 ]

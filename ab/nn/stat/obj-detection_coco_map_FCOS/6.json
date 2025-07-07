@@ -1,5 +1,35 @@
 [
     {
+        "accuracy": 0.7217646837234497,
+        "batch": 2,
+        "center_sampling_radius": 0.08857500244022731,
+        "detections_per_img": 0.10195804628087224,
+        "duration": 12961188108742,
+        "lr": 0.00027147931738171643,
+        "momentum": 0.6590032766805667,
+        "nms_thresh": 0.7598720160270549,
+        "pretrained": 1.0,
+        "score_thresh": 0.10366082784433794,
+        "topk_candidates": 0.06693526677778305,
+        "transform": "soft_pad",
+        "uid": "6527c2fc2a714aff580690f97946cd86"
+    },
+    {
+        "accuracy": 0.500986635684967,
+        "batch": 4,
+        "center_sampling_radius": 0.8766091998434211,
+        "detections_per_img": 0.8331107380230762,
+        "duration": 32189036873539,
+        "lr": 0.00013563117295255716,
+        "momentum": 0.2878801705831573,
+        "nms_thresh": 0.4805774111214004,
+        "pretrained": 1.0,
+        "score_thresh": 0.08828131724019095,
+        "topk_candidates": 0.7143231241822533,
+        "transform": "soft_pad",
+        "uid": "be4306c8890731c1458bc50f186b1f4e"
+    },
+    {
         "accuracy": 0.47171229124069214,
         "batch": 16,
         "center_sampling_radius": 0.4908194294288062,
@@ -12,7 +42,22 @@
         "score_thresh": 0.15274237749096065,
         "topk_candidates": 0.338493467579174,
         "transform": "soft_pad",
-        "uid": "c95dbaee40c9a0d740e251de371e4f1c"
+        "uid": "0576474f3cd1c8a5f74ab8f1cd6f3d1f"
+    },
+    {
+        "accuracy": 0.4544122815132141,
+        "batch": 2,
+        "center_sampling_radius": 0.9579062756729119,
+        "detections_per_img": 0.5635213562733079,
+        "duration": 12537822962432,
+        "lr": 1.2053315982164966e-05,
+        "momentum": 0.8876815779400551,
+        "nms_thresh": 0.4458334473698268,
+        "pretrained": 1.0,
+        "score_thresh": 0.010172915765042312,
+        "topk_candidates": 0.806132081943046,
+        "transform": "soft_pad",
+        "uid": "251de9f36d0171ca8006ad0df0603128"
     },
     {
         "accuracy": 0.10886859893798828,
@@ -27,6 +72,6 @@
         "score_thresh": 0.6389147802557987,
         "topk_candidates": 0.5367494738032497,
         "transform": "soft_pad",
-        "uid": "2c3c3628ad8a933b523022201d06eaef"
+        "uid": "17c1d061714886e4a615a497e766a77c"
     }
 ]

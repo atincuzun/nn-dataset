@@ -1,12 +1,30 @@
 [
     {
+        "accuracy": 0.6777070063694267,
+        "batch": 32,
+        "duration": 4437250557687,
+        "lr": 0.0016195948036705897,
+        "momentum": 0.9502871342052247,
+        "transform": "echo_32",
+        "uid": "fe4e845f1507da010b3ef38e759e8975"
+    },
+    {
+        "accuracy": 0.6305732484076433,
+        "batch": 32,
+        "duration": 7290157159444,
+        "lr": 0.0018101323967374258,
+        "momentum": 0.5501600208458165,
+        "transform": "norm_32_flip",
+        "uid": "e0666684f82bc7e4e8554a14089ad822"
+    },
+    {
         "accuracy": 0.46802547770700637,
         "batch": 4,
         "duration": 3697026795629,
         "lr": 1.2574636425459859e-05,
         "momentum": 0.9887686654495895,
         "transform": "echo_512",
-        "uid": "3bb54d4382de80e3330afea3552522a2"
+        "uid": "77f767a0878bce5b5e35c4bd5a4ddfb8"
     },
     {
         "accuracy": 0.4519745222929936,
@@ -15,7 +33,7 @@
         "lr": 3.499044965387621e-05,
         "momentum": 0.9580966258051054,
         "transform": "norm_512",
-        "uid": "69504d62467db8ce62ddea94ad611de3"
+        "uid": "35823485599cd08903f6af4a3c2779f4"
     },
     {
         "accuracy": 0.3989808917197452,
@@ -24,7 +42,7 @@
         "lr": 0.03388956141480094,
         "momentum": 0.13651736330603959,
         "transform": "echo_64",
-        "uid": "d9f1b7018d929a86fa86deb9a5c4a73a"
+        "uid": "3e6293ab0b5ab66d7f99dde9d4e2728b"
     },
     {
         "accuracy": 0.3989808917197452,
@@ -33,6 +51,15 @@
         "lr": 0.00015212777672846695,
         "momentum": 0.19913026960790015,
         "transform": "norm_32_flip",
-        "uid": "4d9ab854c4498ba2dc78cd8874673035"
+        "uid": "af362687a8b3c2f83ae9e59d96603b24"
+    },
+    {
+        "accuracy": 0.3228025477707006,
+        "batch": 1,
+        "duration": 4510285250498,
+        "lr": 0.39698363309037177,
+        "momentum": 0.13866425373266777,
+        "transform": "echo_32_flip",
+        "uid": "72bc4c9d8e006793a0e033aed2c72ac2"
     }
 ]

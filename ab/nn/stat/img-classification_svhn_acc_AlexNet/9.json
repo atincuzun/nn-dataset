@@ -7,7 +7,7 @@
         "lr": 0.007053851136392778,
         "momentum": 0.8250659141967467,
         "transform": "norm_299",
-        "uid": "a7a0f7c69d165dadb5ee308f5f02f20a"
+        "uid": "43ed3330e3b675c6aa3d3566d33af52c"
     },
     {
         "accuracy": 0.905500921942225,
@@ -17,7 +17,7 @@
         "lr": 0.0010483475098979852,
         "momentum": 0.9313715104213692,
         "transform": "echo_256",
-        "uid": "3fef86ffb1a3e0f6e8b58dead8686924"
+        "uid": "0008d468899ed7d0b7d48cba3bdcde61"
     },
     {
         "accuracy": 0.37354025814382297,
@@ -27,7 +27,17 @@
         "lr": 0.0077719709829949845,
         "momentum": 0.5145054709372381,
         "transform": "echo_64_flip",
-        "uid": "71cf6db8475f07cf0acdea060bc08b25"
+        "uid": "83b4dc0432c1634f3bedbbe06a41d0e9"
+    },
+    {
+        "accuracy": 0.320259680393362,
+        "batch": 8,
+        "dropout": 0.3652383056221425,
+        "duration": 524718393099,
+        "lr": 0.0010638958929670035,
+        "momentum": 0.362786742146749,
+        "transform": "echo_64",
+        "uid": "b813098e59df3b29d10feaaf8989d191"
     },
     {
         "accuracy": 0.1958743085433313,
@@ -37,7 +47,7 @@
         "lr": 0.000589899708563531,
         "momentum": 0.20401701513490444,
         "transform": "echo_64",
-        "uid": "3f7144173978701e9dc1cb033541c395"
+        "uid": "508aa22e3bd28bb204347f7bdffd3c9b"
     },
     {
         "accuracy": 0.1958743085433313,
@@ -47,7 +57,7 @@
         "lr": 0.06424023958892967,
         "momentum": 0.858447096984115,
         "transform": "echo_512",
-        "uid": "7666eed8909658379594fefb048cba6c"
+        "uid": "33fee5b4cbf306ca152a8543329ae929"
     },
     {
         "accuracy": 0.1958743085433313,
@@ -57,6 +67,16 @@
         "lr": 0.0003249468253592205,
         "momentum": 0.8115301983645367,
         "transform": "echo_299",
-        "uid": "24dec3fcd8b052d32cba9c80ea5a55e9"
+        "uid": "69441c27691cb83a785dd470517dcab2"
+    },
+    {
+        "accuracy": 0.1958743085433313,
+        "batch": 1024,
+        "dropout": 0.3472644036063979,
+        "duration": 2753638084312,
+        "lr": 0.0006289402443172388,
+        "momentum": 0.937726293849454,
+        "transform": "echo_256",
+        "uid": "105affc45161c50809838d5dd56a786d"
     }
 ]
