@@ -36,6 +36,15 @@
         "uid": "bb1610cf81a2d93723ffe3f98a017b0a"
     },
     {
+        "accuracy": 0.0988,
+        "batch": 64,
+        "duration": 539020780105,
+        "lr": 0.12542833344546864,
+        "momentum": 0.8193891904671494,
+        "transform": "echo_299_flip",
+        "uid": "0b2feba705998ec0aa71223db3cefe67"
+    },
+    {
         "accuracy": 0.0978,
         "batch": 256,
         "duration": 64414466149,
@@ -61,6 +70,15 @@
         "momentum": 0.8674295580733663,
         "transform": "norm_256_flip",
         "uid": "0e8768341c3c07c141f5ddcb26139e55"
+    },
+    {
+        "accuracy": 0.0857,
+        "batch": 128,
+        "duration": 97952806071,
+        "lr": 0.0037840789287475903,
+        "momentum": 0.8270405472868653,
+        "transform": "norm_128_flip",
+        "uid": "c8b2e1627e9d1f7f17c07afd8727eea0"
     },
     {
         "accuracy": 0.0809,
@@ -126,6 +144,24 @@
         "uid": "d035895797817a52ebbc742def3ad17b"
     },
     {
+        "accuracy": 0.0615,
+        "batch": 128,
+        "duration": 33365515837,
+        "lr": 0.0001461670779257745,
+        "momentum": 0.9711901607997613,
+        "transform": "norm_64",
+        "uid": "13a6124a348e84fd3285d96c844d5b49"
+    },
+    {
+        "accuracy": 0.0537,
+        "batch": 2,
+        "duration": 191531532489,
+        "lr": 0.8691528311674174,
+        "momentum": 0.10064178744482155,
+        "transform": "norm_64_flip",
+        "uid": "547a6fd9367d983af51683269171cfb0"
+    },
+    {
         "accuracy": 0.0523,
         "batch": 8,
         "duration": 23921291210,
@@ -178,6 +214,15 @@
         "momentum": 0.5207371687204996,
         "transform": "echo_256",
         "uid": "2c2cd4ee05e52c003b0f248bb5ea0f1e"
+    },
+    {
+        "accuracy": 0.0152,
+        "batch": 2,
+        "duration": 207827406902,
+        "lr": 3.881543334692346e-05,
+        "momentum": 0.04556559994432341,
+        "transform": "norm_128",
+        "uid": "99f8f9484cfa49bcbd356c0ff87fe3ea"
     },
     {
         "accuracy": 0.0146,
