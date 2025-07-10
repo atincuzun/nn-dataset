@@ -23,7 +23,7 @@ For Windows:
    .venv\Scripts\activate
    ```
 
-It is also assumed that CUDA 12.6 is installed. If you have a different version, please replace 'cu126' with the appropriate version number.
+It is also assumed that CUDA 12.6 is installed; otherwise, consider replacing 'cu126' with the appropriate version.
 
 ## Environment for NN Dataset Contributors
 ### Pip package manager
