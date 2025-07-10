@@ -1,5 +1,32 @@
 [
     {
+        "accuracy": 0.4568101465702057,
+        "batch": 16,
+        "duration": 13690174832399,
+        "lr": 0.05276453163132002,
+        "momentum": 0.5157913530332003,
+        "transform": "echo_128",
+        "uid": "7fc78cbb3500058266aa3547294474b7"
+    },
+    {
+        "accuracy": 0.36331555247306824,
+        "batch": 32,
+        "duration": 16685552838899,
+        "lr": 0.02019527158710923,
+        "momentum": 0.5184118315465919,
+        "transform": "echo_256_flip",
+        "uid": "9fd61a46ab2f4acb88c9044613e4bcbe"
+    },
+    {
+        "accuracy": 0.2088630199432373,
+        "batch": 128,
+        "duration": 13998863826380,
+        "lr": 0.006744768814046883,
+        "momentum": 0.7451338640170551,
+        "transform": "echo_64_flip",
+        "uid": "b61bb626dc68e2ec54953190d4adc2bb"
+    },
+    {
         "accuracy": 0.19308073818683624,
         "batch": 256,
         "duration": 8815691171546,
@@ -9,6 +36,15 @@
         "uid": "68344a1c80738081187d563abac1071e"
     },
     {
+        "accuracy": 0.17880024015903473,
+        "batch": 64,
+        "duration": 13771718629940,
+        "lr": 0.004900113964815769,
+        "momentum": 0.4514348777022882,
+        "transform": "echo_128_flip",
+        "uid": "f9b41d94946f30f7791754e47c4eee7c"
+    },
+    {
         "accuracy": 0.16865719854831696,
         "batch": 4,
         "duration": 9999434473499,
@@ -16,5 +52,23 @@
         "momentum": 0.956364811707963,
         "transform": "norm_128",
         "uid": "570efcbb1aff79e31fbf47c24b6e5a14"
+    },
+    {
+        "accuracy": 0.1533748209476471,
+        "batch": 16,
+        "duration": 15906578364145,
+        "lr": 0.00020610403436041981,
+        "momentum": 0.11101742388571956,
+        "transform": "echo_299_flip",
+        "uid": "0b1d25508eb3ccf8e1ff34f5d8a12478"
+    },
+    {
+        "accuracy": 0.13961385190486908,
+        "batch": 4,
+        "duration": 15086209840562,
+        "lr": 0.00011749254744247097,
+        "momentum": 0.094027245070052,
+        "transform": "echo_32",
+        "uid": "bde4f4ef2a9ed7e8b6190d230210763a"
     }
 ]
