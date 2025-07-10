@@ -50,7 +50,7 @@ stat_dir = nn_path('stat')
 
 def __project_root_path():
     """
-    Defines path to the project root directory.
+    Defines a path to the project root directory.
     """
     project_root = Path().absolute()
     current_dir = project_root
