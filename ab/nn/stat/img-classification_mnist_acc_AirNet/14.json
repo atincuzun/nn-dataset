@@ -1,5 +1,23 @@
 [
     {
+        "accuracy": 0.9946,
+        "batch": 32,
+        "duration": 347951843540,
+        "lr": 0.01627878260768341,
+        "momentum": 0.6412607328393062,
+        "transform": "norm_32",
+        "uid": "a848796d58233e6b8695d07a473026e4"
+    },
+    {
+        "accuracy": 0.9945,
+        "batch": 128,
+        "duration": 439374997249,
+        "lr": 0.011780093753538081,
+        "momentum": 0.8838413395034067,
+        "transform": "echo_128",
+        "uid": "696e29f3ed872337c95aac9271f8357c"
+    },
+    {
         "accuracy": 0.9939,
         "batch": 256,
         "duration": 508868277495,
@@ -36,6 +54,24 @@
         "uid": "6b3535f89f2f9e7d0ff67e8efc7ef973"
     },
     {
+        "accuracy": 0.9873,
+        "batch": 16,
+        "duration": 578584212044,
+        "lr": 0.11824174022152796,
+        "momentum": 0.5948778451823084,
+        "transform": "norm_128_flip",
+        "uid": "7538f1c9fb3a8b777c1b7e730cc20d1e"
+    },
+    {
+        "accuracy": 0.9794,
+        "batch": 64,
+        "duration": 138492204028,
+        "lr": 0.001188711838530506,
+        "momentum": 0.18801990121310275,
+        "transform": "echo_flip",
+        "uid": "6bdefd6eb04eadcd620018a7ae5d8951"
+    },
+    {
         "accuracy": 0.7709,
         "batch": 64,
         "duration": 41640479115,
@@ -43,6 +79,24 @@
         "momentum": 0.10111707506735446,
         "transform": "echo",
         "uid": "ed5d23019ce88e4837a58db63d66df86"
+    },
+    {
+        "accuracy": 0.7097,
+        "batch": 32,
+        "duration": 2115156101358,
+        "lr": 1.1913385649241109e-05,
+        "momentum": 0.9457962391480997,
+        "transform": "norm_299",
+        "uid": "47117b6f6543845a06e310c30b10e640"
+    },
+    {
+        "accuracy": 0.6607,
+        "batch": 256,
+        "duration": 228238189597,
+        "lr": 4.60887001771973e-05,
+        "momentum": 0.6616536665563663,
+        "transform": "norm_64_flip",
+        "uid": "4e329bb267f7ee5f815672a8c297662d"
     },
     {
         "accuracy": 0.6278,
