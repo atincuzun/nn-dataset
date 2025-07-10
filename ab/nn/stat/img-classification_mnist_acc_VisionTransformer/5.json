@@ -1,5 +1,17 @@
 [
     {
+        "accuracy": 0.9713,
+        "attention_dropout": 0.15515407343311616,
+        "batch": 256,
+        "dropout": 0.008356780019545151,
+        "duration": 94268939932,
+        "lr": 0.0013700868222371488,
+        "momentum": 0.7635850019667609,
+        "patch_size": 0.4237205304384839,
+        "transform": "echo_64",
+        "uid": "369be41f2f81a25488a4f753b5d23900"
+    },
+    {
         "accuracy": 0.9591,
         "attention_dropout": 0.8005016798182601,
         "batch": 32,
@@ -60,6 +72,18 @@
         "uid": "c84392b7d857d3b85f1939360d0e5969"
     },
     {
+        "accuracy": 0.9074,
+        "attention_dropout": 0.15248363764367212,
+        "batch": 4096,
+        "dropout": 0.2757041687967864,
+        "duration": 136114809331,
+        "lr": 0.03884780327621161,
+        "momentum": 0.8181823444139887,
+        "patch_size": 0.7471334577217842,
+        "transform": "norm_32_flip",
+        "uid": "fabfeb00a8d3dbd22cca480658c7afeb"
+    },
+    {
         "accuracy": 0.8969,
         "attention_dropout": 0.5973927540281131,
         "batch": 32,
@@ -106,6 +130,18 @@
         "patch_size": 0.7958139641305977,
         "transform": "norm_256",
         "uid": "006b937965b83317351bb0f31f0bdd7d"
+    },
+    {
+        "accuracy": 0.8424,
+        "attention_dropout": 0.4436267936884609,
+        "batch": 1024,
+        "dropout": 0.1810401364528334,
+        "duration": 64598553175,
+        "lr": 0.12830718073807448,
+        "momentum": 0.9828465915477068,
+        "patch_size": 0.8688321849612445,
+        "transform": "echo_flip",
+        "uid": "c83fb46b3621957b4f83e01e2523b513"
     },
     {
         "accuracy": 0.816,
@@ -226,5 +262,17 @@
         "patch_size": 0.5688320802102904,
         "transform": "norm_flip",
         "uid": "fbc08d815a8fd305dbdcee719be8529b"
+    },
+    {
+        "accuracy": 0.2055,
+        "attention_dropout": 0.8026470650465873,
+        "batch": 64,
+        "dropout": 0.2305625449224054,
+        "duration": 1392667185858,
+        "lr": 2.4832600255895674e-05,
+        "momentum": 0.4326649220280038,
+        "patch_size": 0.3077445231703009,
+        "transform": "norm_512_flip",
+        "uid": "e9670e3d4447f95db46926f597bad7b0"
     }
 ]

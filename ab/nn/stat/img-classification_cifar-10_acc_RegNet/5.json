@@ -1,5 +1,14 @@
 [
     {
+        "accuracy": 0.8347,
+        "batch": 16,
+        "duration": 959627989920,
+        "lr": 0.153140219505893,
+        "momentum": 0.5725779668362878,
+        "transform": "norm_299_flip",
+        "uid": "506ab78cf7ec715f10740a43abd1a2c2"
+    },
+    {
         "accuracy": 0.817,
         "batch": 4,
         "lr": 0.18085948434242904,
@@ -785,6 +794,15 @@
         "uid": "48957c7b03bf54a30681159c2976fafd"
     },
     {
+        "accuracy": 0.6627,
+        "batch": 32,
+        "duration": 211247590653,
+        "lr": 0.25811115966721687,
+        "momentum": 0.3513536666484425,
+        "transform": "norm_64",
+        "uid": "932b5587fff5940b44b4d92c8dbabc99"
+    },
+    {
         "accuracy": 0.6563,
         "batch": 4,
         "duration": 709729773583,
@@ -808,6 +826,15 @@
         "momentum": 0.09640228716218326,
         "transform": "norm_299",
         "uid": "3f4acc2e126fd15a325947a751ab975e"
+    },
+    {
+        "accuracy": 0.6246,
+        "batch": 512,
+        "duration": 519447965775,
+        "lr": 0.5116792871034899,
+        "momentum": 0.28150606783812615,
+        "transform": "echo_256",
+        "uid": "774cfa4a8cea8d262279c2834cbc175e"
     },
     {
         "accuracy": 0.6135,
@@ -844,6 +871,15 @@
         "uid": "43796ddfe4699fc3b2dfc00e6468185f"
     },
     {
+        "accuracy": 0.4777,
+        "batch": 32,
+        "duration": 210194512045,
+        "lr": 0.03273864935335135,
+        "momentum": 0.0873207298284624,
+        "transform": "norm_64",
+        "uid": "96019b0cc712b52d8b6fd4130aceabb9"
+    },
+    {
         "accuracy": 0.4352,
         "batch": 1024,
         "duration": 10638811140,
@@ -868,5 +904,14 @@
         "momentum": 0.010263204018765676,
         "transform": "norm_299",
         "uid": "f5bcff041afbe48ac81d2f54aaeda4ea"
+    },
+    {
+        "accuracy": 0.3087,
+        "batch": 128,
+        "duration": 170507594533,
+        "lr": 0.0002672377037008396,
+        "momentum": 0.9833860371520271,
+        "transform": "norm_64_flip",
+        "uid": "72cc6b3b8288c1da297d0a42b3a13f99"
     }
 ]
