@@ -15,6 +15,21 @@
         "uid": "6527c2fc2a714aff580690f97946cd86"
     },
     {
+        "accuracy": 0.5223571062088013,
+        "batch": 4,
+        "center_sampling_radius": 0.9964693853410627,
+        "detections_per_img": 0.3101104234136498,
+        "duration": 15325567827706,
+        "lr": 0.003702787076406182,
+        "momentum": 0.13174945235808222,
+        "nms_thresh": 0.25325233831507077,
+        "pretrained": 1.0,
+        "score_thresh": 0.3059976775758516,
+        "topk_candidates": 0.19735448912300657,
+        "transform": "soft_pad",
+        "uid": "94911697ba50dc51b69b1870e5c4b8ba"
+    },
+    {
         "accuracy": 0.48522311449050903,
         "batch": 4,
         "center_sampling_radius": 0.8766091998434211,
@@ -28,6 +43,21 @@
         "topk_candidates": 0.7143231241822533,
         "transform": "soft_pad",
         "uid": "be4306c8890731c1458bc50f186b1f4e"
+    },
+    {
+        "accuracy": 0.455485999584198,
+        "batch": 16,
+        "center_sampling_radius": 0.5648537790893869,
+        "detections_per_img": 0.23739233140606497,
+        "duration": 13954240809478,
+        "lr": 8.057476182250049e-05,
+        "momentum": 0.02828818533848021,
+        "nms_thresh": 0.7099815862088603,
+        "pretrained": 1.0,
+        "score_thresh": 0.09592720029041257,
+        "topk_candidates": 0.76458970323924,
+        "transform": "soft_pad",
+        "uid": "964c63bfa047948fd325c3aefeff1c83"
     },
     {
         "accuracy": 0.38498955965042114,
@@ -88,5 +118,35 @@
         "topk_candidates": 0.5367494738032497,
         "transform": "soft_pad",
         "uid": "17c1d061714886e4a615a497e766a77c"
+    },
+    {
+        "accuracy": 0.03655572980642319,
+        "batch": 8,
+        "center_sampling_radius": 0.6526501087991556,
+        "detections_per_img": 0.5467022936779871,
+        "duration": 16528173756618,
+        "lr": 2.608433708481373e-05,
+        "momentum": 0.9105888074211561,
+        "nms_thresh": 0.3873171413608415,
+        "pretrained": 0.0,
+        "score_thresh": 0.3855533743908627,
+        "topk_candidates": 0.7148039704781445,
+        "transform": "soft_pad",
+        "uid": "02e2b4a9e5e31dec94b5c99bacdd259e"
+    },
+    {
+        "accuracy": 0.01818181946873665,
+        "batch": 4,
+        "center_sampling_radius": 0.18747795296826142,
+        "detections_per_img": 0.25026224536401875,
+        "duration": 15359602359151,
+        "lr": 2.9409848745214805e-05,
+        "momentum": 0.10970332059948851,
+        "nms_thresh": 0.41287944626566175,
+        "pretrained": 1.0,
+        "score_thresh": 0.6143316486547624,
+        "topk_candidates": 0.5217847577217368,
+        "transform": "soft_pad",
+        "uid": "706486517999f57c13c64a3d4f31f97e"
     }
 ]
