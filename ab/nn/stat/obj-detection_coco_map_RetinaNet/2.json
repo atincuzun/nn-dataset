@@ -1,5 +1,21 @@
 [
     {
+        "accuracy": 0.07338432222604752,
+        "batch": 4,
+        "bg_iou_thresh": 0.012709434125363739,
+        "detections_per_img": 0.19215752576121992,
+        "duration": 2281104780640,
+        "fg_iou_thresh": 0.37001152000074866,
+        "lr": 0.00021108978772733106,
+        "momentum": 0.36158150656605537,
+        "nms_thresh": 0.8634811644099154,
+        "pretrained": 1.0,
+        "score_thresh": 0.5690761226819642,
+        "topk_candidates": 0.3607208657476806,
+        "transform": "soft_pad",
+        "uid": "49775162462e36928e139181afd7a3fd"
+    },
+    {
         "accuracy": 0.06738624721765518,
         "batch": 4,
         "bg_iou_thresh": 0.0098788464640025,
@@ -64,6 +80,38 @@
         "uid": "5e8d5035731ead5dbc719bf39e5c0c01"
     },
     {
+        "accuracy": 0.02350064553320408,
+        "batch": 128,
+        "bg_iou_thresh": 0.13513557271042997,
+        "detections_per_img": 0.7409923436553059,
+        "duration": 1611365617817,
+        "fg_iou_thresh": 0.4784739984507973,
+        "lr": 0.0018855536313092754,
+        "momentum": 0.946296037362822,
+        "nms_thresh": 0.465223523797198,
+        "pretrained": 1.0,
+        "score_thresh": 0.6012657302568891,
+        "topk_candidates": 0.884769062991224,
+        "transform": "soft_pad",
+        "uid": "ea80ebed2a123f39a0acdbf3c9871ebb"
+    },
+    {
+        "accuracy": 0.023104483261704445,
+        "batch": 4,
+        "bg_iou_thresh": 0.07812695530762659,
+        "detections_per_img": 0.08389807086248358,
+        "duration": 2326611410481,
+        "fg_iou_thresh": 0.4085076198917824,
+        "lr": 0.00393080661606083,
+        "momentum": 0.5489981773338517,
+        "nms_thresh": 0.1713997131198558,
+        "pretrained": 1.0,
+        "score_thresh": 0.8431024736160347,
+        "topk_candidates": 0.4347961896325502,
+        "transform": "soft_pad",
+        "uid": "75092d482b7c7cc756f8c000ca5a6077"
+    },
+    {
         "accuracy": 0.021161649376153946,
         "batch": 32,
         "bg_iou_thresh": 0.2649573406933998,
@@ -80,6 +128,38 @@
         "uid": "28b97036538f8d3f81b9711e80270bf1"
     },
     {
+        "accuracy": 0.01822660118341446,
+        "batch": 2,
+        "bg_iou_thresh": 0.18052543247307296,
+        "detections_per_img": 0.5349141201336829,
+        "duration": 3448598471856,
+        "fg_iou_thresh": 0.2826743976985828,
+        "lr": 0.03267511433695243,
+        "momentum": 0.8772230252025626,
+        "nms_thresh": 0.46144076669952316,
+        "pretrained": 0.0,
+        "score_thresh": 0.8762848168444874,
+        "topk_candidates": 0.2536518605397099,
+        "transform": "soft_pad",
+        "uid": "3d2011a3511b78555f3f11b38913f2c2"
+    },
+    {
+        "accuracy": 0.009930676780641079,
+        "batch": 8,
+        "bg_iou_thresh": 0.20075380071351856,
+        "detections_per_img": 0.530237837568703,
+        "duration": 1826843590239,
+        "fg_iou_thresh": 0.5869044836253196,
+        "lr": 2.187957569162454e-05,
+        "momentum": 0.9908901741576942,
+        "nms_thresh": 0.17432382904324484,
+        "pretrained": 1.0,
+        "score_thresh": 0.16789122875074836,
+        "topk_candidates": 0.0013439857004323708,
+        "transform": "soft_pad",
+        "uid": "567e2a5e70bc012e07c1e0bfc0627817"
+    },
+    {
         "accuracy": 0.009466085582971573,
         "batch": 8,
         "bg_iou_thresh": 0.2772541204230561,
@@ -94,6 +174,22 @@
         "topk_candidates": 0.013732079994706936,
         "transform": "soft_pad",
         "uid": "ba575deb06b610b9197542df77831676"
+    },
+    {
+        "accuracy": 0.008587253279983997,
+        "batch": 2,
+        "bg_iou_thresh": 0.08290005286353208,
+        "detections_per_img": 0.9528426677561787,
+        "duration": 3190100634019,
+        "fg_iou_thresh": 0.34669513259883,
+        "lr": 0.00504511376866848,
+        "momentum": 0.8048649329417199,
+        "nms_thresh": 0.29552024966414714,
+        "pretrained": 1.0,
+        "score_thresh": 0.2726978210546356,
+        "topk_candidates": 0.14106448820876272,
+        "transform": "soft_pad",
+        "uid": "73e439f7719670b25a81bc3bde92b496"
     },
     {
         "accuracy": 0.008474361151456833,
