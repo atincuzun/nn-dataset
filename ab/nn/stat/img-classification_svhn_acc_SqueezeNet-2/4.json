@@ -180,6 +180,16 @@
         "uid": "ab6935f457bd26c937af4c5e7e80f4ac"
     },
     {
+        "accuracy": 0.8051244622003688,
+        "batch": 32,
+        "dropout": 0.38479198067830345,
+        "duration": 254574872221,
+        "lr": 0.011427761665866728,
+        "momentum": 0.46485869653429346,
+        "transform": "norm_64_flip",
+        "uid": "7ea04fbda1bd23098b4a0cd54d428413"
+    },
+    {
         "accuracy": 0.7851106330669945,
         "batch": 128,
         "dropout": 0.18588151026962815,
@@ -290,6 +300,16 @@
         "uid": "d72ba6361e5604d2c59777b68e0b43ae"
     },
     {
+        "accuracy": 0.5009987707437,
+        "batch": 256,
+        "dropout": 0.2188800021656322,
+        "duration": 291655144156,
+        "lr": 0.006309879577733698,
+        "momentum": 0.7672589810678608,
+        "transform": "norm_64_flip",
+        "uid": "70c920ad217df89774e2c606679ed95c"
+    },
+    {
         "accuracy": 0.47768131530424096,
         "batch": 16,
         "dropout": 0.29960329961540294,
@@ -358,6 +378,16 @@
         "momentum": 0.421898225740277,
         "transform": "norm_512_flip",
         "uid": "2d1b371c509a3d8b3b77eb65c2239d2e"
+    },
+    {
+        "accuracy": 0.382260295021512,
+        "batch": 512,
+        "dropout": 0.45880974967542415,
+        "duration": 150097942599,
+        "lr": 0.01222691168236165,
+        "momentum": 0.6343276694004873,
+        "transform": "echo_32_flip",
+        "uid": "5b7abc534545a48c5a9c5a6ea9f43b4e"
     },
     {
         "accuracy": 0.36693300553165337,
@@ -918,6 +948,16 @@
         "momentum": 0.6429131657191534,
         "transform": "echo_64",
         "uid": "d9bd954f7265c3535902c0a9d1f4e1b3"
+    },
+    {
+        "accuracy": 0.15938076213890595,
+        "batch": 256,
+        "dropout": 0.4908285742012753,
+        "duration": 308500304897,
+        "lr": 0.3275451388299398,
+        "momentum": 0.7990070320451707,
+        "transform": "norm_64_flip",
+        "uid": "d938ca0e73886baddbe73189e715fa78"
     },
     {
         "accuracy": 0.1559618930547019,

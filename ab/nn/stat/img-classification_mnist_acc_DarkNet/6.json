@@ -50,6 +50,16 @@
         "uid": "b0cd8771816cc9b63842d3e1c2fa899b"
     },
     {
+        "accuracy": 0.9815,
+        "batch": 64,
+        "dropout": 0.42693901132158263,
+        "duration": 138931559804,
+        "lr": 0.001494965543169974,
+        "momentum": 0.506469241839955,
+        "transform": "norm_32",
+        "uid": "100fc66ad070aa837ae4f89d49ee3e6e"
+    },
+    {
         "accuracy": 0.9811,
         "batch": 128,
         "dropout": 0.31974437712605086,
@@ -58,6 +68,16 @@
         "momentum": 0.7684946722779635,
         "transform": "echo_128",
         "uid": "127969415a710815020fd778007d9798"
+    },
+    {
+        "accuracy": 0.9651,
+        "batch": 256,
+        "dropout": 0.12357720169001757,
+        "duration": 80221565092,
+        "lr": 0.0056722667775302065,
+        "momentum": 0.40430359234049096,
+        "transform": "echo_flip",
+        "uid": "86e9ac06a257c8790f8f8215d8171a02"
     },
     {
         "accuracy": 0.9639,
@@ -78,6 +98,36 @@
         "momentum": 0.2168313930575232,
         "transform": "norm_299_flip",
         "uid": "bbfb8752ce447f9e3d209ebb0ca5eea3"
+    },
+    {
+        "accuracy": 0.9405,
+        "batch": 64,
+        "dropout": 0.25806992009307256,
+        "duration": 2400104431885,
+        "lr": 0.1740645707526599,
+        "momentum": 0.9838624876742519,
+        "transform": "echo_299",
+        "uid": "c33929443587c7b276975b60108edca3"
+    },
+    {
+        "accuracy": 0.9328,
+        "batch": 1024,
+        "dropout": 0.35858257427663826,
+        "duration": 96644089247,
+        "lr": 0.0011266607203307905,
+        "momentum": 0.6271684504914514,
+        "transform": "norm",
+        "uid": "057374d42346218199e3f5f459b2fa89"
+    },
+    {
+        "accuracy": 0.8132,
+        "batch": 128,
+        "dropout": 0.03376422350699165,
+        "duration": 154940723791,
+        "lr": 0.00039104790843027924,
+        "momentum": 0.1656060227045253,
+        "transform": "norm_32_flip",
+        "uid": "10b52a253a041c8d317b7e97fc78d38f"
     },
     {
         "accuracy": 0.8,
