@@ -11,6 +11,17 @@
         "uid": "06fd54d1ae11e860439f2f5dc1eae19c"
     },
     {
+        "accuracy": 0.9947,
+        "batch": 16,
+        "dropout": 0.2259040867991366,
+        "dropout_aux": 0.5019630658947745,
+        "duration": 363546113784,
+        "lr": 0.0007071178438894446,
+        "momentum": 0.7134470001972092,
+        "transform": "norm_299",
+        "uid": "94ae3b62573bc0ad4f2321090a69f5df"
+    },
+    {
         "accuracy": 0.9933,
         "batch": 64,
         "dropout": 0.23101513874324575,
@@ -143,6 +154,17 @@
         "uid": "82670b03fc9f2ab92c9bfa6d64b31398"
     },
     {
+        "accuracy": 0.9819,
+        "batch": 128,
+        "dropout": 0.0072152635140496635,
+        "dropout_aux": 0.5592129005376394,
+        "duration": 73719428032,
+        "lr": 0.011849241100234631,
+        "momentum": 0.07604838473167574,
+        "transform": "norm_64_flip",
+        "uid": "64a188faffd595860480060660c362d6"
+    },
+    {
         "accuracy": 0.9812,
         "batch": 128,
         "dropout": 0.004112019262208999,
@@ -231,6 +253,17 @@
         "uid": "658395172d701cffa9bc91983633e4a4"
     },
     {
+        "accuracy": 0.9661,
+        "batch": 32,
+        "dropout": 0.28800874650617075,
+        "dropout_aux": 0.9639268275381696,
+        "duration": 294337194205,
+        "lr": 0.5453238197237745,
+        "momentum": 0.9069401642816898,
+        "transform": "norm_256_flip",
+        "uid": "bfd8b4fda5d43adb2a9ec3ee5060dc48"
+    },
+    {
         "accuracy": 0.9536,
         "batch": 16,
         "dropout": 0.15018426848492256,
@@ -240,5 +273,16 @@
         "momentum": 0.5555022478368066,
         "transform": "soft_pad",
         "uid": "7f23459b6e9f0af5c0be85244df12211"
+    },
+    {
+        "accuracy": 0.7358,
+        "batch": 16,
+        "dropout": 0.1977104372542225,
+        "dropout_aux": 0.04761111034501231,
+        "duration": 178146562253,
+        "lr": 0.29733977244466175,
+        "momentum": 0.7947976253612293,
+        "transform": "norm_32_flip",
+        "uid": "fda7d0f2b2eccb2fe8eeca42db46594b"
     }
 ]
