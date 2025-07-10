@@ -10,6 +10,16 @@
         "uid": "a780c113443e91af8a48c7bfeca7db43"
     },
     {
+        "accuracy": 0.9564,
+        "batch": 32,
+        "dropout": 0.06200180697153018,
+        "duration": 524129064718,
+        "lr": 0.005649619906543062,
+        "momentum": 0.38795955346313604,
+        "transform": "echo_299_flip",
+        "uid": "f716f02953c4f10131b79c5edf7ce21d"
+    },
+    {
         "accuracy": 0.956,
         "batch": 32,
         "dropout": 0.23741345501775957,
@@ -18,6 +28,16 @@
         "momentum": 0.6574113055285321,
         "transform": "echo_flip",
         "uid": "6a80c70ebbafd4600ff6f1cec067ed6d"
+    },
+    {
+        "accuracy": 0.9542,
+        "batch": 256,
+        "dropout": 0.15516519055065386,
+        "duration": 418204600201,
+        "lr": 0.003909421705127764,
+        "momentum": 0.3321500457556976,
+        "transform": "norm_256_flip",
+        "uid": "ea6810e30ed1c104c9fc32a484054c54"
     },
     {
         "accuracy": 0.9517,
@@ -48,6 +68,36 @@
         "momentum": 0.7096666620694384,
         "transform": "norm_32_flip",
         "uid": "96f00ecfd41f769d7a55cf8e7f70e6f2"
+    },
+    {
+        "accuracy": 0.9292,
+        "batch": 2048,
+        "dropout": 0.0458120929028033,
+        "duration": 420624645006,
+        "lr": 0.32293965259230833,
+        "momentum": 0.367088074285155,
+        "transform": "echo_256",
+        "uid": "387a3306f3a102fbd3e86e2a149dce0c"
+    },
+    {
+        "accuracy": 0.9057,
+        "batch": 16,
+        "dropout": 0.2739285777432563,
+        "duration": 179033902671,
+        "lr": 0.000898928893051064,
+        "momentum": 0.6148014808227212,
+        "transform": "norm_32_flip",
+        "uid": "9d575fa2cf50da261bc01365993ce335"
+    },
+    {
+        "accuracy": 0.8771,
+        "batch": 64,
+        "dropout": 0.0366319001394782,
+        "duration": 1433837619822,
+        "lr": 0.0010102079651835023,
+        "momentum": 0.610978947194972,
+        "transform": "soft_pad",
+        "uid": "40844c3a67baacee066dd8de09812294"
     },
     {
         "accuracy": 0.8219,
