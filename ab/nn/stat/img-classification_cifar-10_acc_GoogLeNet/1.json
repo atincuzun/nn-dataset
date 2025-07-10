@@ -821,6 +821,17 @@
         "uid": "83fc8ef64a3e221632026d93c5b6b074"
     },
     {
+        "accuracy": 0.4335,
+        "batch": 256,
+        "dropout": 0.18619450479208433,
+        "dropout_aux": 0.6587173051480542,
+        "duration": 20375401606,
+        "lr": 0.0022554409823732115,
+        "momentum": 0.17866781182662783,
+        "transform": "norm_32_flip",
+        "uid": "01fa2f889e7d6d683eae2f08d68d08de"
+    },
+    {
         "accuracy": 0.4311,
         "batch": 16,
         "dropout": 0.2,
@@ -1144,6 +1155,17 @@
         "uid": "e1e2c61fc1fb1f2c1407887271735745"
     },
     {
+        "accuracy": 0.3316,
+        "batch": 32,
+        "dropout": 0.1580136540913074,
+        "dropout_aux": 0.6048079342302916,
+        "duration": 46600122336,
+        "lr": 0.8242924254994787,
+        "momentum": 0.3138335435354954,
+        "transform": "echo_128",
+        "uid": "366a5629181d443ede43144277d00f18"
+    },
+    {
         "accuracy": 0.3295,
         "batch": 8,
         "dropout": 0.2,
@@ -1290,6 +1312,17 @@
         "uid": "0b513b3da86c190edc7988beb3657963"
     },
     {
+        "accuracy": 0.2031,
+        "batch": 16,
+        "dropout": 0.17977321078825126,
+        "dropout_aux": 0.4557803082911861,
+        "duration": 69171659195,
+        "lr": 1.0541616231363991e-05,
+        "momentum": 0.0015526947357696885,
+        "transform": "norm_128_flip",
+        "uid": "787916cb67c3a8b9d08249bf5582b876"
+    },
+    {
         "accuracy": 0.2024,
         "batch": 128,
         "dropout": 0.6226677417410674,
@@ -1299,6 +1332,17 @@
         "momentum": 0.3709965637777718,
         "transform": "norm_32",
         "uid": "1338b5b2e83a47900f7352b71847b812"
+    },
+    {
+        "accuracy": 0.1766,
+        "batch": 16,
+        "dropout": 0.14358412094866607,
+        "dropout_aux": 0.12918408513268653,
+        "duration": 53267121063,
+        "lr": 0.5309032748918913,
+        "momentum": 0.22743776980288444,
+        "transform": "norm_32_flip",
+        "uid": "61040555c334b2c4c83f8e88b540d42e"
     },
     {
         "accuracy": 0.1499,
