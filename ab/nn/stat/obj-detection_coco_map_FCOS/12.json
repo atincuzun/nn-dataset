@@ -15,6 +15,21 @@
         "uid": "0576474f3cd1c8a5f74ab8f1cd6f3d1f"
     },
     {
+        "accuracy": 0.6064841151237488,
+        "batch": 16,
+        "center_sampling_radius": 0.5648537790893869,
+        "detections_per_img": 0.23739233140606497,
+        "duration": 33504407749200,
+        "lr": 8.057476182250049e-05,
+        "momentum": 0.02828818533848021,
+        "nms_thresh": 0.7099815862088603,
+        "pretrained": 1.0,
+        "score_thresh": 0.09592720029041257,
+        "topk_candidates": 0.76458970323924,
+        "transform": "soft_pad",
+        "uid": "964c63bfa047948fd325c3aefeff1c83"
+    },
+    {
         "accuracy": 0.5484583377838135,
         "batch": 2,
         "center_sampling_radius": 0.08857500244022731,
@@ -30,6 +45,21 @@
         "uid": "6527c2fc2a714aff580690f97946cd86"
     },
     {
+        "accuracy": 0.5348588824272156,
+        "batch": 4,
+        "center_sampling_radius": 0.9964693853410627,
+        "detections_per_img": 0.3101104234136498,
+        "duration": 36923077663640,
+        "lr": 0.003702787076406182,
+        "momentum": 0.13174945235808222,
+        "nms_thresh": 0.25325233831507077,
+        "pretrained": 1.0,
+        "score_thresh": 0.3059976775758516,
+        "topk_candidates": 0.19735448912300657,
+        "transform": "soft_pad",
+        "uid": "94911697ba50dc51b69b1870e5c4b8ba"
+    },
+    {
         "accuracy": 0.5263682007789612,
         "batch": 4,
         "center_sampling_radius": 0.8766091998434211,
@@ -43,5 +73,20 @@
         "topk_candidates": 0.7143231241822533,
         "transform": "soft_pad",
         "uid": "be4306c8890731c1458bc50f186b1f4e"
+    },
+    {
+        "accuracy": 0.0363636389374733,
+        "batch": 4,
+        "center_sampling_radius": 0.18747795296826142,
+        "detections_per_img": 0.25026224536401875,
+        "duration": 36943501996936,
+        "lr": 2.9409848745214805e-05,
+        "momentum": 0.10970332059948851,
+        "nms_thresh": 0.41287944626566175,
+        "pretrained": 1.0,
+        "score_thresh": 0.6143316486547624,
+        "topk_candidates": 0.5217847577217368,
+        "transform": "soft_pad",
+        "uid": "706486517999f57c13c64a3d4f31f97e"
     }
 ]

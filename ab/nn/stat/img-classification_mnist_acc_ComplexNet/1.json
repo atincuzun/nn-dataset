@@ -1,5 +1,14 @@
 [
     {
+        "accuracy": 0.9822,
+        "batch": 8,
+        "duration": 77157976311,
+        "lr": 0.0027919232523811706,
+        "momentum": 0.4983216406093366,
+        "transform": "complex_64",
+        "uid": "dfa32b4e2237affb66da274b8dfb6734"
+    },
+    {
         "accuracy": 0.9726,
         "batch": 4,
         "duration": 78207827452,
@@ -34,6 +43,15 @@
         "momentum": 0.2705413166410716,
         "transform": "complex_64_flip",
         "uid": "cfc9eb683e9864d23c5ab5194c145b23"
+    },
+    {
+        "accuracy": 0.9561,
+        "batch": 8,
+        "duration": 78858535315,
+        "lr": 0.13260808051858392,
+        "momentum": 0.1586581783921056,
+        "transform": "complex_128_flip",
+        "uid": "d5cd59d7e2f74ab8871900712dea444d"
     },
     {
         "accuracy": 0.9555,
@@ -81,6 +99,15 @@
         "uid": "512dd10f01f7d20798964c49ea178b89"
     },
     {
+        "accuracy": 0.9284,
+        "batch": 128,
+        "duration": 18532930339,
+        "lr": 0.002228955031706296,
+        "momentum": 0.5509036512267412,
+        "transform": "complex_64_flip",
+        "uid": "eb9533a3e63b9eac81cb4f07f98fdb85"
+    },
+    {
         "accuracy": 0.9243,
         "batch": 256,
         "duration": 91647449235,
@@ -97,6 +124,15 @@
         "momentum": 0.15599251430071237,
         "transform": "complex_256",
         "uid": "e0586692d71bd4199ca47333cdfb1aa6"
+    },
+    {
+        "accuracy": 0.9161,
+        "batch": 16,
+        "duration": 219475524125,
+        "lr": 0.0004347056653733992,
+        "momentum": 0.505939672562275,
+        "transform": "complex_299_flip",
+        "uid": "04d71a8bab55f1d2b641befd837bc27e"
     },
     {
         "accuracy": 0.9149,
@@ -151,6 +187,15 @@
         "momentum": 0.559450179047762,
         "transform": "complex_256_flip",
         "uid": "c3412f98f1c323aaf761ff2a5697c940"
+    },
+    {
+        "accuracy": 0.7674,
+        "batch": 32,
+        "duration": 22907072749,
+        "lr": 0.4151219154360988,
+        "momentum": 0.510220836297797,
+        "transform": "complex_64",
+        "uid": "bc92290c06a869bd37f7d776836b722a"
     },
     {
         "accuracy": 0.4988,
