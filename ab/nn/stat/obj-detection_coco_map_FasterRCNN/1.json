@@ -176,6 +176,22 @@
         "uid": "c05cf8b5354c6733955dcb11d2974ba0"
     },
     {
+        "accuracy": 0.40410032868385315,
+        "batch": 4,
+        "batch_size_per_image": 0.21975206772183864,
+        "bg_iou_thresh": 0.3795722745765554,
+        "duration": 3022381954557,
+        "fg_iou_thresh": 0.9330422837896578,
+        "lr": 0.008971970038578492,
+        "momentum": 0.4992017967962107,
+        "nms_thresh": 0.24823185014778304,
+        "positive_fraction": 0.4320296390861037,
+        "pretrained": 1.0,
+        "score_thresh": 0.12069338419075759,
+        "transform": "soft_pad",
+        "uid": "53e89b01a218663ccc88f899070c73ea"
+    },
+    {
         "accuracy": 0.3637639582157135,
         "batch": 16,
         "batch_size_per_image": 0.7834735902622276,
@@ -414,6 +430,38 @@
         "score_thresh": 0.6850274613550162,
         "transform": "soft_pad",
         "uid": "8026bb588ac427a15e82f428aa63bc01"
+    },
+    {
+        "accuracy": 0.14060424268245697,
+        "batch": 4,
+        "batch_size_per_image": 0.8010099858771779,
+        "bg_iou_thresh": 0.7332639745681018,
+        "duration": 2924516273647,
+        "fg_iou_thresh": 0.9686180600376051,
+        "lr": 0.00037302133303022885,
+        "momentum": 0.8152769809841008,
+        "nms_thresh": 0.002710035535792743,
+        "positive_fraction": 0.7214527878646234,
+        "pretrained": 1.0,
+        "score_thresh": 0.523313821990371,
+        "transform": "soft_pad",
+        "uid": "ae845b4cb046511e4c629b7788dfd93c"
+    },
+    {
+        "accuracy": 0.1250738650560379,
+        "batch": 8,
+        "batch_size_per_image": 0.48746214952564204,
+        "bg_iou_thresh": 0.6244766542236582,
+        "duration": 3110655005161,
+        "fg_iou_thresh": 0.883590429762737,
+        "lr": 0.0015000024620217733,
+        "momentum": 0.021947483752164043,
+        "nms_thresh": 0.4939485741987928,
+        "positive_fraction": 0.45177317895712066,
+        "pretrained": 1.0,
+        "score_thresh": 0.22268063046890518,
+        "transform": "soft_pad",
+        "uid": "f7f09657910ec986d9daadeb40cce2e9"
     },
     {
         "accuracy": 0.12164652347564697,
