@@ -6,4 +6,4 @@ if [ -d .venv ]; then
     source .venv/bin/activate
 fi
 
-while true ; do python run.py "$@"; done
+while true ; do python -m ab.nn.train "$@"; done
