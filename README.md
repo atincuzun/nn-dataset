@@ -66,15 +66,17 @@ python -m ab.nn.train -c img-classification_cifar-10_acc_ComplexNet
 ```
 or for all image segmentation models using a fixed range of training parameters and transformer:
 ```bash
-python run.py -c img-segmentation -f echo --min_learning_rate 1e-4 -l 1e-2 --min_momentum 0.8 -m 0.99 --min_batch_binary_power 2 -b 6
+. train.sh -c img-segmentation -f echo --min_learning_rate 1e-4 -l 1e-2 --min_momentum 0.8 -m 0.99 --min_batch_binary_power 2 -b 6
 ```
+`train.sh` internally calls `ab.nn.train`, offering a shorter way to run the program. Both scripts accept the same input flags and can be used interchangeably.
+
 To reproduce the previous result, set the minimum and maximum to the same desired values:
 ```bash
-python run.py -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
+. train.sh -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
 ```
 To view supported flags:
 ```bash
-python run.py -h
+. train.sh -h
 ```
 
 ### Docker
