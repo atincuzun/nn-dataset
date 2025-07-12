@@ -70,7 +70,7 @@ or for all image segmentation models using a fixed range of training parameters 
 ```
 `train.sh` internally calls `ab.nn.train`, offering a shorter way to run the program. Both scripts accept the same input flags and can be used interchangeably.
 
-To reproduce the previous result, set the minimum and maximum to the same desired values:
+To reproduce a previously obtained result, set both the minimum and maximum values of the training parameters to the desired value:
 ```bash
 . train.sh -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
 ```
@@ -91,7 +91,7 @@ docker run --rm -u $(id -u):ab -v $(pwd):/a/mm abrainone/ai-linux bash -c "[ -d 
 
 Running script
 ```bash
-docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". run50.sh"
+docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". train.sh -c img-classification_cifar-10_acc_ComplexNet -f complex -l 0.017 --min_learning_rate 0.013 -m 0.025 --min_momentum 0.022 -b 9 --min_batch_binary_power 9"
 ```
 
 Some recently added dependencies might be missing in the <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a>. In this case, you can create a container from the Docker image ```abrainone/ai-linux```, install the missing packages (preferably using ```pip install <package name>```), and then create a new image from the container using ```docker commit <container name> <new image name>```. You can use this new image locally or push it to the registry for deployment on the computer cluster.
