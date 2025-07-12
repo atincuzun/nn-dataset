@@ -66,21 +66,23 @@ python -m ab.nn.train -c img-classification_cifar-10_acc_ComplexNet
 ```
 or for all image segmentation models using a fixed range of training parameters and transformer:
 ```bash
-python run.py -c img-segmentation -f echo --min_learning_rate 1e-4 -l 1e-2 --min_momentum 0.8 -m 0.99 --min_batch_binary_power 2 -b 6
+. train.sh -c img-segmentation -f echo --min_learning_rate 1e-4 -l 1e-2 --min_momentum 0.8 -m 0.99 --min_batch_binary_power 2 -b 6
 ```
-To reproduce the previous result, set the minimum and maximum to the same desired values:
+`train.sh` internally calls `ab.nn.train`, offering a shorter way to run the program. Both scripts accept the same input flags and can be used interchangeably.
+
+To reproduce a previously obtained result, set both the minimum and maximum values of the training parameters to the desired value:
 ```bash
-python run.py -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
+. train.sh -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
 ```
 To view supported flags:
 ```bash
-python run.py -h
+. train.sh -h
 ```
 
 ### Docker
 All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be seamlessly run within its Docker container.
 
-<h4>Example of training LEMUR neural networks within the AI Linux container (Linux host):</h4>
+<h4>Example of training LEMUR neural network within the AI Linux container (Linux host):</h4>
 
 Installing the latest version of the project from GitHub
 ```bash
@@ -89,7 +91,7 @@ docker run --rm -u $(id -u):ab -v $(pwd):/a/mm abrainone/ai-linux bash -c "[ -d 
 
 Running script
 ```bash
-docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". run50.sh"
+docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". train.sh -c img-classification_cifar-10_acc_ComplexNet -f complex -l 0.017 --min_learning_rate 0.013 -m 0.025 --min_momentum 0.022 -b 9 --min_batch_binary_power 9"
 ```
 
 Some recently added dependencies might be missing in the <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a>. In this case, you can create a container from the Docker image ```abrainone/ai-linux```, install the missing packages (preferably using ```pip install <package name>```), and then create a new image from the container using ```docker commit <container name> <new image name>```. You can use this new image locally or push it to the registry for deployment on the computer cluster.
