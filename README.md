@@ -80,7 +80,7 @@ To view supported flags:
 ```
 
 ### Docker
-All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be seamlessly run within its Docker container.
+All versions of this project are compatible with <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a> and can be seamlessly run within Docker container.
 
 <h4>Example of training LEMUR neural network within the AI Linux container (Linux host):</h4>
 
