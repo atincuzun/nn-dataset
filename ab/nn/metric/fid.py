@@ -1,7 +1,7 @@
-# File: fid.py
+File: fid.py
 # Location: ab/nn/metric/
-# Description: This file defines the FIDMetric class for calculating the
-# Fréchet Inception Distance, conforming to the LEMUR framework's pattern.
+# Description: This file defines the FIDMetric class, with an updated result
+# method to be compatible with the framework's maximization objective.
 
 import torch
 import torch.nn as nn
@@ -47,21 +47,15 @@ def _get_inception_model(device):
 class FIDMetric:
     """
     A stateful metric class for calculating the Fréchet Inception Distance (FID).
-    It accumulates features from real and generated images and computes the
-    final score based on their distributions.
     """
 
     def __init__(self, out_shape=None, device=None):
         self.device = device if device is not None else torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        # InceptionV3 expects 299x299 images normalized with ImageNet stats.
-        # This transform will be applied to all images before feature extraction.
         self.transform = transforms.Compose([
             transforms.Resize((299, 299)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
-
         self.inception_model = _get_inception_model(self.device)
         self.reset()
 
@@ -73,32 +67,19 @@ class FIDMetric:
     def __call__(self, preds, labels):
         """
         Processes a batch of predictions (fake images) and labels (real images).
-
-        Args:
-            preds (list[PIL.Image.Image]): A batch of generated images.
-            labels (torch.Tensor): A batch of real image tensors from the dataloader.
         """
         if not preds or labels is None:
             return
 
         self.inception_model.eval()
-
-        # --- Process Real Images (Labels) ---
-        # The dataloader provides tensors normalized to [-1, 1]. We need to
-        # de-normalize them back to [0, 1] before applying the Inception transform.
         real_images_unnorm = (labels.to(self.device) + 1) / 2
         real_images_transformed = torch.stack(
             [self.transform(transforms.ToPILImage()(img)) for img in real_images_unnorm])
-
-        # --- Process Fake Images (Predictions) ---
         fake_images_transformed = torch.stack([self.transform(img) for img in preds])
 
         with torch.no_grad():
-            # Extract features
             real_feats = self.inception_model(real_images_transformed.to(self.device))
             fake_feats = self.inception_model(fake_images_transformed.to(self.device))
-
-            # Store features as CPU numpy arrays to save GPU memory
             self.real_features.append(real_feats.cpu().numpy())
             self.fake_features.append(fake_feats.cpu().numpy())
 
@@ -116,31 +97,31 @@ class FIDMetric:
 
     def result(self):
         """
-        Calculates and returns the final FID score from all accumulated features.
+        Calculates the final score. Lower FID is better, so we return the
+        negative value for the framework to maximize.
         """
         if not self.real_features or not self.fake_features:
-            return float('inf')  # Return a high value if no data was processed
+            return -float('inf')  # Return a very bad score if no data
 
-        # Concatenate all batch features into single numpy arrays
         real_features_all = np.concatenate(self.real_features, axis=0)
         fake_features_all = np.concatenate(self.fake_features, axis=0)
-
-        # Calculate mean and covariance
         mu_real, sigma_real = np.mean(real_features_all, axis=0), np.cov(real_features_all, rowvar=False)
         mu_fake, sigma_fake = np.mean(fake_features_all, axis=0), np.cov(fake_features_all, rowvar=False)
 
-        # Calculate FID
         fid_score = self._calculate_fid(mu_real, sigma_real, mu_fake, sigma_fake)
-        return float(fid_score)
+
+        # --- FIX as per supervisor's notes ---
+        # The framework maximizes the result, so we return the negative FID score.
+        return -float(fid_score)
 
     def get_all(self):
         """ Returns a dictionary of all computed metrics. """
-        final_score = self.result()
-        return {'FID_Score': final_score}
+        # We calculate the real FID score here for logging purposes.
+        fid_score = -self.result() if (self.real_features and self.fake_features) else float('inf')
+        return {'FID_Score': fid_score}
 
 
 def create_metric(out_shape=None, device=None):
-    """
-    Factory function used by the LEMUR framework to instantiate the metric class.
-    """
+    """ Factory function used by the LEMUR framework. """
     return FIDMetric(out_shape=out_shape, device=device)
+
