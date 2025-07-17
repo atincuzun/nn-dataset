@@ -223,4 +223,6 @@ def args():
                         help='Control pretrained weights usage: 1 (always use), 0 (never use), or default (let Optuna decide)')
     parser.add_argument('--epoch_limit_minutes', type=int, default=default_epoch_limit_minutes,
                         help=f'Maximum duration per training epoch, minutes; default {default_epoch_limit_minutes} minutes')
+    parser.add_argument('--train_missing_pipelines', type=bool, default=default_train_missing_pipelines,
+                        help=f'Find and train all missing training pipelines for the provided configuration; default {default_train_missing_pipelines}')
     return parser.parse_args()
