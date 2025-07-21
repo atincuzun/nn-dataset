@@ -13,12 +13,13 @@ default_min_dropout = 0.0
 default_max_dropout = 0.5
 default_pretrained = None
 default_transform = None
+default_train_missing_pipelines = None
 
 default_nn_fail_attempts = 30
 default_num_workers = 2
 default_random_config_order = False
 
-max_epoch_seconds = 30 * 60
+default_epoch_limit_minutes = 30 # minutes
 
 base_module = 'ab'
 to_nn = (base_module, 'nn')
@@ -50,7 +51,7 @@ stat_dir = nn_path('stat')
 
 def __project_root_path():
     """
-    Defines path to the project root directory.
+    Defines a path to the project root directory.
     """
     project_root = Path().absolute()
     current_dir = project_root

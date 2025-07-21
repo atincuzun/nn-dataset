@@ -24,6 +24,18 @@
         "uid": "8a11a5a977225fb348dd616c52cf0c4a"
     },
     {
+        "accuracy": 0.0408,
+        "batch": 16,
+        "duration": 160545410245,
+        "lr": 1.8275001743899506e-05,
+        "momentum": 0.9265917650023402,
+        "norm_eps": 0.5847388128530813,
+        "norm_std": 0.6226293226282771,
+        "stochastic_depth_prob": 0.48464220213693,
+        "transform": "norm_64_flip",
+        "uid": "d73afd521ea119602a3538c7884fca6b"
+    },
+    {
         "accuracy": 0.0378,
         "batch": 32,
         "duration": 154733367176,
@@ -34,6 +46,18 @@
         "stochastic_depth_prob": 0.722613562728842,
         "transform": "norm_128_flip",
         "uid": "bca4cfb5b5655b0316bc5f008abc217b"
+    },
+    {
+        "accuracy": 0.0305,
+        "batch": 32,
+        "duration": 299942764322,
+        "lr": 0.0001582732521298923,
+        "momentum": 0.5843386271112851,
+        "norm_eps": 0.8488169761108518,
+        "norm_std": 0.9763835757484667,
+        "stochastic_depth_prob": 0.24060666503306072,
+        "transform": "norm_128",
+        "uid": "ae62960175970f698c4090dab5e04024"
     },
     {
         "accuracy": 0.0285,
@@ -96,6 +120,18 @@
         "uid": "508757884ac3a9586912c3f353b90df9"
     },
     {
+        "accuracy": 0.0241,
+        "batch": 128,
+        "duration": 72968793741,
+        "lr": 6.589956835504596e-05,
+        "momentum": 0.32505536228909393,
+        "norm_eps": 0.9560512097951152,
+        "norm_std": 0.4759670481640773,
+        "stochastic_depth_prob": 0.7698158530641704,
+        "transform": "norm_64",
+        "uid": "04fd10012f8533718da2e9f73666e64d"
+    },
+    {
         "accuracy": 0.0233,
         "batch": 256,
         "duration": 36767189196,
@@ -130,6 +166,18 @@
         "stochastic_depth_prob": 0.07110102499391002,
         "transform": "norm_flip",
         "uid": "86bc72fd3e98d0530bd64018f283258f"
+    },
+    {
+        "accuracy": 0.0216,
+        "batch": 16,
+        "duration": 162502583106,
+        "lr": 2.9992305592195975e-05,
+        "momentum": 0.1639682499795141,
+        "norm_eps": 0.15048584814098231,
+        "norm_std": 0.12870252491697254,
+        "stochastic_depth_prob": 0.011119083203737778,
+        "transform": "norm_flip",
+        "uid": "38cb61bb71c010d55808cb912b3c7ecc"
     },
     {
         "accuracy": 0.0206,

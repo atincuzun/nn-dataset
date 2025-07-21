@@ -84,6 +84,42 @@
         "uid": "33a194ebb4349673c6eb4929d7a5e227"
     },
     {
+        "accuracy": 0.0268,
+        "batch": 16,
+        "duration": 80078778876,
+        "lr": 1.8275001743899506e-05,
+        "momentum": 0.9265917650023402,
+        "norm_eps": 0.5847388128530813,
+        "norm_std": 0.6226293226282771,
+        "stochastic_depth_prob": 0.48464220213693,
+        "transform": "norm_64_flip",
+        "uid": "d73afd521ea119602a3538c7884fca6b"
+    },
+    {
+        "accuracy": 0.024,
+        "batch": 32,
+        "duration": 148128153388,
+        "lr": 0.0001582732521298923,
+        "momentum": 0.5843386271112851,
+        "norm_eps": 0.8488169761108518,
+        "norm_std": 0.9763835757484667,
+        "stochastic_depth_prob": 0.24060666503306072,
+        "transform": "norm_128",
+        "uid": "ae62960175970f698c4090dab5e04024"
+    },
+    {
+        "accuracy": 0.0235,
+        "batch": 128,
+        "duration": 36365659552,
+        "lr": 6.589956835504596e-05,
+        "momentum": 0.32505536228909393,
+        "norm_eps": 0.9560512097951152,
+        "norm_std": 0.4759670481640773,
+        "stochastic_depth_prob": 0.7698158530641704,
+        "transform": "norm_64",
+        "uid": "04fd10012f8533718da2e9f73666e64d"
+    },
+    {
         "accuracy": 0.0228,
         "batch": 2,
         "duration": 304353979094,
@@ -202,5 +238,29 @@
         "stochastic_depth_prob": 0.25707321363986635,
         "transform": "echo_128_flip",
         "uid": "a5d4fcd9b68162deeacb91978d577790"
+    },
+    {
+        "accuracy": 0.0124,
+        "batch": 16,
+        "duration": 81171427253,
+        "lr": 2.9992305592195975e-05,
+        "momentum": 0.1639682499795141,
+        "norm_eps": 0.15048584814098231,
+        "norm_std": 0.12870252491697254,
+        "stochastic_depth_prob": 0.011119083203737778,
+        "transform": "norm_flip",
+        "uid": "38cb61bb71c010d55808cb912b3c7ecc"
+    },
+    {
+        "accuracy": 0.0123,
+        "batch": 1024,
+        "duration": 10288486637,
+        "lr": 0.0009312024983401981,
+        "momentum": 0.5663964218525122,
+        "norm_eps": 0.6828511521326669,
+        "norm_std": 0.5450396528932651,
+        "stochastic_depth_prob": 0.10043859079523076,
+        "transform": "echo_flip",
+        "uid": "9d0ae236bca4a06d0d7b7ebe4f2d7dd0"
     }
 ]

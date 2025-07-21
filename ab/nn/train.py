@@ -14,9 +14,20 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
          min_momentum: float = default_min_momentum, max_momentum: float = default_max_momentum,
          min_dropout: float = default_min_dropout, max_dropout: float = default_max_dropout,
          transform: str | tuple = None, nn_fail_attempts: int = default_nn_fail_attempts, random_config_order: bool = default_random_config_order,
-         num_workers: int = default_num_workers, pretrained: int = default_pretrained):
+         num_workers: int = default_num_workers, pretrained: int = default_pretrained, epoch_limit_minutes: int = default_epoch_limit_minutes,
+         train_missing_pipelines: bool = default_train_missing_pipelines):
     """
     Main function for training models using Optuna optimization.
+
+    NN pipeline configuration examples
+    conf = ''  # For all configurations
+    conf = 'img-classification' # For all image classification configurations
+    conf = 'img-classification_cifar-10_acc' # For a particular configuration for all models for CIFAR-10
+    conf = 'img-classification_cifar-10_acc_GoogLeNet'  # For a particular configuration and model for CIFAR-10
+    conf = 'img-classification_mnist_acc' # For a particular configuration for all models for MNIST
+    conf = 'img-classification_mnist_acc_GoogLeNet'  # For a particular configuration and model for MNIST
+    conf = ('img-classification', 'img-segmentation')  # For all image classification and segmentation configurations
+
     :param config: Configuration specifying the model training pipelines. The default value for all configurations.
     :param n_epochs: Number of training epochs.
     :param n_optuna_trials: The total number of Optuna trials the model should have. If negative, its absolute value represents the number of additional trials.
@@ -33,12 +44,14 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
     :param random_config_order: If random shuffling of the config list is required.
     :param num_workers: Number of data loader workers.
     :param pretrained: Control use of NN pretrained weights: 1 (always use), 0 (never use), or default (let Optuna decide).
+    :param epoch_limit_minutes: Maximum duration per training epoch, minutes.
+    :param train_missing_pipelines: Find and train all missing training pipelines for provided configuration.
     """
 
     validate_prm(min_batch_binary_power, max_batch_binary_power, min_learning_rate, max_learning_rate, min_momentum, max_momentum, min_dropout, max_dropout)
 
     # Determine configurations based on the provided config
-    sub_configs = patterns_to_configs(config, random_config_order)
+    sub_configs = patterns_to_configs(config, random_config_order, train_missing_pipelines)
     if transform:
         transform = transform if isinstance(transform, (tuple, list)) else (transform,)
     print(f"Training configurations ({n_epochs} epochs):")
@@ -72,7 +85,7 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
                             accuracy, accuracy_to_time, duration = optuna_objective(trial, sub_config, num_workers, min_learning_rate, max_learning_rate,
                                                                                     min_momentum, max_momentum, min_dropout, max_dropout,
                                                                                     min_batch_binary_power, max_batch_binary_power_local, transform, fail_iterations, n_epochs,
-                                                                                    pretrained)
+                                                                                    pretrained, epoch_limit_minutes)
                             if good(accuracy, min_accuracy(dataset), duration):
                                 fail_iterations = nn_fail_attempts
                             return accuracy
@@ -99,7 +112,6 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
 
 if __name__ == "__main__":
     a = args()
-    main(
-        a.config, a.epochs, a.trials, a.min_batch_binary_power, a.max_batch_binary_power,
-        a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.transform,
-        a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained)
+    main(a.config, a.epochs, a.trials, a.min_batch_binary_power, a.max_batch_binary_power,
+         a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.min_dropout, a.max_dropout, a.transform,
+         a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained, a.epoch_limit_minutes, a.train_missing_pipelines)

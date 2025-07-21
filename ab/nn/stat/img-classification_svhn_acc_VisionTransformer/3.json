@@ -12,6 +12,18 @@
         "uid": "759a0064f0f739447b8412c16239c2bf"
     },
     {
+        "accuracy": 0.5893899815611555,
+        "attention_dropout": 0.6080404525082133,
+        "batch": 16,
+        "dropout": 0.09369326292901481,
+        "duration": 1985591861166,
+        "lr": 0.00817133318092565,
+        "momentum": 0.32137659514437233,
+        "patch_size": 0.9151097579998569,
+        "transform": "norm_256_flip",
+        "uid": "6f6417e5c9cde958390c5e942dda8d74"
+    },
+    {
         "accuracy": 0.5613859864781807,
         "attention_dropout": 0.46742180002776046,
         "batch": 8,
@@ -60,6 +72,18 @@
         "uid": "4dd047b408a0d600196f9e80ccc089e7"
     },
     {
+        "accuracy": 0.21934542102028273,
+        "attention_dropout": 0.17929564560118105,
+        "batch": 64,
+        "dropout": 0.101421760056155,
+        "duration": 826845536454,
+        "lr": 6.898023219246496e-05,
+        "momentum": 0.34758704924697714,
+        "patch_size": 0.6165103556464746,
+        "transform": "norm_299",
+        "uid": "95b29c3f6c7c8d3ac2f34f3525530a6b"
+    },
+    {
         "accuracy": 0.19668100799016594,
         "attention_dropout": 0.5818140120528902,
         "batch": 64,
@@ -70,6 +94,18 @@
         "patch_size": 0.4473523067403897,
         "transform": "norm",
         "uid": "584e1dbfd9d43ba3aeeca6f2ca0af324"
+    },
+    {
+        "accuracy": 0.19598955132145052,
+        "attention_dropout": 0.3299034494414267,
+        "batch": 1024,
+        "dropout": 0.4921245308941799,
+        "duration": 1514634193075,
+        "lr": 0.01859847509841595,
+        "momentum": 0.17013043070678346,
+        "patch_size": 0.6036003668523591,
+        "transform": "norm_256_flip",
+        "uid": "7e7bdec21a63db0ba483bd9da9df77a1"
     },
     {
         "accuracy": 0.1958743085433313,
@@ -142,5 +178,17 @@
         "patch_size": 0.12135143022427253,
         "transform": "norm_128",
         "uid": "555c4a11ea68e4ee4a1fa01e567c53ea"
+    },
+    {
+        "accuracy": 0.1958743085433313,
+        "attention_dropout": 0.2668943413962873,
+        "batch": 2048,
+        "dropout": 0.13465342862095048,
+        "duration": 81136970199,
+        "lr": 2.9588814642725773e-05,
+        "momentum": 0.34339669841565956,
+        "patch_size": 0.7040238502383989,
+        "transform": "echo_128",
+        "uid": "90204d5ddea8879e6cbf0ff91a71aefb"
     }
 ]

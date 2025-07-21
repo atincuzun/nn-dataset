@@ -1,5 +1,32 @@
 [
     {
+        "accuracy": 0.5681528662420382,
+        "batch": 4,
+        "duration": 75786426966,
+        "lr": 0.003065043989584057,
+        "momentum": 0.8350400533511806,
+        "transform": "norm_256_flip",
+        "uid": "21b1a8bc12521322f1a14860448cbb6a"
+    },
+    {
+        "accuracy": 0.5401273885350318,
+        "batch": 64,
+        "duration": 193708915655,
+        "lr": 0.2687507276376591,
+        "momentum": 0.6745601640620495,
+        "transform": "norm_128",
+        "uid": "471e47620ed235d4c4595dcbe30ed43a"
+    },
+    {
+        "accuracy": 0.4894267515923567,
+        "batch": 16,
+        "duration": 300092942257,
+        "lr": 0.006175394588092557,
+        "momentum": 0.04552949707090426,
+        "transform": "norm_256_flip",
+        "uid": "7bc4cb91e79eb79e8dc83693141686af"
+    },
+    {
         "accuracy": 0.4751592356687898,
         "batch": 64,
         "duration": 26204191848,
@@ -27,6 +54,15 @@
         "uid": "8d2c192d5658bf687856ff4094cb0929"
     },
     {
+        "accuracy": 0.4117197452229299,
+        "batch": 4,
+        "duration": 557299391151,
+        "lr": 0.061261031829715505,
+        "momentum": 0.5084557737745989,
+        "transform": "echo_512_flip",
+        "uid": "7f553be4486e4a11d89722cc2165eae9"
+    },
+    {
         "accuracy": 0.41044585987261145,
         "batch": 4,
         "duration": 42513170468,
@@ -34,6 +70,24 @@
         "momentum": 0.722809363511053,
         "transform": "norm_256",
         "uid": "c166baad2ce84434c240075de0a45c69"
+    },
+    {
+        "accuracy": 0.3857324840764331,
+        "batch": 4,
+        "duration": 882322028578,
+        "lr": 0.043120678738383295,
+        "momentum": 0.8990880263403532,
+        "transform": "echo_512",
+        "uid": "646a269e0509edc4c327faa17077e612"
+    },
+    {
+        "accuracy": 0.3615286624203822,
+        "batch": 128,
+        "duration": 460061305901,
+        "lr": 0.002488252349325507,
+        "momentum": 0.5154080295958108,
+        "transform": "norm_512_flip",
+        "uid": "4af2e4e870912f498afed3ca64d376f7"
     },
     {
         "accuracy": 0.3462420382165605,

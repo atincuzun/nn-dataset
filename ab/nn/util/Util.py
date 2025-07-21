@@ -90,14 +90,19 @@ def accuracy_to_time_metric(accuracy, min_accuracy, training_duration) -> float:
     """
     Naive 'accuracy to time' metric for fixed number of training epochs.
     This metric is essential for detecting the fastest accuracy improvements during neural network training.
-
     """
+    if accuracy is None:
+        accuracy = 0.0
+    if min_accuracy is None:
+        min_accuracy = 0.0
     d = max(0.0, (accuracy - min_accuracy)) / (training_duration / 1e11)
     print(f"accuracy_to_time_metric {d}")
     return d
 
 
 def good(result, minimum_accuracy, duration):
+    if minimum_accuracy is None:
+        minimum_accuracy = 0.0
     return result > minimum_accuracy * 1.2
 
 
@@ -221,5 +226,8 @@ def args():
                         help="Number of data loader workers.")
     parser.add_argument('--pretrained', type=int, choices=[1, 0], default=default_pretrained,
                         help='Control pretrained weights usage: 1 (always use), 0 (never use), or default (let Optuna decide)')
-
+    parser.add_argument('--epoch_limit_minutes', type=int, default=default_epoch_limit_minutes,
+                        help=f'Maximum duration per training epoch, minutes; default {default_epoch_limit_minutes} minutes')
+    parser.add_argument('--train_missing_pipelines', type=bool, default=default_train_missing_pipelines,
+                        help=f'Find and train all missing training pipelines for the provided configuration; default {default_train_missing_pipelines}')
     return parser.parse_args()
