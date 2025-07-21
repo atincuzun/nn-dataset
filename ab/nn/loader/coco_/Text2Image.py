@@ -1,4 +1,4 @@
-# File: textimage.py
+# File: Text2Image.py
 # Description: Dataloader that provides dummy labels for the validation set
 # to prevent framework crashes during evaluation.
 
@@ -79,7 +79,7 @@ class TextToImageDataset(Dataset):
 
 
 def loader(transform_fn, task, **kwargs):
-    if 'text2image' not in task:
+    if 'txt-image' not in task:
         raise ValueError(f"The task '{task}' is not a text-to-image task for this dataloader.")
 
     correct_transform = T.Compose([
