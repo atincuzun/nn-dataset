@@ -1,5 +1,7 @@
 import torch
 from ab.nn.metric.base.base import BaseMetric
+from .utils.utils import flatten_logits_and_labels
+
 
 class Accuracy(BaseMetric):
     def reset(self):
@@ -7,12 +9,13 @@ class Accuracy(BaseMetric):
         self.total = 0
     
     def update(self, outputs, targets):
+        outputs, targets = flatten_logits_and_labels(outputs, targets)
         _, predicted = torch.max(outputs.data, 1)
         correct = (predicted == targets).sum().item()
         total = targets.size(0)
         self.correct += correct
         self.total += total
-    
+
     def __call__(self, outputs, targets):
         _, predicted = torch.max(outputs.data, 1)
         correct = (predicted == targets).sum().item()
