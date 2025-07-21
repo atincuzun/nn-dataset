@@ -1,4 +1,4 @@
-File: fid.py
+# File: fid.py
 # Location: ab/nn/metric/
 # Description: This file defines the FIDMetric class, with an updated result
 # method to be compatible with the framework's maximization objective.
