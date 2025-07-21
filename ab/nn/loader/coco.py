@@ -1,4 +1,4 @@
-from ab.nn.loader.coco_ import Detection, Segmentation, Caption
+from ab.nn.loader.coco_ import Detection, Segmentation, Caption,textimage
 
 def loader(transform_fn, task):
     if task == 'obj-detection':
@@ -7,6 +7,8 @@ def loader(transform_fn, task):
         f = Segmentation
     elif task == 'img-captioning':
         f = Caption
+    elif task == 'text2image':
+        f = textimage
     else:
         raise Exception(f"The task '{task}' is not implemented for COCO dataset.")
 
