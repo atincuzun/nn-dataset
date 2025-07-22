@@ -1,6 +1,3 @@
-# File: Text2Image.py
-# Description: Dataloader that provides dummy labels for the validation set
-# to prevent framework crashes during evaluation.
 
 import os
 import random
@@ -20,17 +17,15 @@ COCO_ANN_URL = 'http://images.cocodataset.org/annotations/annotations_trainval20
 COCO_IMG_URL_TEMPLATE = 'http://images.cocodataset.org/zips/{}2017.zip'
 NORM_MEAN = (0.5, 0.5, 0.5)
 NORM_DEV = (0.5, 0.5, 0.5)
-IMAGE_SIZE = 64
-MINIMUM_ACCURACY = 0.001
+IMAGE_SIZE = 256
 
 
-class TextToImageDataset(Dataset):
-    def __init__(self, root, split='train', transform=None, is_eval=False):
+class Text2Image(Dataset):
+    def __init__(self, root, split='train', transform=None):
         super().__init__()
         self.root = root
         self.transform = transform
         self.split = split
-        self.is_eval = is_eval  # Flag to control the output format
 
         ann_dir = join(root, 'annotations')
         if not os.path.exists(ann_dir):
@@ -40,9 +35,6 @@ class TextToImageDataset(Dataset):
         ann_file = join(ann_dir, f'captions_{split}2017.json')
         self.coco = COCO(ann_file)
         self.ids = list(sorted(self.coco.imgs.keys()))
-
-        if split == 'train':
-            self.ids = self.ids[:1000]
 
         self.img_dir = join(root, f'{split}2017')
         if self.ids and not os.path.exists(join(self.img_dir, self.coco.loadImgs(self.ids[0])[0]['file_name'])):
@@ -64,35 +56,25 @@ class TextToImageDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        # --- CHANGE: Return different labels based on the set ---
-        if self.is_eval:
-            # For the evaluation set, return a dummy tensor '0'.
-            # This satisfies the framework's eval loop and prevents the crash.
-            return image, torch.tensor(0)
-        else:
-            # For the training set, return the real text prompt.
-            ann_ids = self.coco.getAnnIds(imgIds=img_id)
-            anns = self.coco.loadAnns(ann_ids)
-            captions = [ann['caption'] for ann in anns if 'caption' in ann]
-            text_prompt = random.choice(captions) if captions else "an image"
-            return image, text_prompt
+        # Always return the real text prompt.
+        ann_ids = self.coco.getAnnIds(imgIds=img_id)
+        anns = self.coco.loadAnns(ann_ids)
+        captions = [ann['caption'] for ann in anns if 'caption' in ann]
+        text_prompt = random.choice(captions) if captions else "an image"
+        return image, text_prompt
 
 
 def loader(transform_fn, task, **kwargs):
-    if 'txt-image' not in task:
+    if 'txt-image' not in task.strip().lower():
         raise ValueError(f"The task '{task}' is not a text-to-image task for this dataloader.")
 
-    correct_transform = T.Compose([
-        T.Resize((IMAGE_SIZE, IMAGE_SIZE)),
-        T.ToTensor(),
-        T.Normalize(NORM_MEAN, NORM_DEV)
-    ])
+    # We now trust the framework's transform_fn, as it seems to be the intended way.
+    transform = transform_fn((NORM_MEAN, NORM_DEV))
 
     path = join(data_dir, 'coco')
 
-    # Create datasets, passing the `is_eval` flag to differentiate them
-    train_dataset = TextToImageDataset(root=path, split='train', transform=correct_transform, is_eval=False)
-    val_dataset = TextToImageDataset(root=path, split='val', transform=correct_transform, is_eval=True)
+    train_dataset = Text2Image(root=path, split='train', transform=transform)
+    val_dataset = Text2Image(root=path, split='val', transform=transform)
 
     metadata = (None,)
     performance_goal = 0.0
