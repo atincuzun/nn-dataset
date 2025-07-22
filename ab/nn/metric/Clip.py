@@ -1,4 +1,4 @@
-# File: clip.py
+# File: Clip.py
 # Location: ab/nn/metric/
 # Description: This file defines the CLIPMetric class, with a safeguard
 #              to prevent crashes from the framework's generic eval loop.
