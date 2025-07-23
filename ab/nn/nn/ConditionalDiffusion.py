@@ -1,5 +1,3 @@
-# File: CLDiffusion.py
-# Description: Dual-purpose script with corrected 'evaluate' function name.
 
 import itertools
 import torch
@@ -11,6 +9,7 @@ import sys
 
 from diffusers import AutoencoderKL, UNet2DConditionModel, DDPMScheduler
 from transformers import AutoTokenizer, AutoModel
+from ab.nn.metric.Clip import create_metric
 
 
 class Net(nn.Module):
@@ -45,36 +44,33 @@ class Net(nn.Module):
             sample_size=32,
             in_channels=4,
             out_channels=4,
-            down_block_types=("DownBlock2D", "CrossAttnDownBlock2D"),
-            up_block_types=("CrossAttnUpBlock2D", "UpBlock2D"),
-            block_out_channels=(128, 256),
+            down_block_types=("DownBlock2D", "CrossAttnDownBlock2D", "DownBlock2D"),
+            up_block_types=("UpBlock2D", "CrossAttnUpBlock2D", "UpBlock2D"),
+            block_out_channels=(256, 512, 512),
             cross_attention_dim=prm.get('cross_attention_dim', 768)
         ).to(device)
 
         self.unet.enable_gradient_checkpointing()
-
-        self.noise_scheduler = DDPMScheduler(
-            num_train_timesteps=1000,
-            beta_schedule="squaredcos_cap_v2"
-        )
-
+        self.noise_scheduler = DDPMScheduler(num_train_timesteps=1000, beta_schedule="squaredcos_cap_v2")
         self.vae.requires_grad_(False)
 
-    def forward(self, inputs):
-        # Dummy forward to satisfy the framework's generic eval loop.
-        return inputs
+
+    @torch.no_grad()
+    def forward(self, images, prompts):
+        # We don't use the input images for generation, only the prompts.
+        # This returns a list of generated PIL images.
+        return self.generate(list(prompts))
 
     def train_setup(self, prm):
         trainable_params = itertools.chain(self.unet.parameters(), self.text_encoder.text_linear.parameters())
-        self.optimizer = torch.optim.AdamW(
-            trainable_params,
-            lr=self.prm.get('lr', 1e-4)
-        )
+        self.optimizer = torch.optim.AdamW(trainable_params, lr=self.prm.get('lr', 1e-5))
         self.criterion = nn.MSELoss()
+
 
     def learn(self, train_data):
         self.train()
         total_loss = 0.0
+
         for batch in train_data:
             images, text_prompts = batch
             self.optimizer.zero_grad()
@@ -89,35 +85,25 @@ class Net(nn.Module):
 
             text_embeddings = self.text_encoder(text_prompts)
 
-            noise_pred = self.unet(
-                sample=noisy_latents,
-                timestep=timesteps,
-                encoder_hidden_states=text_embeddings
-            ).sample
-
+            noise_pred = self.unet(sample=noisy_latents, timestep=timesteps,
+                                   encoder_hidden_states=text_embeddings).sample
             loss = self.criterion(noise_pred, noise)
             loss.backward()
             self.optimizer.step()
 
             total_loss += loss.item()
+
+
         return total_loss / len(train_data) if train_data else 0.0
 
     @torch.no_grad()
     def generate(self, text_prompts, num_inference_steps=50):
-        self.eval()  # This calls the built-in PyTorch eval(), which is now correct.
+        self.eval()
         text_embeddings = self.text_encoder(text_prompts)
-        latents = torch.randn(
-            (len(text_prompts), self.unet.config.in_channels, self.unet.config.sample_size,
-             self.unet.config.sample_size),
-            device=self.device
-        )
+        latents = torch.randn((len(text_prompts), self.unet.config.in_channels, 32, 32), device=self.device)
         self.noise_scheduler.set_timesteps(num_inference_steps)
         for t in self.noise_scheduler.timesteps:
-            noise_pred = self.unet(
-                sample=latents,
-                timestep=t,
-                encoder_hidden_states=text_embeddings
-            ).sample
+            noise_pred = self.unet(sample=latents, timestep=t, encoder_hidden_states=text_embeddings).sample
             latents = self.noise_scheduler.step(noise_pred, t, latents).prev_sample
 
         latents = 1 / 0.18215 * latents
@@ -126,57 +112,32 @@ class Net(nn.Module):
         images = images.cpu().permute(0, 2, 3, 1).numpy()
         return [Image.fromarray((img * 255).astype(np.uint8)) for img in images]
 
-    # --- CHANGE: Renamed function back to evaluate() ---
-    def evaluate(self, test_data, metric):
-        """
-        Custom evaluation logic. The framework will ignore this, but it's here
-        for completeness and potential future use.
-        """
-        # This function will not be called by the current framework version,
-        # but we keep it correctly named. The dummy forward() method will
-        # handle the framework's generic evaluation call.
-        return 0.0  # Return a dummy score.
-    # --- END CHANGE ---
-
 
 def supported_hyperparameters():
     return {'lr', 'momentum'}
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate images from a text prompt using a trained CLDiffusion model.")
+    # The standalone inference script remains the same and still works.
+    parser = argparse.ArgumentParser(description="Generate images from a text prompt.")
     parser.add_argument("--model_path", type=str, required=True,
                         help="Path to the trained model checkpoint (.pth file).")
     parser.add_argument("--prompt", type=str, required=True, help="The text prompt to generate an image for.")
     parser.add_argument("--output_path", type=str, default="generated_image.png",
                         help="Path to save the generated image.")
-    parser.add_argument("--steps", type=int, default=50, help="Number of inference steps.")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
-
     model = Net(in_shape=None, out_shape=None, prm={}, device=device)
-
-    print(f"Loading trained weights from {args.model_path}...")
-    try:
-        model.load_state_dict(torch.load(args.model_path, map_location=device))
-    except FileNotFoundError:
-        print(f"[ERROR] Model file not found at '{args.model_path}'. Please check the path.")
-        sys.exit(1)
-
+    model.load_state_dict(torch.load(args.model_path, map_location=device))
     model.to(device)
     model.eval()
-    print("Model loaded successfully.")
 
-    print(f"\nGenerating image for prompt: '{args.prompt}'...")
-    with torch.no_grad():
-        generated_images = model.generate([args.prompt], num_inference_steps=args.steps)
-
+    generated_images = model.generate([args.prompt])
     if generated_images:
         output_image = generated_images[0]
         output_image.save(args.output_path)
-        print(f"\nImage saved successfully to {args.output_path}")
-    else:
-        print("Image generation failed.")
+        clip_metric = create_metric(device=device)
+        clip_metric([output_image], [args.prompt])
+        score = clip_metric.result()
+        print(f"Image saved to {args.output_path} with a CLIP Score of: {score:.2f}")
