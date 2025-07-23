@@ -56,7 +56,7 @@ class Text2Image(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        # Always return the real text prompt.
+
         ann_ids = self.coco.getAnnIds(imgIds=img_id)
         anns = self.coco.loadAnns(ann_ids)
         captions = [ann['caption'] for ann in anns if 'caption' in ann]
@@ -68,7 +68,7 @@ def loader(transform_fn, task, **kwargs):
     if 'txt-image' not in task.strip().lower():
         raise ValueError(f"The task '{task}' is not a text-to-image task for this dataloader.")
 
-    # We now trust the framework's transform_fn, as it seems to be the intended way.
+
     transform = transform_fn((NORM_MEAN, NORM_DEV))
 
     path = join(data_dir, 'coco')

@@ -66,11 +66,11 @@ class Net(nn.Module):
         self.optimizer = torch.optim.AdamW(trainable_params, lr=self.prm.get('lr', 1e-5))
         self.criterion = nn.MSELoss()
 
-    # --- NEW: The learn() method now contains the full epoch training loop ---
+
     def learn(self, train_data):
         self.train()
         total_loss = 0.0
-        # The framework passes the entire dataloader here. We loop over it.
+
         for batch in train_data:
             images, text_prompts = batch
             self.optimizer.zero_grad()
@@ -93,8 +93,7 @@ class Net(nn.Module):
 
             total_loss += loss.item()
 
-        # The return value is no longer used by the framework to judge performance,
-        # but returning the average loss is good practice.
+
         return total_loss / len(train_data) if train_data else 0.0
 
     @torch.no_grad()
