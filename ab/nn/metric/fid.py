@@ -14,7 +14,6 @@ import torchvision.transforms as transforms
 # A global cache for the InceptionV3 model to avoid reloading it on every call.
 _inception_model_cache = {}
 
-
 class InceptionV3FeatureExtractor(nn.Module):
     """
     A wrapper for the InceptionV3 model to extract features from the

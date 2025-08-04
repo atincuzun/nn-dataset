@@ -1,14 +1,14 @@
 import math
 from typing import Optional
+
 import torch
 import torch.nn.functional as F
-from .base.base import BaseMetric
-from .utils.utils import flatten_logits_and_labels
 
+from .base import BaseMetric
+from .utils import flatten_logits_and_labels
 
 PPL_MIN = 1
 PPL_MAX = 1_000
-
 
 class Perplexity(BaseMetric):
     """
