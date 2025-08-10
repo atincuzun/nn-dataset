@@ -31,7 +31,7 @@ class Net(nn.Module):
         super().__init__()
         self.device = device
         layers = []
-        in_channels = in_shape[0]
+        in_channels = in_shape[1]
 
         layers += [
             nn.Conv2d(in_channels, 64, kernel_size=11,
