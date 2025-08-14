@@ -15,7 +15,7 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
          min_dropout: float = default_min_dropout, max_dropout: float = default_max_dropout,
          transform: str | tuple = None, nn_fail_attempts: int = default_nn_fail_attempts, random_config_order: bool = default_random_config_order,
          num_workers: int = default_num_workers, pretrained: int = default_pretrained, epoch_limit_minutes: int = default_epoch_limit_minutes,
-         train_missing_pipelines : bool = default_train_missing_pipelines):
+         train_missing_pipelines: bool = default_train_missing_pipelines):
     """
     Main function for training models using Optuna optimization.
 
@@ -112,7 +112,6 @@ def main(config: str | tuple | list = default_config, n_epochs: int = default_ep
 
 if __name__ == "__main__":
     a = args()
-    main(
-        a.config, a.epochs, a.trials, a.min_batch_binary_power, a.max_batch_binary_power,
-        a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.min_dropout, a.max_dropout, a.transform,
-        a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained, a.epoch_limit_minutes, a.train_missing_pipelines)
+    main(a.config, a.epochs, a.trials, a.min_batch_binary_power, a.max_batch_binary_power,
+         a.min_learning_rate, a.max_learning_rate, a.min_momentum, a.max_momentum, a.min_dropout, a.max_dropout, a.transform,
+         a.nn_fail_attempts, a.random_config_order, a.workers, a.pretrained, a.epoch_limit_minutes, a.train_missing_pipelines)
