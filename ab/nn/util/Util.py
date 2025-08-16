@@ -90,14 +90,19 @@ def accuracy_to_time_metric(accuracy, min_accuracy, training_duration) -> float:
     """
     Naive 'accuracy to time' metric for fixed number of training epochs.
     This metric is essential for detecting the fastest accuracy improvements during neural network training.
-
     """
+    if accuracy is None:
+        accuracy = 0.0
+    if min_accuracy is None:
+        min_accuracy = 0.0
     d = max(0.0, (accuracy - min_accuracy)) / (training_duration / 1e11)
     print(f"accuracy_to_time_metric {d}")
     return d
 
 
 def good(result, minimum_accuracy, duration):
+    if minimum_accuracy is None:
+        minimum_accuracy = 0.0
     return result > minimum_accuracy * 1.2
 
 
