@@ -1,7 +1,6 @@
 import torch
-from ab.nn.metric.base.base import BaseMetric
-from .utils.utils import flatten_logits_and_labels
-
+from .base import BaseMetric
+from .utils import flatten_logits_and_labels
 
 class Accuracy(BaseMetric):
     def reset(self):
