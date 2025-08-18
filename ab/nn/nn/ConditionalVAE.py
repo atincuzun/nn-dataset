@@ -1,6 +1,3 @@
-# File: ConditionalVAE.py
-# Description: This version includes the definitive fix for the epoch counter,
-#              ensuring it increments only once per epoch.
 
 import torch
 import torch.nn as nn
