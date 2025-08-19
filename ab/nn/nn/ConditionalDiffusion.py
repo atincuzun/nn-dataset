@@ -76,7 +76,7 @@ class Net(nn.Module):
             cross_attention_dim=prm.get('cross_attention_dim', 768)
         ).to(device)
 
-        # --- NEW: Enable Memory-Efficient Attention (xFormers) if available ---
+        #  Enable Memory-Efficient Attention (xFormers) if available
         try:
             self.unet.enable_xformers_memory_efficient_attention()
             print("xFormers memory-efficient attention enabled.")
@@ -87,7 +87,7 @@ class Net(nn.Module):
         self.unet.enable_gradient_checkpointing()
         self.noise_scheduler = DDPMScheduler(num_train_timesteps=1000, beta_schedule="squaredcos_cap_v2")
 
-        # --- NEW: Setup for Mixed-Precision Training ---
+        #  Setup for Mixed-Precision Training
         self.scaler = torch.cuda.amp.GradScaler()
 
         self.checkpoint_dir = os.path.join("checkpoints", self.model_name)
@@ -119,7 +119,7 @@ class Net(nn.Module):
         lr = 2e-4
         beta1 = 0.5
 
-        # --- NEW: Optional 8-bit Optimizer ---
+        #  Optional 8-bit Optimizer
         # To use, ensure 'bitsandbytes' is installed and uncomment the following lines.
         # if BITSANDBYTES_AVAILABLE:
         #     print("Using 8-bit AdamW optimizer.")
@@ -165,7 +165,7 @@ class Net(nn.Module):
                                        encoder_hidden_states=text_embeddings).sample
                 loss = self.criterion(noise_pred, noise)
 
-            # --- NEW: Scale loss and update weights ---
+            #  Scale loss and update weights ---
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optimizer)
             self.scaler.update()
@@ -185,7 +185,7 @@ class Net(nn.Module):
 
     @torch.no_grad()
     def generate(self, text_prompts, num_inference_steps=50):
-        # (omitted for brevity - no changes from previous version)
+        # (omitted for brevity)
         self.eval()
         text_embeddings = self.text_encoder(text_prompts)
         latents = torch.randn((len(text_prompts), self.unet.config.in_channels, self.unet.config.sample_size,
