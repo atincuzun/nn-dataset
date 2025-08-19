@@ -22,7 +22,7 @@ except ImportError:
 
 def supported_hyperparameters():
     """Returns the hyperparameters supported by this model."""
-    return {'lr', 'momentum', 'version', 'steps_per_epoch'}
+    return {'lr', 'momentum', 'steps_per_epoch'}
 
 
 class Net(nn.Module):
@@ -56,8 +56,6 @@ class Net(nn.Module):
         self.prm = prm or {}
         self.epoch_counter = 0
         self.model_name = "CLDiffusion"
-
-        self.prm.setdefault('steps_per_epoch', 200)
 
         self.vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(device)
         self.vae.requires_grad_(False)
@@ -138,7 +136,7 @@ class Net(nn.Module):
         if not hasattr(self, 'infinite_data_loader'):
             self.infinite_data_loader = itertools.cycle(train_data)
 
-        num_steps = int(self.prm['steps_per_epoch'])
+        num_steps = int(self.prm['steps_per_epoch'] * 400)
 
         if num_steps == 0:
             print("Warning: 'steps_per_epoch' is zero. Skipping training for this epoch.")

@@ -12,7 +12,7 @@ from transformers import AutoTokenizer, AutoModel
 
 def supported_hyperparameters():
     """Returns the hyperparameters supported by this model."""
-    return {'lr', 'momentum', 'version'}
+    return {'lr', 'momentum'}
 
 
 class PerceptualLoss(nn.Module):
