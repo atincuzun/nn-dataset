@@ -1,6 +1,3 @@
-# File: Clip.py
-# Description: This version reverts to the stable "slow" processor to fix
-#              the '_valid_processor_keys' error.
 
 import torch
 from PIL import Image

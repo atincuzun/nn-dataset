@@ -1,6 +1,3 @@
-# File: Text2Image.py
-# Description: This version adds the critical CenterCrop step to ensure
-#              all images in a batch have the exact same size.
 
 import os
 import random
@@ -15,7 +12,7 @@ import torchvision.transforms as T
 
 from ab.nn.util.Const import data_dir
 
-# --- Configuration ---
+
 COCO_ANN_URL = 'http://images.cocodataset.org/annotations/annotations_trainval2017.zip'
 COCO_IMG_URL_TEMPLATE = 'http://images.cocodataset.org/zips/{}2017.zip'
 
@@ -85,7 +82,7 @@ def loader(transform_fn, task, **kwargs):
     if 'txt-image' not in task.strip().lower():
         raise ValueError(f"The task '{task}' is not a text-to-image task for this dataloader.")
 
-    # --- THE DEFINITIVE FIX ---
+
     # Inspect the transform provided by the framework to get the target image size
     example_transform = transform_fn((NORM_MEAN, NORM_DEV))
     resize_step = example_transform.transforms[0]
@@ -102,11 +99,11 @@ def loader(transform_fn, task, **kwargs):
     # Rebuild the transform pipeline correctly, adding the crucial CenterCrop step
     final_transform = T.Compose([
         T.Resize(image_size),
-        T.CenterCrop(image_size),  # <-- THE FIX: Ensures a square image
+        T.CenterCrop(image_size),  # Ensures a square image
         T.ToTensor(),
         T.Normalize(NORM_MEAN, NORM_DEV)
     ])
-    # --- END OF FIX ---
+
 
     path = join(data_dir, 'coco')
     train_dataset = Text2Image(root=path, split='train', transform=final_transform)

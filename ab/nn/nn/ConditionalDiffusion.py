@@ -1,7 +1,3 @@
-# File: CLDiffusion.py
-# Description: A robust Conditional Diffusion model with a dynamic architecture,
-#              stabilized training, and automatic checkpointing.
-# MODIFIED: Integrated Mixed-Precision Training, xFormers, and an optional 8-bit optimizer for more robust and memory-efficient training.
 
 import torch
 import torch.nn as nn
