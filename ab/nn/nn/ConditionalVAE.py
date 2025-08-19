@@ -12,7 +12,7 @@ from transformers import AutoTokenizer, AutoModel
 
 def supported_hyperparameters():
     """Returns the hyperparameters supported by this model."""
-    return {'lr', 'momentum'}
+    return {'lr', 'beta1', 'beta2', 'kld_warmup_epochs'}
 
 
 class PerceptualLoss(nn.Module):
@@ -150,41 +150,36 @@ class Net(nn.Module):
         self.text_encoder = self.TextEncoder(out_size=self.text_embedding_dim).to(device)
         self.cvae = self.CVAE(self.latent_dim, self.text_embedding_dim, image_channels, image_size).to(device)
 
-        lr = self.prm.get('lr', 1e-4)
-        beta1 = self.prm.get('momentum', 0.9)
+        lr = self.prm['lr']
+        beta1 = self.prm['beta1']
+        beta2 = self.prm['beta2']
 
-        self.optimizer = torch.optim.Adam(self.cvae.parameters(), lr=lr, betas=(beta1, 0.999))
+        self.optimizer = torch.optim.Adam(self.cvae.parameters(), lr=lr, betas=(beta1, beta2))
         self.reconstruction_loss = nn.L1Loss()
         self.perceptual_loss = PerceptualLoss().to(device)
 
-        # --- Controllable Auto-Resume with Diagnostics ---
-        self.checkpoint_dir = os.path.join("checkpoints", self.model_name)
-        if not os.path.exists(self.checkpoint_dir):
-            os.makedirs(self.checkpoint_dir)
-
-        # Check the environment variable. Default to 'true' if not set.
-        resume_flag = os.getenv('RESUME_TRAINING', 'true').lower()
-
-        print("------------------------------------------")
-        print(f"DEBUG: RESUME_TRAINING flag is set to '{resume_flag}'")
-
-        if resume_flag == 'true':
-            print(f"DEBUG: Searching for checkpoints in: {self.checkpoint_dir}")
-            list_of_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_epoch_*.pth'))
-            print(f"DEBUG: Found checkpoint files: {list_of_files}")
-
-            if list_of_files:
-                latest_file = max(list_of_files, key=os.path.getctime)
-                print(f"DEBUG: Latest file found: {latest_file}")
-                print(f"RESUME_TRAINING=true. Loading checkpoint: {latest_file}")
-                self.cvae.load_state_dict(torch.load(latest_file, map_location=self.device))
-                self.epoch_counter = int(os.path.basename(latest_file).split('_')[-1].split('.')[0])
-                print(f"DEBUG: Setting epoch counter to: {self.epoch_counter}")
-            else:
-                print("RESUME_TRAINING=true, but no checkpoint found. Starting from scratch.")
-        else:
-            print("RESUME_TRAINING=false. Starting a fresh training run.")
-        print("------------------------------------------")
+        # resume_flag = os.getenv('RESUME_TRAINING', 'true').lower()
+        #
+        # print("------------------------------------------")
+        # print(f"DEBUG: RESUME_TRAINING flag is set to '{resume_flag}'")
+        #
+        # if resume_flag == 'true':
+        #     print(f"DEBUG: Searching for checkpoints in: {self.checkpoint_dir}")
+        #     list_of_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_epoch_*.pth'))
+        #     print(f"DEBUG: Found checkpoint files: {list_of_files}")
+        #
+        #     if list_of_files:
+        #         latest_file = max(list_of_files, key=os.path.getctime)
+        #         print(f"DEBUG: Latest file found: {latest_file}")
+        #         print(f"RESUME_TRAINING=true. Loading checkpoint: {latest_file}")
+        #         self.cvae.load_state_dict(torch.load(latest_file, map_location=self.device))
+        #         self.epoch_counter = int(os.path.basename(latest_file).split('_')[-1].split('.')[0])
+        #         print(f"DEBUG: Setting epoch counter to: {self.epoch_counter}")
+        #     else:
+        #         print("RESUME_TRAINING=true, but no checkpoint found. Starting from scratch.")
+        # else:
+        #     print("RESUME_TRAINING=false. Starting a fresh training run.")
+        # print("------------------------------------------")
 
     def train_setup(self, prm):
         pass
@@ -193,7 +188,7 @@ class Net(nn.Module):
         self.train()
         total_loss = 0.0
 
-        kld_warmup_epochs = 25
+        kld_warmup_epochs = int(50 * self.prm['kld_warmup_epochs'])
         max_kld_weight = 0.000025
 
         current_epoch = self.epoch_counter
@@ -244,22 +239,22 @@ class Net(nn.Module):
                                   "a car parked"]
         prompts_to_use = [fixed_prompts_for_eval[i % len(fixed_prompts_for_eval)] for i in range(batch_size)]
 
-        output_dir = os.path.join("output_images", self.model_name)
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        # output_dir = os.path.join("output_images", self.model_name)
+        # if not os.path.exists(output_dir):
+        #     os.makedirs(output_dir)
 
-        custom_prompts_to_generate = ["a red car",
-                                      "a blue car"]
-        if custom_prompts_to_generate:
-            custom_images = self.generate(custom_prompts_to_generate)
-            for i, img in enumerate(custom_images):
-                # Use the current epoch_counter for saving images
-                save_path = os.path.join(output_dir,
-                                         f"{self.model_name}_output_epoch_{self.epoch_counter}_image_{i + 1}.png")
-                img.save(save_path)
+        # custom_prompts_to_generate = ["a red car",
+        #                               "a blue car"]
+        # if custom_prompts_to_generate:
+        #     custom_images = self.generate(custom_prompts_to_generate)
+        #     for i, img in enumerate(custom_images):
+        #         # Use the current epoch_counter for saving images
+        #         save_path = os.path.join(output_dir,
+        #                                  f"{self.model_name}_output_epoch_{self.epoch_counter}_image_{i + 1}.png")
+        #         img.save(save_path)
 
         #  The counter is no longer incremented here
-        checkpoint_path = os.path.join(self.checkpoint_dir, f"{self.model_name}_epoch_{self.epoch_counter}.pth")
-        torch.save(self.cvae.state_dict(), checkpoint_path)
+        # checkpoint_path = os.path.join(self.checkpoint_dir, f"{self.model_name}_epoch_{self.epoch_counter}.pth")
+        # torch.save(self.cvae.state_dict(), checkpoint_path)
 
         return self.generate(prompts_to_use), prompts_to_use

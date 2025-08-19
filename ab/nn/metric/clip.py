@@ -67,7 +67,7 @@ class CLIPMetric:
         if self.num_samples == 0:
             return 0.0
         avg_score = sum(self.similarity_scores) / self.num_samples
-        return float(avg_score * 100)
+        return avg_score
 
     def get_all(self):
         return {'CLIP_Score': self.result()}

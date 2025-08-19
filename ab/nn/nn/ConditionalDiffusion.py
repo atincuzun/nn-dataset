@@ -1,7 +1,6 @@
 
 import torch
 import torch.nn as nn
-import torchvision.transforms as T
 import numpy as np
 import os
 import glob
@@ -22,7 +21,7 @@ except ImportError:
 
 def supported_hyperparameters():
     """Returns the hyperparameters supported by this model."""
-    return {'lr', 'momentum', 'steps_per_epoch'}
+    return {'lr', 'beta1', 'beta2', 'steps_per_epoch'}
 
 
 class Net(nn.Module):
@@ -88,34 +87,35 @@ class Net(nn.Module):
         #  Setup for Mixed-Precision Training
         self.scaler = torch.cuda.amp.GradScaler()
 
-        self.checkpoint_dir = os.path.join("checkpoints", self.model_name)
-        if not os.path.exists(self.checkpoint_dir):
-            os.makedirs(self.checkpoint_dir)
-        self.load_checkpoint()
+        # self.checkpoint_dir = os.path.join("checkpoints", self.model_name)
+        # if not os.path.exists(self.checkpoint_dir):
+        #     os.makedirs(self.checkpoint_dir)
+        # self.load_checkpoint()
 
-    def load_checkpoint(self):
-        # (omitted for brevity - no changes from previous version)
-        unet_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_unet_epoch_*.pth'))
-        text_encoder_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_text_encoder_epoch_*.pth'))
-
-        if unet_files and text_encoder_files:
-            latest_unet = max(unet_files, key=os.path.getctime)
-            latest_text_encoder = max(text_encoder_files, key=os.path.getctime)
-            print(f"Loading UNet checkpoint: {latest_unet}")
-            print(f"Loading Text Encoder checkpoint: {latest_text_encoder}")
-            self.unet.load_state_dict(torch.load(latest_unet, map_location=self.device))
-            self.text_encoder.load_state_dict(torch.load(latest_text_encoder, map_location=self.device))
-            try:
-                self.epoch_counter = int(os.path.basename(latest_unet).split('_')[-1].split('.')[0])
-            except (ValueError, IndexError):
-                self.epoch_counter = 0
-        else:
-            print("No checkpoint found, starting from scratch.")
+    # def load_checkpoint(self):
+    #     # (omitted for brevity - no changes from previous version)
+    #     unet_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_unet_epoch_*.pth'))
+    #     text_encoder_files = glob.glob(os.path.join(self.checkpoint_dir, f'{self.model_name}_text_encoder_epoch_*.pth'))
+    #
+    #     if unet_files and text_encoder_files:
+    #         latest_unet = max(unet_files, key=os.path.getctime)
+    #         latest_text_encoder = max(text_encoder_files, key=os.path.getctime)
+    #         print(f"Loading UNet checkpoint: {latest_unet}")
+    #         print(f"Loading Text Encoder checkpoint: {latest_text_encoder}")
+    #         self.unet.load_state_dict(torch.load(latest_unet, map_location=self.device))
+    #         self.text_encoder.load_state_dict(torch.load(latest_text_encoder, map_location=self.device))
+    #         try:
+    #             self.epoch_counter = int(os.path.basename(latest_unet).split('_')[-1].split('.')[0])
+    #         except (ValueError, IndexError):
+    #             self.epoch_counter = 0
+    #     else:
+    #         print("No checkpoint found, starting from scratch.")
 
     def train_setup(self, prm):
         trainable_params = list(self.unet.parameters()) + list(self.text_encoder.text_linear.parameters())
-        lr = 2e-4
-        beta1 = 0.5
+        lr = prm['lr']
+        beta1 = prm['beta1']
+        beta2 = prm['beta2']
 
         #  Optional 8-bit Optimizer
         # To use, ensure 'bitsandbytes' is installed and uncomment the following lines.
@@ -124,10 +124,10 @@ class Net(nn.Module):
         #     self.optimizer = bnb.optim.AdamW8bit(trainable_params, lr=lr, betas=(beta1, 0.999))
         # else:
         #     print("Using standard AdamW optimizer.")
-        self.optimizer = torch.optim.AdamW(trainable_params, lr=lr, betas=(beta1, 0.999))
+        self.optimizer = torch.optim.AdamW(trainable_params, lr=lr, betas=(beta1, beta2))
 
         self.criterion = nn.MSELoss()
-        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, 'max', patience=50, factor=0.5)
+        # self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, 'max', patience=50, factor=0.5)
 
     def learn(self, train_data):
         self.train()
@@ -172,12 +172,12 @@ class Net(nn.Module):
 
         self.epoch_counter += 1
 
-        unet_path = os.path.join(self.checkpoint_dir, f"{self.model_name}_unet_epoch_{self.epoch_counter}.pth")
-        text_encoder_path = os.path.join(self.checkpoint_dir,
-                                         f"{self.model_name}_text_encoder_epoch_{self.epoch_counter}.pth")
-        torch.save(self.unet.state_dict(), unet_path)
-        torch.save(self.text_encoder.state_dict(), text_encoder_path)
-        print(f"\nCompleted epoch {self.epoch_counter}. Saved checkpoint to {unet_path} and {text_encoder_path}")
+        # unet_path = os.path.join(self.checkpoint_dir, f"{self.model_name}_unet_epoch_{self.epoch_counter}.pth")
+        # text_encoder_path = os.path.join(self.checkpoint_dir,
+        #                                  f"{self.model_name}_text_encoder_epoch_{self.epoch_counter}.pth")
+        # torch.save(self.unet.state_dict(), unet_path)
+        # torch.save(self.text_encoder.state_dict(), text_encoder_path)
+        # print(f"\nCompleted epoch {self.epoch_counter}. Saved checkpoint to {unet_path} and {text_encoder_path}")
 
         return total_loss / num_steps
 
@@ -212,18 +212,18 @@ class Net(nn.Module):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        custom_prompts_to_generate = [
-            "a smiling woman with blond hair",
-            "a man wearing eyeglasses"
-        ]
-        if custom_prompts_to_generate:
-            print(f"\n[Inference] Generating {len(custom_prompts_to_generate)} custom image(s)...")
-            custom_images = self.generate(custom_prompts_to_generate)
-            for i, img in enumerate(custom_images):
-                save_path = os.path.join(output_dir,
-                                         f"{self.model_name}_output_epoch_{self.epoch_counter}_image_{i + 1}.png")
-                img.save(save_path)
-                print(f"[Inference] Saved custom image to {save_path}")
+        # custom_prompts_to_generate = [
+        #     "a smiling woman with blond hair",
+        #     "a man wearing eyeglasses"
+        # ]
+        # if custom_prompts_to_generate:
+        #     print(f"\n[Inference] Generating {len(custom_prompts_to_generate)} custom image(s)...")
+        #     custom_images = self.generate(custom_prompts_to_generate)
+        #     for i, img in enumerate(custom_images):
+        #         save_path = os.path.join(output_dir,
+        #                                  f"{self.model_name}_output_epoch_{self.epoch_counter}_image_{i + 1}.png")
+        #         img.save(save_path)
+        #         print(f"[Inference] Saved custom image to {save_path}")
 
         eval_images = self.generate(prompts_to_use)
 
