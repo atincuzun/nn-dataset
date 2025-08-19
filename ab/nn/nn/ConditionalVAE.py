@@ -258,7 +258,7 @@ class Net(nn.Module):
                                          f"{self.model_name}_output_epoch_{self.epoch_counter}_image_{i + 1}.png")
                 img.save(save_path)
 
-        # --- THE FIX: The counter is no longer incremented here ---
+        #  The counter is no longer incremented here
         checkpoint_path = os.path.join(self.checkpoint_dir, f"{self.model_name}_epoch_{self.epoch_counter}.pth")
         torch.save(self.cvae.state_dict(), checkpoint_path)
 
