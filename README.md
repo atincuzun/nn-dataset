@@ -25,17 +25,9 @@ For Windows:
    python -m pip install --upgrade pip
    ```
 
-It is also assumed that CUDA 12.6 is installed; otherwise, consider replacing 'cu126' with the appropriate version.
+It is assumed that CUDA 12.6 is installed; otherwise, consider replacing 'cu126' with the appropriate version. Some neural network training tasks require GPUs with at least 24 GB of memory.
 
-## Environment for NN Dataset Contributors
-### Pip package manager
-Create a virtual environment, activate it, and run the following command to install all the project dependencies:
-```bash
-python -m pip install --upgrade pip
-pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu126
-```
-
-## Installation or Update of the NN Dataset
+## Installation or Update of the NN Dataset with pip
 Remove an old version of the LEMUR Dataset and its database:
 ```bash
 pip uninstall nn-dataset -y
@@ -51,11 +43,19 @@ pip install git+https://github.com/ABrain-One/nn-dataset --upgrade --force --ext
 ```
 Adding functionality to export data to Excel files and generate plots for <a href='https://github.com/ABrain-One/nn-stat'>analyzing neural network performance</a>:
 ```bash
-pip install nn-stat --upgrade --extra-index-url https://download.pytorch.org/whl/cu126
+pip install nn-dataset[stat] --upgrade --extra-index-url https://download.pytorch.org/whl/cu126
 ```
 and export/generate:
 ```bash
 python -m ab.stat.export
+```
+
+## Environment for NN Dataset Contributors
+### Pip package manager
+Create a virtual environment, activate it, and run the following command to install all the project dependencies:
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu126
 ```
 
 ## Usage
