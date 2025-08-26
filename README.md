@@ -72,9 +72,9 @@ or for all image segmentation models using a fixed range of training parameters 
 ```
 `train.sh` internally calls `ab.nn.train`, offering a shorter way to run the program. Both scripts accept the same input flags and can be used interchangeably.
 
-#### Reproducing Results with Fixed Training Parameters
+##### Reproducing Results with Fixed Training Parameters
 
-To reproduce previously obtained results, provide fixed values for the training parameters in JSON format. The parameter names should match those returned by the supported_hyperparameters() function of the NN model.
+To reproduce previously obtained results, provide fixed values for the training parameters in JSON format. The parameter names should match those returned by the <strong>supported_hyperparameters()</strong> function of the NN model.
 
 Example command:
 
@@ -83,11 +83,15 @@ Example command:
 ```
 
 where:
--c specifies the training configuration.
--f selects the preprocessing pipeline.
+
+-c specifies the training configuration,
+
+-f selects the preprocessing pipeline,
+
 -p sets the hyperparameters explicitly (e.g., learning rate, momentum, batch size) using a JSON string.
 
-To view supported flags:
+
+##### To view supported flags:
 ```bash
 . train.sh -h
 ```
