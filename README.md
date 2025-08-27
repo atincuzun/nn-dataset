@@ -84,9 +84,9 @@ Example command:
 
 where:
 
--c specifies the training configuration,
+-c specifies the training pipeline,
 
--f selects the preprocessing pipeline,
+-f selects the preprocessing algorithm,
 
 -p sets the hyperparameters explicitly (e.g., learning rate, momentum, batch size) using a JSON string.
 
