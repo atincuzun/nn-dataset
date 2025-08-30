@@ -46,7 +46,7 @@ def optuna_objective(trial, config, num_workers, min_lr, max_lr, min_momentum, m
             prm_str += f", {k}: {v}"
         print(f"Initialize training with {prm_str[2:]}")
         # Load dataset
-        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
+        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name, transform_dir)
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
                      num_workers, prms).train_n_eval(n_epochs, epoch_limit_minutes)
     except Exception as e:
@@ -238,7 +238,7 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
             f.write(nn_code)  # write the code to the temp file
         res = codeEvaluator.evaluate_single_file(temp_file_path)
         # load dataset
-        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset, prm['transform'])
+        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset, prm['transform'], transform_dir)
         num_workers = prm.get('num_workers', 1)
         # initialize model and trainer
         trainer = Train(
