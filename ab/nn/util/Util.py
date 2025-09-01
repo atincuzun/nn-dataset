@@ -1,13 +1,4 @@
-import argparse
-import datetime
-import gc
-import hashlib
-import importlib.util
-import inspect
-import random
-import re
-
-import torch
+import argparse, json, datetime, gc, hashlib, inspect, random, re, importlib.util, torch
 from os import makedirs, remove
 from os.path import exists
 
@@ -190,10 +181,18 @@ def export_model_to_onnx(model, dummy_input):
     print(f"Exported neural network to ONNX format at {onnx_file}")
 
 
+def add_categorical_if_absent(trial, prms, nm, fn, default=None):
+    if not (nm in prms and prms[nm]):
+        prms[nm] = trial.suggest_categorical(nm, default or fn())
+    return prms[nm]
+
+
 def args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, default=default_config,
                         help="Configuration specifying the model training pipelines. The default value for all configurations.")
+    parser.add_argument('-p', '--nn_prm', type=json.loads, default=default_nn_hyperparameters,
+                        help="JSON string with fixed hyperparameter values for neural network training, e.g. -p '{\"lr\": 0.0061, \"momentum\": 0.7549, \"batch\": 4}'")
     parser.add_argument('-e', '--epochs', type=int, default=default_epochs,
                         help="Numbers of training epochs.")
     parser.add_argument('-t', '--trials', type=int, default=default_trials,
