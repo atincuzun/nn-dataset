@@ -46,7 +46,7 @@ def optuna_objective(trial, config, nn_prm, num_workers, min_lr, max_lr, min_mom
             prm_str += f", {k}: {v}"
         print(f"Initialize training with {prm_str[2:]}")
         # Load dataset
-        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name, transform_dir)
+        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset_name, transform_name)
         return Train(config, out_shape, minimum_accuracy, batch, nn_mod('nn', nn), task, train_set, test_set, metric,
                      num_workers, prms).train_n_eval(n_epochs, epoch_limit_minutes)
     except Exception as e:
@@ -207,7 +207,7 @@ class Train:
         return self.metric_function.result()
 
 
-def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False, epoch_limit_minutes=default_epoch_limit_minutes):
+def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False, epoch_limit_minutes=default_epoch_limit_minutes, transform_dir= None):
     """
     train the model with the given code and hyperparameters and evaluate it.
 
