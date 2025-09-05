@@ -72,11 +72,26 @@ or for all image segmentation models using a fixed range of training parameters 
 ```
 `train.sh` internally calls `ab.nn.train`, offering a shorter way to run the program. Both scripts accept the same input flags and can be used interchangeably.
 
-To reproduce a previously obtained result, set both the minimum and maximum values of the training parameters to the desired value:
+##### Reproducing Results with Fixed Training Parameters
+
+To reproduce previously obtained results, provide fixed values for the training parameters in JSON format. The parameter names should match those returned by the <strong>supported_hyperparameters()</strong> function of the NN model.
+
+Example command:
+
 ```bash
-. train.sh -c img-classification_cifar-10_acc_AlexNet --min_learning_rate 0.0061 -l 0.0061 --min_momentum 0.7549 -m 0.7549 --min_batch_binary_power 2 -b 2 -f norm_299
+. train.sh -c img-classification_cifar-10_acc_ComplexNet -f complex -p '{"lr": 0.017, "momentum": 0.022 , "batch": 32}'
 ```
-To view supported flags:
+
+where:
+
+-c specifies the training pipeline,
+
+-f selects the preprocessing algorithm,
+
+-p sets the hyperparameters explicitly (e.g., learning rate, momentum, batch size) using a JSON string.
+
+
+##### To view supported flags:
 ```bash
 . train.sh -h
 ```
@@ -91,9 +106,9 @@ Installing the latest version of the project from GitHub
 docker run --rm -u $(id -u):ab -v $(pwd):/a/mm abrainone/ai-linux bash -c "[ -d nn-dataset ] && git -C nn-dataset pull || git -c advice.detachedHead=false clone --depth 1 https://github.com/ABrain-One/nn-dataset"
 ```
 
-Running script
+Running a quick training script:
 ```bash
-docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". train.sh -c img-classification_cifar-10_acc_ComplexNet -f complex -l 0.017 --min_learning_rate 0.013 -m 0.025 --min_momentum 0.022 -b 9 --min_batch_binary_power 9"
+docker run --rm -u $(id -u):ab --shm-size=16G -v $(pwd)/nn-dataset:/a/mm abrainone/ai-linux bash -c ". train.sh -c img-classification_cifar-10_acc_ComplexNet -f complex -l 0.017 --min_learning_rate 0.013 -m 0.025 --min_momentum 0.022 -b 7 --min_batch_binary_power 8"
 ```
 
 If recently added dependencies are missing in the <a href='https://hub.docker.com/r/abrainone/ai-linux' target='_blank'>AI Linux</a>, you can create a container from the Docker image ```abrainone/ai-linux```, install the missing packages (preferably using ```pip install <package name>```), and then create a new image from the container using ```docker commit <container name> <new image name>```. You can use this new image locally or push it to the registry for deployment on the computer cluster.
