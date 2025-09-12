@@ -207,7 +207,7 @@ class Train:
         return self.metric_function.result()
 
 
-def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False, epoch_limit_minutes=default_epoch_limit_minutes):
+def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Union[str, None] = None, save_path: Union[str, None] = None, export_onnx=False, epoch_limit_minutes=default_epoch_limit_minutes, transform_dir= None):
     """
     train the model with the given code and hyperparameters and evaluate it.
 
@@ -238,7 +238,7 @@ def train_new(nn_code, task, dataset, metric, prm, save_to_db=True, prefix: Unio
             f.write(nn_code)  # write the code to the temp file
         res = codeEvaluator.evaluate_single_file(temp_file_path)
         # load dataset
-        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset, prm['transform'])
+        out_shape, minimum_accuracy, train_set, test_set = load_dataset(task, dataset, prm['transform'], transform_dir)
         num_workers = prm.get('num_workers', 1)
         # initialize model and trainer
         trainer = Train(
