@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.7249,
+    "architecture": "ResNet",
+    "batch": 64,
+    "code_hash": "697519e6f297c6f8c841c49b75ca5dd1c1f8a08e79c94e0f83e855f0e1abf559",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "gamma": 0.5,
+      "step_size": 10
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 10,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "PR_0001",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s10_g05",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-c0b0de481957db50c936d37b7d55391a",
+    "weight_decay": 0.0001
+  }
+]

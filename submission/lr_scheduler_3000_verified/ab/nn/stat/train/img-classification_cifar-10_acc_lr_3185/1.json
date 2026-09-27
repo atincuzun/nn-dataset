@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.3778,
+    "architecture": "MNASNet",
+    "batch": 64,
+    "code_hash": "ee5fa581df6869d86fc443b3072f74c018d326bbec9a3f50f272da4925326bf8",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr_3185",
+    "momentum": 0.9,
+    "scheduler": "ExponentialLR_g095",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_5203",
+    "weight_decay": 0.005
+  }
+]

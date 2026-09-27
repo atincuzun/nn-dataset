@@ -1,0 +1,37 @@
+{
+  "model_id": "lr_1195",
+  "source_id": "lr_1195",
+  "code_hash": "dcfd1ed62d74807b078a1b8fd42917ca86a1b8f987f0c73482208f21092001cf",
+  "architecture": "ConvNeXt",
+  "scheduler": "OneCycleLR_005",
+  "accuracy": 0.2687,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-ee1d0db3e360336d4eeb8e2e54c72fda",
+  "weight_decay": 0.0005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "max_lr": 0.1,
+    "weight_decay": 0.0005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "max_lr": 0.1
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1195/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

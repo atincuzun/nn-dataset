@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_1012",
+  "source_id": "lr_1012",
+  "code_hash": "a5debce6ecfcc03d05fe4749ad30881d767d649ce659930aa05c91092a857255",
+  "architecture": "BayesianNet-1",
+  "scheduler": "OneCycleLR_01",
+  "accuracy": 0.7885,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-c7718f1462224b194d4e38c03c3b596a",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "max_lr": 0.1,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "max_lr": 0.1
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1012/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_4767",
+  "source_id": "lr_4767",
+  "code_hash": "0d9c35c1a373d2c86c6845801c666ebb3230fc989fd3d173f135d0b3575652f9",
+  "architecture": "UNet2D",
+  "scheduler": "ExponentialLR_g09",
+  "accuracy": 0.2287,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-1f4e164ce0dc3c5f3ae854fb708ccdcc",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4767/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

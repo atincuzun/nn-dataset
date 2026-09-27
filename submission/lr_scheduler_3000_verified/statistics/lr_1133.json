@@ -1,0 +1,37 @@
+{
+  "model_id": "lr_1133",
+  "source_id": "lr_1133",
+  "code_hash": "469af125da478c1ab02f4d6e466605a1133def5b8886b580dc2f967fca0ba7b1",
+  "architecture": "ConvNeXt",
+  "scheduler": "MultiStepLR_m3_7_g03",
+  "accuracy": 0.3128,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-56ff1c2902228caac799719dd850adc4",
+  "weight_decay": 0.001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "gamma": 0.5,
+    "weight_decay": 0.001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1133/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

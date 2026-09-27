@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_2098",
+  "source_id": "lr_2098",
+  "code_hash": "f5a681ec81d77eb1cf1852f1c0a96693ef9868829e6bdab7ca315304718023f0",
+  "architecture": "DenseNet",
+  "scheduler": "PolynomialLR_p2",
+  "accuracy": 0.7314,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-9fe2476718588fdb3bbdbc65bb95b2cc",
+  "weight_decay": 0.0005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "total_iters": 0.1,
+    "power": 2.0,
+    "weight_decay": 0.0005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "total_iters": 0.1,
+    "power": 2.0
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2098/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

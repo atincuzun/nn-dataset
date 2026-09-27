@@ -1,0 +1,29 @@
+{
+  "model_id": "PR_0004",
+  "source_id": "PR_0004",
+  "code_hash": "560587160ccdf8a949ac7865b58a01b7513528228e323fab35a251a2701150b6",
+  "architecture": "ResNet",
+  "scheduler": "ExponentialLR_g09",
+  "accuracy": 0.7804,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-94485497b53ab21edbc8a5b604220772",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "gamma": 0.5,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/PR_0004/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

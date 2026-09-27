@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_0870",
+  "source_id": "lr_0870",
+  "code_hash": "8bb4092d51ef62a87ee0f445ed4f052a3fb255255dde3190f4808e3bfc47dd80",
+  "architecture": "ComplexNet",
+  "scheduler": "PolynomialLR_p2",
+  "accuracy": 0.2206,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-a5a7a8386900b84772797514c43784f0",
+  "weight_decay": 1e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "total_iters": 0.1,
+    "power": 2.0,
+    "weight_decay": 1e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "total_iters": 0.1,
+    "power": 2.0
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0870/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

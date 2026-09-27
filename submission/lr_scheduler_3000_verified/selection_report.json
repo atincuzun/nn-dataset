@@ -1,0 +1,858 @@
+{
+  "primary_submission_ready_total": 3082,
+  "selected_prior_models": 3000,
+  "excluded_prior_models": 82,
+  "new_results_total": 95,
+  "new_results_included": 0,
+  "new_results_duplicate_by_model_id": 62,
+  "new_results_duplicate_by_code_hash": 50,
+  "new_results_duplicate_by_id_or_hash": 79,
+  "new_results_excluded_due_to_cap": 95,
+  "excluded_prior_ids": [
+    "lr_4986",
+    "lr_4988",
+    "lr_4991",
+    "lr_4994",
+    "lr_4996",
+    "lr_4998",
+    "lr_5000",
+    "lr_5001",
+    "lr_5002",
+    "lr_5003",
+    "lr_5005",
+    "lr_5010",
+    "lr_5011",
+    "lr_5012",
+    "lr_5016",
+    "lr_5017",
+    "lr_5018",
+    "lr_5022",
+    "lr_5024",
+    "lr_5028",
+    "lr_5029",
+    "lr_5030",
+    "lr_5032",
+    "lr_5049",
+    "lr_5050",
+    "lr_5053",
+    "lr_5054",
+    "lr_5056",
+    "lr_5057",
+    "lr_5058",
+    "lr_5059",
+    "lr_5060",
+    "lr_5061",
+    "lr_5063",
+    "lr_5064",
+    "lr_5066",
+    "lr_5068",
+    "lr_5071",
+    "lr_5073",
+    "lr_5075",
+    "lr_5077",
+    "lr_5086",
+    "lr_5088",
+    "lr_5089",
+    "lr_5091",
+    "lr_5093",
+    "lr_5094",
+    "lr_5098",
+    "lr_5099",
+    "lr_5100",
+    "lr_5112",
+    "lr_5128",
+    "lr_5136",
+    "lr_5137",
+    "lr_5140",
+    "lr_5141",
+    "lr_5143",
+    "lr_5147",
+    "lr_5154",
+    "lr_5155",
+    "lr_5156",
+    "lr_5157",
+    "lr_5161",
+    "lr_5162",
+    "lr_5163",
+    "lr_5170",
+    "lr_5172",
+    "lr_5173",
+    "lr_5180",
+    "lr_5183",
+    "lr_5184",
+    "lr_5186",
+    "lr_5189",
+    "lr_5191",
+    "lr_5197",
+    "lr_5201",
+    "lr_5205",
+    "lr_5227",
+    "lr_5236",
+    "lr_5246",
+    "lr_5247",
+    "lr_5250"
+  ],
+  "new_deduplication": [
+    {
+      "model_id": "lr_0001",
+      "code_hash": "964d231a62cfdf23d7a0c810910ccfe6bd9fa8c5cf3571e48cbf41bf3ddfdd48",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0002",
+      "code_hash": "d9ebd8c0aba7073ad1daf5d026e09cb9b4186664618ba3c0b411c50f259e56cd",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0003",
+      "code_hash": "8cbb21a34c866841c9c7fafb830ba471b4464492d7db8ad5124b8bdc7ddd4e6d",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0004",
+      "code_hash": "85510ace7a95a3e83ea0a054dd2496a579fe52c2cd0b9b5086feec6ec719c841",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0005",
+      "code_hash": "aa2db6d2cf996dc8b14c53202f9e520f656d1c1af655a850911740f48ce2664a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0006",
+      "code_hash": "f781a93221f81bbda306842f566a61a35e5d72654b3c3cd71739a8b489d8faf9",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0007",
+      "code_hash": "7e184458eb31090e98f132a828ce090b8dfa349f5066888ce344c8204cc3b04b",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0008",
+      "code_hash": "b243044a951c0c0c69039dd37789ff5de7ba503d67b7c214b7967a18a4266aff",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0009",
+      "code_hash": "4bd24c899876fd65a61de96b70b71ab2b7db169df1885443930548b08810980a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0010",
+      "code_hash": "9fb266f102ce802f9104451bfcdd490f7197bcc0f6d066171c7340c5032bcd2e",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0011",
+      "code_hash": "fd342fd35dcd48d8b312c60b209a9ce65bb7076eff749d85813df6b290624890",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0012",
+      "code_hash": "e7c1da3a1359c2b2bbdaf79d0d6f67ced2c0913dbfc48bbefde66776be681075",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0013",
+      "code_hash": "aa87f3fade0912a6e9016b0ef4565e42bbd88f11773d74da8fb1e63fb593402c",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0014",
+      "code_hash": "0d8df994b41889abad4675cb22868b86bfe19f35e87d4a141c06034d28e524c0",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0015",
+      "code_hash": "e650ee1794fae0071ab336ebcb2ee04b73cb49e502df8769e4b08759de6094d6",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0016",
+      "code_hash": "d236a437c11b6374b918440695e15f78c5a0fb0ee5501a4fcb035806a93322b9",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0017",
+      "code_hash": "185dc5f73e6f938265e08a73bcc0b4c8071c5493dc94e3d09fc7a8700885cd3a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0018",
+      "code_hash": "0e84c671a58e6315cddb08a87389d3a0a6608b5d95fba78a53913545d7891dc7",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0019",
+      "code_hash": "fef86596f9028a54e98454ccbcacebe6a5f3f6fdbedb58b5f554f9c349a0ed4e",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0020",
+      "code_hash": "83a72816bb749a0c5f272487c537ae9b4f2e3ede907b73a3995d7899d3d2c1af",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0021",
+      "code_hash": "93725196de42e181d3212fc5deb6ba3aef54908cdea533e0c8d3918ffb60b5cc",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0022",
+      "code_hash": "2143ef0a8e1c8b1d09864d5ffc19381faac31d439b8fc58ddf6cd87ba57dfe57",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0023",
+      "code_hash": "10dbf0e518c605a47c57cd2fcc9211a2abdfdb013787c408386ab46c751e3691",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0024",
+      "code_hash": "61c65125704e62b55db53976784c41bf44d1aefec3d34fd6670ae36635a74e90",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0025",
+      "code_hash": "3e46f04b56af701e0942abaafe2508c96090ada6fb13574daf107971882d538a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0026",
+      "code_hash": "62579533c3fef07d6ac4e484a09a0c110751827684c997fe0d50e9ee36235486",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0027",
+      "code_hash": "fdca36d8ac75c7a59642b301bb24d68853bd76186d9a61af533179f53200ee50",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0028",
+      "code_hash": "2b9cb0ed7711f62e2c73ba2306f9347b9e49b30252cdad2acb06c0e211ebeba5",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0029",
+      "code_hash": "4441d5b845598a0c61bb885dedad56360322fee4697a928e0811dc1c9f0e1e0c",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0030",
+      "code_hash": "f88d8f7c76960680709e762b7f837e0d0602490aa896a4703178a77700e1df75",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0031",
+      "code_hash": "b637b58ce088a1624c757626de45e58ac1f568a6d3dff13ca38c42487134e9db",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0032",
+      "code_hash": "08e7e47f3c2b681d1098d84a2efe9590715ffa4ee2c97e54b7c16464400c68df",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0033",
+      "code_hash": "e252480cf07bcfa33d04be514700737e405c2b4dc75228d8b528c57068481560",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0034",
+      "code_hash": "a2808530aaa35a6c10373192ca6261a8ed401f5be25e1a3dcb30cadd48a3f54b",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0035",
+      "code_hash": "51c51589839bd05daa24abd46b2a1af96da5e4ad3fb7fdfc125708b2c56ea086",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0036",
+      "code_hash": "3a79024a27b93489c619d6e3b54d4e80ff1c56df43c8f9bc4f611f49ac8539d1",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0037",
+      "code_hash": "e5a05550e2021ff09e42db2363782d5202969d89995f334546b8acbb9404ecf4",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0038",
+      "code_hash": "1b8538fb7f4dcc258779033fa52e87ae82dafec6cfb333aab3cc5e13f2928408",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0039",
+      "code_hash": "b34ab017d8f2471779b6bfb88de849ce81288403407b1a5f7380a1ff99f843d1",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0040",
+      "code_hash": "e2d60b40017fed9b6675e455346fe91662c79c0c319f093aee323309014deddf",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0041",
+      "code_hash": "15afd7d0cfaec77ebea2f85a8373f69f72f84ccaf77137455c9ff8ff3ebd91e0",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0042",
+      "code_hash": "545ddc7680451bb6e115af343baa0d28bccf4c96b0dca61017e35a77cc785476",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0043",
+      "code_hash": "cfc09d3115d6bb580a28f681268680682d547c2e18b85a9dbe8dc64386189292",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0044",
+      "code_hash": "2d326cd87dbf4ee16e34681f83315c370ad43c34114829e82c33bfb82439b3b5",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0045",
+      "code_hash": "090559d10d1677084e98c5045322f55a16d19a024e5f5d3e7fa9c706a65b45e3",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0046",
+      "code_hash": "b1533274250851e9e85a82ade37eb79c717230d97d519d0c0c2a23d358e0016b",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0047",
+      "code_hash": "49ceabf50096acf330c0bcea56623718d3f349791cbfe6f9ff291b9ce063d426",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0048",
+      "code_hash": "65124fb04e0c5acc120cd9976b8988dd80ba6cea9ca80fc9fc60544b134ed13f",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0049",
+      "code_hash": "2c874501a83f017d9cc44f4ea322ef7d22739901ee8fd81e8dabd4fa918d97c2",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0050",
+      "code_hash": "0199736939891d64d440cfba6f0702fc7d14c3e0661120efb8626e556fcbc18d",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0051",
+      "code_hash": "11fde696bf9e81ef587ede84ba50ae223d8df5bbb02a1c0acd5f0e0a6f7c5c9a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0052",
+      "code_hash": "07ff2cf5146a1a4a837eddb7835964d34d25e2e6e363a1f88c8a9f42bb1b256b",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0053",
+      "code_hash": "fa776164c9495e7380c977521bf8de0514b201a4bb0cd37015b2c4e491da3287",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0054",
+      "code_hash": "0a1ae6c38cc0ed6aa911c72eab159f949dc6713166ead35614e6719f9ee63b74",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0055",
+      "code_hash": "7c7d3e2c308f568eb0070fa6a268cdf85dcc51f5a01b7c7a167014c50a7dd462",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0056",
+      "code_hash": "e945787fb48215b1f88e828afc7215638287f0169d3421c0df27a9397f4c85b4",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0057",
+      "code_hash": "26aa0df6566cc91a6277e62ac32a6eb19639eeb23524a663bbbcca53e0965f40",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0058",
+      "code_hash": "050d2b930170e5553732ec8210e97344173ff3a38e6739a9e4e43ff1128d5dab",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0059",
+      "code_hash": "ed9f6cd54424222090ea9dc774abaae3ce1c7a947caad46a01196583a4c02e24",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0060",
+      "code_hash": "a7966b00244b95c5ccb75f69584692d6002fa8f9983ffd0eb323dc286a600516",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0061",
+      "code_hash": "60f0762d1e36d82d9aae0e6710d69c7027ff3b449dab6eefaa8413f44b251ab9",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0062",
+      "code_hash": "47f208a98fb54ee3ed7bedfecdc7eef71071ba3178f6cd922bd98de656362be7",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0063",
+      "code_hash": "53906aacafbbdbad50b01cfe40cccbcb7f90f0175e9f9af7372e6da50dbb5ab9",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0064",
+      "code_hash": "42f0f6619ebdae44d51229f146ae07907098381d67bf4e8ca85480b70b47bb33",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0065",
+      "code_hash": "3a99f5556c4ab55b8fbdfd1be07faa221e51ffb332e82bd2424e693ef8899fb1",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0066",
+      "code_hash": "f10f83d85212de0112dbad523478d37547e6f6220157ec012534622ca0f5fd95",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0067",
+      "code_hash": "a12b72ea3151dc30c2631ef5dfcebab0affc88696f0688b6787186fdc5e34d1d",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0068",
+      "code_hash": "0c110987eaf151e49923529dd21712a1b84c2f087a73723d3710b721f7d2a189",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0069",
+      "code_hash": "59f5d35c1322d2f6fdcaa95d2fe013f0a68451ee1e54a8183ef0d98be9568518",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0070",
+      "code_hash": "98db0d985ef598f3437fbd29d2d9b2346f26b058531554d811c866275202b616",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0071",
+      "code_hash": "d725038aa46e7dca7812587cee58354bfc51232dd8f4cab0f68693242fbab5e8",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0072",
+      "code_hash": "13c8e9d0c462976771de4d27fae9a85ce4916c47e703804ac55c6cfdc9c89e70",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0073",
+      "code_hash": "fc231e54d91359e1d829b2446435357fbe56218e70d790937931dcf7fda6bd4d",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0074",
+      "code_hash": "e90eed9b6ea6d98a2b496819da546f1bebefbabf55d8462529d11714ee9adfa1",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0075",
+      "code_hash": "c101de8406b2cb2133b5de3119cf5ccdd6b0d086e684dc3f534ae605e22d882a",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0076",
+      "code_hash": "27ce1e76f876bb4f1886b4aaf596d4cfe27792f6754c6df83e27545145958e71",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0077",
+      "code_hash": "f7e38b4742e66fce055215231e999cc24808a17456244e21a9ef339923e738b1",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0078",
+      "code_hash": "af25b99f04c171aa75dab72bf9943ffc2eff06d6537e98e7aea275c8ba0d5e20",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0079",
+      "code_hash": "0397a208e66c3eac8dc4c0fe0dedc8a52f51547b2418d15d1bbece3fde5561d2",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0080",
+      "code_hash": "0bf5f52230f80107b9097b9359c6225efd0a6cadb50257bdc478e09797deddc2",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0081",
+      "code_hash": "d2096db4ade94fb7b52930ef10e81b20fe7d4350c703d60519b519d1c6655cd8",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0082",
+      "code_hash": "7b1e1a27ed177baed99e1aaa17a1f0234ac68d8cec92cea942f3b28dd42561b1",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0083",
+      "code_hash": "cb34c4d242b6669be6af2ea522c45b92aacd148f883551ba02a2dd4c33756645",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0084",
+      "code_hash": "0fa41a547a9dbb6c54e798755718a1b3e888e87a4ca29a849bb3467e830eb2ce",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0085",
+      "code_hash": "d05ced48f14ceabc4ec8e3bc3491b166d85442eb4e665ee6340e85a84edb6822",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0086",
+      "code_hash": "7cb736685d65f57b14ee559c6331d4c4b3b74d2435bd2501c70dc0fee652d8ce",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0087",
+      "code_hash": "b3568be2d8d2340a3cd4d67efad5b725e93a26e054548b8a1766d0b5637430b7",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0088",
+      "code_hash": "9ec24ee5e2ee188bb22362eca52cfcda9c48b84c847edf5acd2d862c4fbaa546",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0089",
+      "code_hash": "5c825919d0a590d47a6c1562d75be01e39e9476466a3ec88b260e4cf818cec8b",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0090",
+      "code_hash": "4cfe26fa385031ffb27df4491d610faca06f07d42e9d47d4c24b3f8b7f65ed5b",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0091",
+      "code_hash": "31eab8fe558dfafc746adccec1a56541de325da716541871b348bfcf0c6d91e0",
+      "duplicate_model_id": true,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0092",
+      "code_hash": "7b29f01fb2c516a45e1181a5aaa793b8fa118aae484d8efc90e12fd3219c1dc9",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0093",
+      "code_hash": "99e51bace506a78574936d2a205f68561e0b511f730958779cfda927e4caa84c",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0094",
+      "code_hash": "3d499b390ab57775a4b14a64723ec487cd6e3ef1f5b5d24ea805c63dc738bf65",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": true,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    },
+    {
+      "model_id": "lr_0095",
+      "code_hash": "4307e700798ff4db5b0a858b163019d384d2e66bf977679bde0512d53b218564",
+      "duplicate_model_id": false,
+      "duplicate_code_hash": false,
+      "included": false,
+      "reason": "primary prior set fills cap"
+    }
+  ],
+  "missing_mappings": []
+}

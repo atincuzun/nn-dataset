@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.4962,
+    "architecture": "ICNet",
+    "batch": 64,
+    "code_hash": "5d850b2c44e7467f54bb286fd9832b4d70941c488aa1aa2ddf27e3d3950be9ec",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "patience": 3
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "patience": 3,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr_2893",
+    "momentum": 0.9,
+    "scheduler": "ReduceLROnPlateau_f05_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_4592",
+    "weight_decay": 1e-05
+  }
+]

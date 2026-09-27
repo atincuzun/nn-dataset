@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.725,
+    "architecture": "GoogLeNet",
+    "batch": 64,
+    "code_hash": "a0f98eb0f45a53677d3afddddc35e8645e47c7a00bb13794a37c48941e655746",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.001
+    },
+    "lr": 0.01,
+    "model_id": "lr_2659",
+    "momentum": 0.9,
+    "scheduler": "ExponentialLR_g095",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_4102",
+    "weight_decay": 0.001
+  }
+]

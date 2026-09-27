@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.3041,
+    "architecture": "AirNet",
+    "batch": 64,
+    "code_hash": "61c65125704e62b55db53976784c41bf44d1aefec3d34fd6670ae36635a74e90",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr_0042",
+    "momentum": 0.9,
+    "scheduler": "ExponentialLR_g09",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-077706d4a52515d1432419451c8659c3",
+    "weight_decay": 0.005
+  }
+]

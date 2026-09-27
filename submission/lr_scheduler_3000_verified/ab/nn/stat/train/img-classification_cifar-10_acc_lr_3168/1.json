@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.3003,
+    "architecture": "MNASNet",
+    "batch": 64,
+    "code_hash": "8f5043a6cc7f7f85bca256bfcb00a1ab746fab3f958483bf8a62a78e3941527d",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr_3168",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s20_g07",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_5170",
+    "weight_decay": 0.0001
+  }
+]

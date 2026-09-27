@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_2527",
+  "source_id": "lr_2527",
+  "code_hash": "f8aecc57dc75ba5fbe0ee9f3a1e36c9d775aa060ff2c33cf2113721575377f1c",
+  "architecture": "FractalNet",
+  "scheduler": "MultiStepLR_m5_10_g05",
+  "accuracy": 0.4545,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr_3752",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2527/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_3899",
+  "source_id": "lr_3899",
+  "code_hash": "51823f54f993c2010835cc8da8fb8fdec09b5de55879ea117b7c0b607d0c952c",
+  "architecture": "RegNet",
+  "scheduler": "ExponentialLR_g098",
+  "accuracy": 0.7285,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-3b9e8593dd6e8d607f78a9b69c10f7ba",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3899/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

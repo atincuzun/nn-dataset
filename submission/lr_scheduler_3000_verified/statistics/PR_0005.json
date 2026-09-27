@@ -1,0 +1,31 @@
+{
+  "model_id": "PR_0005",
+  "source_id": "PR_0005",
+  "code_hash": "7d4441286ac3d3e6be18c6cc8789330cca08e8655105aaab855005585d68722f",
+  "architecture": "ResNet",
+  "scheduler": "CosineAnnealingLR_T10",
+  "accuracy": 0.775,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "PR-347235cb7834f7480d013b477641a3ef",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "T_max": 10,
+    "eta_min": 1e-06,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "T_max": 10,
+    "eta_min": 1e-06
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/PR_0005/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

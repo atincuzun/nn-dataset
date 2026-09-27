@@ -1,0 +1,35 @@
+[
+  {
+    "accuracy": 0.1251,
+    "architecture": "GoogLeNet",
+    "batch": 64,
+    "code_hash": "873feae5ad0d58c3f11d52997de129423f1970d51fa7754a31c3713db4dbdde9",
+    "epoch_metrics": {
+      "T_0": 0.1,
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "eta_min": 1e-06
+    },
+    "hyperparameters": {
+      "T_0": 0.1,
+      "batch": 64,
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr_2774",
+    "momentum": 0.9,
+    "scheduler": "CosineWarmRestarts_T5",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_4310",
+    "weight_decay": 1e-05
+  }
+]

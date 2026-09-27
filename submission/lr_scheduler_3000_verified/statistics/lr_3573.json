@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_3573",
+  "source_id": "lr_3573",
+  "code_hash": "14d5b4eed3b5d517a6bca428044d89e315fddec34478d17ca9a77ed574e86664",
+  "architecture": "MobileNetV2",
+  "scheduler": "MultiStepLR_m5_10_g05",
+  "accuracy": 0.7885,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-e1dddba1c9f0c0fe37292d838234f217",
+  "weight_decay": 5e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 5e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3573/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

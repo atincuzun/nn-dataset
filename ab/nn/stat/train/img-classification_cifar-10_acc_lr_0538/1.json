@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.2722,
+    "architecture": "BagNet",
+    "batch": 64,
+    "code_hash": "6d695e8ab3564bb1caaf97ba7ecaf3c205284ea4a143cfbb1244964310555b7a",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.001
+    },
+    "lr": 0.01,
+    "model_id": "lr_0538",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s5_g03",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-672cfdd62fc06595fb69773d28a447a3",
+    "weight_decay": 0.001
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.6925,
+    "architecture": "FractalNet",
+    "batch": 64,
+    "code_hash": "d66faab33a25c4cb18244883800723365103bed778b1e7a63c3407b37a499b93",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "patience": 3
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "patience": 3,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.001
+    },
+    "lr": 0.01,
+    "model_id": "lr_2547",
+    "momentum": 0.9,
+    "scheduler": "ReduceLROnPlateau_f05_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_3842",
+    "weight_decay": 0.001
+  }
+]
