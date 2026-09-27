@@ -83,7 +83,7 @@ def init_population():
 def code_to_db(cursor, table_name, code=None, code_file=None, force_name = None):
     # If the model does not exist, insert it with a new UUID
     if code_file:
-        nm = code_file.stem 
+        nm = code_file.stem
     elif force_name is None:
         nm = uuid4(code)
     else:
@@ -457,7 +457,16 @@ def json_train_to_db():
                                     file=sys.stderr,
                                 )
             except Exception as e:
-                print(f"Warning: skipping JSON file {model_stat_file}: {e}", file=sys.stderr)
+                message = f"Error: skipping JSON file {model_stat_file}: {e}"
+                print(message, file=sys.stderr)
+                with open(ab_root_path / 'error.txt', 'a') as f:
+                    print(message, file=f)
+                    f.flush()
+
+                # # Delete files that do not have the corresponding NN code. Uncomment and use this only when you are 100% sure this is the case.
+                # import shutil
+                # shutil.rmtree(model_stat_file.parent, ignore_errors=True)
+
     close_conn(conn)
     print("All statistics reloaded successfully.")
 
