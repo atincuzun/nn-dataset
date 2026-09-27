@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_1979",
+  "source_id": "lr_1979",
+  "code_hash": "1d83d82edf79cfca3821abe980aa6c0c306a2edd0522c611abc9fe1ee0d6f2a8",
+  "architecture": "DenseNet",
+  "scheduler": "CosineAnnealingLR_T5",
+  "accuracy": 0.7247,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-126d74e65ae00f6bbd6240a24975a00e",
+  "weight_decay": 0.0005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_max": 0.2,
+    "eta_min": 1e-06,
+    "weight_decay": 0.0005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "T_max": 0.2,
+    "eta_min": 1e-06
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1979/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

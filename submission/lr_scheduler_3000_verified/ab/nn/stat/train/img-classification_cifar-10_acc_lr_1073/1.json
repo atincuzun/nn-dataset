@@ -1,0 +1,39 @@
+[
+  {
+    "accuracy": 0.8096,
+    "architecture": "ConvNeXt",
+    "batch": 64,
+    "code_hash": "de0019e604f8ab7fea72f4370c479e807bed5875553b2de80db5001422a9da1a",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "step_size": 0.5,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "step_size": 0.5,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr_1073",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s3_g01",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-d88186965e91781e7aacd206191bda2b",
+    "weight_decay": 1e-05
+  }
+]

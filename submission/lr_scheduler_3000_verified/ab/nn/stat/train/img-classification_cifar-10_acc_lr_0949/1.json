@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.7552,
+    "architecture": "BayesianNet-1",
+    "batch": 64,
+    "code_hash": "c4c67f1cef1c28597c2b21607b72af52bb651ea20b3b040292005032756ae80b",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr_0949",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m5_10_g05",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-b82e704f542bfc39c059d4075c0a673d",
+    "weight_decay": 0.0001
+  }
+]

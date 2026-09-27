@@ -1,0 +1,35 @@
+[
+  {
+    "accuracy": 0.7818,
+    "architecture": "MobileNetV3",
+    "batch": 64,
+    "code_hash": "6e41c3f75077dbfe85762b1ec3913e56d8cca39c9679c90e113647d8b5826d44",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr_3756",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m3_7_g03",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-2ebac0fb129fb8ee059284f873bd59ef",
+    "weight_decay": 0.0001
+  }
+]

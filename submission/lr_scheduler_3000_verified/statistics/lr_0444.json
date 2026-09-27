@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_0444",
+  "source_id": "lr_0444",
+  "code_hash": "4637abbf03cad59514fa115a78b89fd8bcbb71323f43d3dd5297fea64ecfd74a",
+  "architecture": "AlexNet",
+  "scheduler": "ReduceLROnPlateau_f05_p2",
+  "accuracy": 0.2891,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-5673b4871893b8188f3a71dbf34742d6",
+  "weight_decay": 5e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3,
+    "weight_decay": 5e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0444/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

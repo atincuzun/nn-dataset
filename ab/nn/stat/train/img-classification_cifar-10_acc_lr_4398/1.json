@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.3938,
+    "architecture": "SqueezeNet-1",
+    "batch": 64,
+    "code_hash": "fe98d047bb00c1ee75fc06c80b3976d03d24f437070eab8b27ba9ee15fd6059d",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr_4398",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s3_g01",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-1420471de6c73a907456ac8234e353d5",
+    "weight_decay": 1e-05
+  }
+]

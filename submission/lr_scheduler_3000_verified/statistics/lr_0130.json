@@ -1,0 +1,35 @@
+{
+  "model_id": "lr_0130",
+  "source_id": "lr_0130",
+  "code_hash": "e90eed9b6ea6d98a2b496819da546f1bebefbabf55d8462529d11714ee9adfa1",
+  "architecture": "AirNet",
+  "scheduler": "CyclicLR_exp",
+  "accuracy": 0.7823,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-170669b10e216d173288b4880b461cbc",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "gamma": 0.5,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0130/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

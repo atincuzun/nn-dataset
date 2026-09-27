@@ -1,0 +1,37 @@
+[
+  {
+    "accuracy": 0.4567,
+    "architecture": "ConvNeXt",
+    "batch": 64,
+    "code_hash": "4e5f6ded2dfd67a6ba9c5988c2bd480870d67621f76f79eaa526337a09d57b5b",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "max_lr": 0.1,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "lr": 0.01,
+      "max_lr": 0.1,
+      "momentum": 0.9,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.001
+    },
+    "lr": 0.01,
+    "model_id": "lr_1196",
+    "momentum": 0.9,
+    "scheduler": "OneCycleLR_005",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-ee22d11668acaa29ebef26bbc0240198",
+    "weight_decay": 0.001
+  }
+]

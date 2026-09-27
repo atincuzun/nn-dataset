@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_4123",
+  "source_id": "lr_4123",
+  "code_hash": "07c85dfcce29d7589da9ac432f2e91c11987f4191bb2d05d00b757836878c767",
+  "architecture": "ResNet",
+  "scheduler": "ReduceLROnPlateau_f05_p2",
+  "accuracy": 0.3184,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-f251f5d2fb50edf7eb5164ca7aa7d4b1",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4123/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

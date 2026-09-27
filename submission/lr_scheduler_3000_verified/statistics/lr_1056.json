@@ -1,0 +1,39 @@
+{
+  "model_id": "lr_1056",
+  "source_id": "lr_1056",
+  "code_hash": "8595dd92136f9be8e94ef4d36a42d3ef564d85700aa549c92c5258b15589c29a",
+  "architecture": "ConvNeXt",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.3612,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-d5f7fc416dc43aeca482a2e327244c1f",
+  "weight_decay": 0.001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "stochastic_depth_prob": 0.1,
+    "norm_eps": 1e-06,
+    "norm_std": 0.02,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1056/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

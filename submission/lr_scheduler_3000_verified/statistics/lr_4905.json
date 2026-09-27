@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_4905",
+  "source_id": "lr_4905",
+  "code_hash": "0403a7b39d7bce2154e16e62392cbebe24b6c99a9498cf5548ebebf923220f3b",
+  "architecture": "VGG",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.7907,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-a198e08560076e2c002a1bdd5dcbcfa8",
+  "weight_decay": 0.0005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.0005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4905/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

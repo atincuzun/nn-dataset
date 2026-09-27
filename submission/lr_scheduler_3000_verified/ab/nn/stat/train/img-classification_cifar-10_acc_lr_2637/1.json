@@ -1,0 +1,35 @@
+[
+  {
+    "accuracy": 0.797,
+    "architecture": "GoogLeNet",
+    "batch": 64,
+    "code_hash": "61d826ea24f898bdc2b3f9774123acae612bffcde21a6f66e7a253eb5622ae9c",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "dropout_aux": 0.7,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0005
+    },
+    "lr": 0.01,
+    "model_id": "lr_2637",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s5_g03",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-3dc078c4a49acc96bedf10aa3ecc93d6",
+    "weight_decay": 0.0005
+  }
+]

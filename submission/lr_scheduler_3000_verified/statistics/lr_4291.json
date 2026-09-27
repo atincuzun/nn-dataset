@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_4291",
+  "source_id": "lr_4291",
+  "code_hash": "a90aca3dd496b726679d4bfdce80fbfd6ac4d5d58a635bfd2279883f53b0dc55",
+  "architecture": "ShuffleNet",
+  "scheduler": "MultiStepLR_m2_4_g01",
+  "accuracy": 0.8086,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-f428ebad84808ff72726e1767835fb2f",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4291/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

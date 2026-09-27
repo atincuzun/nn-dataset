@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_3000",
+  "source_id": "lr_3000",
+  "code_hash": "3df3fc97ffe20c5c8977eb33c629c38101dab5d48ae60b9de51d92bb069161ad",
+  "architecture": "InceptionV3-1",
+  "scheduler": "StepLR_s3_g01",
+  "accuracy": 0.5666,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-a3223a600d1a6a4051cd7bd6ba20e34d",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3000/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

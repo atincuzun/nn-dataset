@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_3195",
+  "source_id": "lr_3195",
+  "code_hash": "beaa5d76eb6746dd46f5df6b1221636d102d7c4b39473472a8b0930803af7430",
+  "architecture": "MNASNet",
+  "scheduler": "ExponentialLR_g098",
+  "accuracy": 0.4811,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr_5247",
+  "weight_decay": 5e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 5e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3195/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

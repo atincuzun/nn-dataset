@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.585,
+    "architecture": "DarkNet",
+    "batch": 64,
+    "code_hash": "d87f3e821957c3fdd0f8cfdce9f69d6a66dfdd673296f5a61e2d8bd4e5c2b8c3",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "power": 2.0,
+      "total_iters": 0.1
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "power": 2.0,
+      "total_iters": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr_1925",
+    "momentum": 0.9,
+    "scheduler": "PolynomialLR_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr_1866",
+    "weight_decay": 0.005
+  }
+]

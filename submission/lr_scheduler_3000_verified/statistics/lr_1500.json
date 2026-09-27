@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_1500",
+  "source_id": "lr_1500",
+  "code_hash": "14fd9ae119b86175f7c5ea701756d1462d170a46fe57d98b8aa0cf7a11e8e824",
+  "architecture": "DPN131",
+  "scheduler": "ReduceLROnPlateau_f03_p3",
+  "accuracy": 0.2423,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-394e542896ee46273e87809431296089",
+  "weight_decay": 1e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3,
+    "weight_decay": 1e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1500/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

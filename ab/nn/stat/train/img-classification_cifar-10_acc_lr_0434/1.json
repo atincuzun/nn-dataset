@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.2211,
+    "architecture": "AlexNet",
+    "batch": 64,
+    "code_hash": "12188f95e75170878f71c757284c499916bf5251ede7f0f63854cb25d8108018",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr_0434",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m3_7_g03",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-5492447864f8e30ea735b4b571e1138c",
+    "weight_decay": 0.005
+  }
+]

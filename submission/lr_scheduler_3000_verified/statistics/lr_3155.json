@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_3155",
+  "source_id": "lr_3155",
+  "code_hash": "127b7e4d88a2e632b29cc371e1dcca8867bbf46e414fb4281a7f9216fc02490b",
+  "architecture": "MNASNet",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.4661,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr_5136",
+  "weight_decay": 0.0005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.0005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3155/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

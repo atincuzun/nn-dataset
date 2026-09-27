@@ -1,0 +1,33 @@
+{
+  "model_id": "lr_2804",
+  "source_id": "lr_2804",
+  "code_hash": "1913886f71882312762940ed16d406f79f15c8c7c0c8f8a4824e335395bfeb1c",
+  "architecture": "ICNet",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.3844,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-2c28e57b5185821146e09dd0278dd8a9",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2804/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

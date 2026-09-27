@@ -1,0 +1,35 @@
+{
+  "model_id": "lr_2632",
+  "source_id": "lr_2632",
+  "code_hash": "e2c4dc610c1bd85ccecb0085a13f1a5c9c2e87c0ab549595162cb4c433a05881",
+  "architecture": "GoogLeNet",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.7836,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr_4061",
+  "weight_decay": 0.005,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "dropout_aux": 0.7,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.005
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "dropout_aux": 0.7,
+    "step_size": 0.5,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2632/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

@@ -1,0 +1,31 @@
+{
+  "model_id": "PR_0001",
+  "source_id": "PR_0001",
+  "code_hash": "697519e6f297c6f8c841c49b75ca5dd1c1f8a08e79c94e0f83e855f0e1abf559",
+  "architecture": "ResNet",
+  "scheduler": "StepLR_s10_g05",
+  "accuracy": 0.7249,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr-c0b0de481957db50c936d37b7d55391a",
+  "weight_decay": 0.0001,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "step_size": 10,
+    "gamma": 0.5,
+    "weight_decay": 0.0001
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "step_size": 10,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/PR_0001/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}

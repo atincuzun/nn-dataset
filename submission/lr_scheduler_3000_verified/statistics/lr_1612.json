@@ -1,0 +1,31 @@
+{
+  "model_id": "lr_1612",
+  "source_id": "lr_1612",
+  "code_hash": "eb1613ed3c45200159a529681bf110df3af59935a065c31ab57b8e75860cd2a9",
+  "architecture": "DPN68",
+  "scheduler": "ExponentialLR_g09",
+  "accuracy": 0.2576,
+  "batch": 64,
+  "lr": 0.01,
+  "momentum": 0.9,
+  "transform": "norm_256_flip",
+  "uid": "lr_1169",
+  "weight_decay": 1e-05,
+  "hyperparameters": {
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 1e-05
+  },
+  "epoch_metrics": {
+    "dropout": 0.2,
+    "epoch_max": 50,
+    "gamma": 0.5
+  },
+  "source_eval_info": "../nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1612/eval_info.json",
+  "statistics_source": "actual eval_info.json"
+}
