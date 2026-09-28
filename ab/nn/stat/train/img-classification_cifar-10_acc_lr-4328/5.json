@@ -1,0 +1,23 @@
+[
+  {
+    "accuracy": 0.2114,
+    "epoch": 5,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "gamma": 0.5,
+    "weight_decay": 1e-05,
+    "architecture": "ShuffleNet",
+    "scheduler": "CyclicLR_exp",
+    "model_id": "lr-4328",
+    "source_id": "lr_4328",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4328/5.json",
+    "code_hash": "e7fd461cbc89fc4ae2a7e93385bb1c09570af9a9d51b2fcc5f3687070b847a92",
+    "uid": "lr-7b8b00eab30d9866b065cbb7c7401c71"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.7191,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_0": 0.1,
+    "eta_min": 1e-06,
+    "weight_decay": 1e-05,
+    "architecture": "MobileNetV2",
+    "scheduler": "CosineWarmRestarts_T2",
+    "model_id": "lr-3656",
+    "source_id": "lr_3656",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3656/3.json",
+    "code_hash": "c6fdb56b2fe9ca437859c1c956babdadd445b3485fe30e5b89dae5e24231c94a",
+    "uid": "lr-b63462b6d00cdcba283fe463fc0c61b6"
+  }
+]

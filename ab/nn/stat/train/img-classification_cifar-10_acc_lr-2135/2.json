@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.2447,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005,
+    "architecture": "Diffuser",
+    "scheduler": "ExponentialLR_g095",
+    "model_id": "lr-2135",
+    "source_id": "lr_2135",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2135/2.json",
+    "code_hash": "867252e717012bf334cfb9486a984f9f758a63a3d39d50e2ab09f7e12851a5ab",
+    "uid": "lr-dcd99db8c802d329180f39f795bde9c5"
+  }
+]

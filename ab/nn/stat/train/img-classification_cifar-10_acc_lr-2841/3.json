@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.2908,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.001,
+    "architecture": "ICNet",
+    "scheduler": "ExponentialLR_g09",
+    "model_id": "lr-2841",
+    "source_id": "lr_2841",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2841/3.json",
+    "code_hash": "a1c00eb7040efcbf1c4d8303d14865551f3cd59639138b6961653e5856df5d2b",
+    "uid": "lr-077706d4a52515d1432419451c8659c3"
+  }
+]

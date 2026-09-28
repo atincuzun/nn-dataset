@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.5916,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.0005,
+    "architecture": "BagNet",
+    "scheduler": "MultiStepLR_m3_7_g03",
+    "model_id": "lr-0607",
+    "source_id": "lr_0607",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0607/2.json",
+    "code_hash": "518bf8c4c1981dcc4db20a48093909115df0b3fd0f3ad96594aa80b859c2e7f2",
+    "uid": "lr-170669b10e216d173288b4880b461cbc"
+  }
+]

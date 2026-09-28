@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.5264,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_0": 0.1,
+    "eta_min": 1e-06,
+    "weight_decay": 0.001,
+    "architecture": "DarkNet",
+    "scheduler": "CosineWarmRestarts_T5",
+    "model_id": "lr-1903",
+    "source_id": "lr_1903",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1903/3.json",
+    "code_hash": "1e0799e4ae58b4583dea570a5b1568e489a84c4332a7a1f19feabfdeb608bd78",
+    "uid": "lr_1815"
+  }
+]

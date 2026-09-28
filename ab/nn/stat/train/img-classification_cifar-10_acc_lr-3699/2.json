@@ -1,0 +1,24 @@
+[
+  {
+    "accuracy": 0.5895,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "norm_eps": 0.001,
+    "norm_momentum": 0.01,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 5e-05,
+    "architecture": "MobileNetV3",
+    "scheduler": "StepLR_s3_g01",
+    "model_id": "lr-3699",
+    "source_id": "lr_3699",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3699/2.json",
+    "code_hash": "dd0ce2383eca61fb4d0336bde456878d28b250ab1ec2aca17c65b4380ab80b89",
+    "uid": "lr-07136b58eb8c2b6c6c51cdceae051f70"
+  }
+]

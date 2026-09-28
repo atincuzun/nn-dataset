@@ -1,0 +1,23 @@
+[
+  {
+    "accuracy": 0.1908,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "gamma": 0.5,
+    "weight_decay": 1e-05,
+    "architecture": "AlexNet",
+    "scheduler": "CyclicLR_exp",
+    "model_id": "lr-0478",
+    "source_id": "lr_0478",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0478/3.json",
+    "code_hash": "921fd1d80f0be130356fe5e6e742e97d6665f107ac7b3b18dfc4ad5e9869394e",
+    "uid": "lr-5d2da3713dc930d210f90fc62b8c6205"
+  }
+]

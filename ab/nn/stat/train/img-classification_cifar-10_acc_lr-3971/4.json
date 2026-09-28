@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.6797,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "weight_decay": 1e-05,
+    "architecture": "RegNet",
+    "scheduler": "CyclicLR_tri2",
+    "model_id": "lr-3971",
+    "source_id": "lr_3971",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3971/4.json",
+    "code_hash": "ba01b8a01ce6d9a798fb5f1c0435509edf693da0830310fe83f3e3a9f8667cef",
+    "uid": "lr-79fb4273f6d67a902517daa5e19b75d5"
+  }
+]

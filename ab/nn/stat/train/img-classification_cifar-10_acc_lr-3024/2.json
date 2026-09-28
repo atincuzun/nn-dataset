@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.4103,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005,
+    "architecture": "InceptionV3-1",
+    "scheduler": "ExponentialLR_g098",
+    "model_id": "lr-3024",
+    "source_id": "lr_3024",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3024/2.json",
+    "code_hash": "105183fd46e398a51e2b3aa0786556221959daf0d6390c233b960d424a4dac5f",
+    "uid": "lr-7a6e86d66c651da6857bbb7ebd1b66d9"
+  }
+]

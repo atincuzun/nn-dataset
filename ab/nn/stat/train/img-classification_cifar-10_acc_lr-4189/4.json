@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.5611,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "start_factor": 0.1,
+    "total_iters": 0.1,
+    "weight_decay": 5e-05,
+    "architecture": "ResNet",
+    "scheduler": "LinearLR_sf01",
+    "model_id": "lr-4189",
+    "source_id": "lr_4189",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4189/4.json",
+    "code_hash": "d1ef00c5cdabb2f684be291c9d6c4cc6ac5d3cda6ec1b2d739da3fddbb2c971e",
+    "uid": "lr-79f9a19e457de81fe7a8c59dbbdb28ed"
+  }
+]

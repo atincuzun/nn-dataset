@@ -1,0 +1,31 @@
+[
+  {
+    "accuracy": 0.7257,
+    "architecture": "RegNet",
+    "batch": 64,
+    "code_hash": "66c369f0ddc49c8deb32283c24c42eff6d05236260e32fe2acfe57dca012eace",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-3936",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-ad8eb60005c838f94fff63d40aa3c3df",
+    "weight_decay": 1e-05
+  }
+]

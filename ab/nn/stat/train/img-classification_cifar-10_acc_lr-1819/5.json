@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.5791,
+    "epoch": 5,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_max": 0.2,
+    "eta_min": 1e-06,
+    "weight_decay": 0.001,
+    "architecture": "DarkNet",
+    "scheduler": "CosineAnnealingLR_T20",
+    "model_id": "lr-1819",
+    "source_id": "lr_1819",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1819/5.json",
+    "code_hash": "b7df6f87dd7689cbbaa35b341a5611827c0addfcc34eac8b7f57691ffee17487",
+    "uid": "lr_1609"
+  }
+]

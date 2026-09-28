@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.312,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_0": 0.1,
+    "eta_min": 1e-06,
+    "weight_decay": 0.005,
+    "architecture": "DPN107",
+    "scheduler": "CosineWarmRestarts_T5",
+    "model_id": "lr-1379",
+    "source_id": "lr_1379",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1379/3.json",
+    "code_hash": "13526d9b32324619b902a37b13925114633ec5de0220195de627073dcd79dabb",
+    "uid": "lr_0167"
+  }
+]

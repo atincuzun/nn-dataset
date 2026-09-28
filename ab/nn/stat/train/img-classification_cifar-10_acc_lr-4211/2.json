@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.5906,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.0001,
+    "architecture": "ShuffleNet",
+    "scheduler": "StepLR_s5_g03",
+    "model_id": "lr-4211",
+    "source_id": "lr_4211",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4211/2.json",
+    "code_hash": "6c05cc0e82b66aa524cb8c73338d854cb7193ac8420f7aff1de8f1ab4c82bd34",
+    "uid": "lr-b15e8a784deaab6f60228a5c7a447164"
+  }
+]

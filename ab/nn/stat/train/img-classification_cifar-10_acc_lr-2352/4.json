@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.66,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.005,
+    "architecture": "EfficientNet",
+    "scheduler": "MultiStepLR_m5_10_g05",
+    "model_id": "lr-2352",
+    "source_id": "lr_2352",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2352/4.json",
+    "code_hash": "a23044a1c9c43ac943d6c071a042061a0952bce1f65c559db157c13d472cf815",
+    "uid": "lr-6750f1b09cef5b00201d3e3797a1d77c"
+  }
+]

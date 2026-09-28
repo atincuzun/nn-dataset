@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.5936,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.001,
+    "architecture": "AlexNet",
+    "scheduler": "ExponentialLR_g09",
+    "model_id": "lr-0391",
+    "source_id": "lr_0391",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0391/2.json",
+    "code_hash": "d92403a64a7ab14e422ebff49ca0be80d9df419ca5faeae6191e4c2a6a302ddf",
+    "uid": "lr-ef5fd324e4e7a42adefab856798b9e05"
+  }
+]

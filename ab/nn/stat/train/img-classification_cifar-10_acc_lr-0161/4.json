@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.6557,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_0": 0.1,
+    "eta_min": 1e-06,
+    "weight_decay": 0.005,
+    "architecture": "AirNet",
+    "scheduler": "CosineWarmRestarts_T2",
+    "model_id": "lr-0161",
+    "source_id": "lr_0161",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0161/4.json",
+    "code_hash": "7b29f01fb2c516a45e1181a5aaa793b8fa118aae484d8efc90e12fd3219c1dc9",
+    "uid": "lr-64afaecd958e90f58248ecd4522a546d"
+  }
+]

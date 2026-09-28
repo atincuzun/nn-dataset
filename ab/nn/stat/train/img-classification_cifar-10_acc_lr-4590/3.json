@@ -1,0 +1,23 @@
+[
+  {
+    "accuracy": 0.5206,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "attention_dropout": 0.0,
+    "stochastic_depth_prob": 0.1,
+    "gamma": 0.5,
+    "weight_decay": 0.0005,
+    "architecture": "SwinTransformer",
+    "scheduler": "ExponentialLR_g09",
+    "model_id": "lr-4590",
+    "source_id": "lr_4590",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4590/3.json",
+    "code_hash": "1e494f263e4b7cb17a3abc26021f6419481b08a0d6e86b3d4d0e793e121fe645",
+    "uid": "lr-2d799325e9008f37b12bca97b0b768e8"
+  }
+]

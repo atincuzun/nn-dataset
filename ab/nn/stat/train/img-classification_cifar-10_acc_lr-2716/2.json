@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.6796,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "dropout_aux": 0.7,
+    "gamma": 0.5,
+    "weight_decay": 0.005,
+    "architecture": "GoogLeNet",
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "model_id": "lr-2716",
+    "source_id": "lr_2716",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2716/2.json",
+    "code_hash": "bb2cd120ded9ca0b1f4e04a20c7d91ae502afb881d8f13a6c6c93e563f6a3ce8",
+    "uid": "lr-02ec1499e07b4ca68846c6dbbef89ab5"
+  }
+]
