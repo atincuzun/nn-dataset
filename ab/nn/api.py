@@ -115,7 +115,8 @@ def run_data(model_name=None, device_type=None, max_rows=None, type=None) -> Dat
       - device_type (str | None): filter by device type (only applies to run table)
       - max_rows (int | None): maximum number of results
       - type (str | None): filter by runtime: "tflite" (mobile) or "pt" (workstation, PyTorch).
-          For "pt" rows, 'duration' is the CPU latency and 'unit' is the GPU name.
+          For "pt" rows, 'duration' is the fastest latency and 'unit' is the GPU name,
+          or "CPU" when the CPU was faster.
 
     Returns:
       - A pandas DataFrame with columns from both tables:
