@@ -13,7 +13,7 @@ from tqdm import tqdm
 from ab.nn.util.Util import *
 from ab.nn.util.db.Init import init_db, sql_conn, close_conn
 from ab.nn.util.hf.DB_from_HF import db_from_hf
-from ab.nn.util.Const import nn_stat_table, stat_run_tflite_fp32_dir, stat_run_tflite_int8_dir, run_table, tflite_table, prun_table, stat_run_pt_dir, train_stat_table
+from ab.nn.util.Const import nn_stat_table, stat_run_tflite_fp32_dir, stat_run_tflite_int8_dir, stat_run_pt_fp32_dir, run_table, tflite_table, prun_table, stat_run_pt_dir, train_stat_table
 from ab.nn.util.db.build_nn_similarity import upsert_minhash, upsert_minhash_batch
 
 
@@ -751,19 +751,22 @@ def save_layer_stat(epoch: int, table: dict, stat_id: str, metric: str = None):
 @_serialized_db_write
 def json_run_tflite_to_db():
     """
-    Import runtime analytics from tflite JSON files in stat/run/tflite/fp32 and stat/run/tflite/int8.
-    Adds precision_type column to indicate whether the data is from fp32 or int8.
+    Import runtime analytics from the JSON files in stat/run/tflite/fp32 and stat/run/tflite/int8
+    (mobile, type "tflite") and in stat/run/pt/fp32 (workstation, PyTorch, type "pt").
+    Adds precision_type column to indicate whether the data is from fp32 or int8, and type column
+    to indicate the runtime ("tflite" or "pt").
     """
     conn, cursor = sql_conn()
 
     tflite_dirs = [
-        (stat_run_tflite_fp32_dir, 'fp32'),
-        (stat_run_tflite_int8_dir, 'int8')
+        (stat_run_tflite_fp32_dir, 'fp32', 'tflite'),
+        (stat_run_pt_fp32_dir, 'fp32', 'pt'),
+        (stat_run_tflite_int8_dir, 'int8', 'tflite')
     ]
 
     total_files = 0
-    accuracy_maps: dict[str, dict] = {}
-    for tflite_dir, precision_type in tflite_dirs:
+    accuracy_maps: dict = {}  # per folder, as tflite/fp32 and pt/fp32 share the precision 'fp32'
+    for tflite_dir, precision_type, run_type in tflite_dirs:
         if not tflite_dir.exists():
             continue
 
@@ -771,12 +774,12 @@ def json_run_tflite_to_db():
         if map_path.exists():
             try:
                 with open(map_path, 'r', encoding='utf-8') as mf:
-                    accuracy_maps[precision_type] = json.load(mf)
+                    accuracy_maps[tflite_dir] = json.load(mf)
             except Exception as e:
                 print(f"Warning: failed to load mapping from {map_path}: {e}", file=sys.stderr)
-                accuracy_maps[precision_type] = {}
+                accuracy_maps[tflite_dir] = {}
         else:
-            accuracy_maps[precision_type] = {}
+            accuracy_maps[tflite_dir] = {}
 
         json_files = list(tflite_dir.rglob('*.json'))
         total_files += len(json_files)
@@ -785,11 +788,11 @@ def json_run_tflite_to_db():
         close_conn(conn)
         return
 
-    print(f"Importing runtime analytics from {total_files} tflite JSON files...")
+    print(f"Importing runtime analytics from {total_files} tflite and pt JSON files...")
 
     processed = 0
     with tqdm(total=total_files, desc="Importing tflite runtime data") as pbar:
-        for tflite_dir, precision_type in tflite_dirs:
+        for tflite_dir, precision_type, run_type in tflite_dirs:
             if not tflite_dir.exists():
                 continue
 
@@ -809,7 +812,7 @@ def json_run_tflite_to_db():
                     continue
 
                 model_name = data.get('model_name')
-                acc_info = accuracy_maps.get(precision_type, {}).get(model_name, {})
+                acc_info = accuracy_maps.get(tflite_dir, {}).get(model_name, {})
                 accuracy = acc_info.get('accuracy')
                 transform_code = acc_info.get('transform')
                 device_type = data.get('device_type')
@@ -839,7 +842,7 @@ def json_run_tflite_to_db():
                     'npu_duration', 'npu_min_duration', 'npu_max_duration', 'npu_std_dev', 'npu_error',
                     'total_ram_kb', 'free_ram_kb', 'available_ram_kb', 'cached_kb',
                     'in_dim_0', 'in_dim_1', 'in_dim_2', 'in_dim_3',
-                    'device_analytics_json', 'precision_type'
+                    'device_analytics_json', 'precision_type', 'type'
                 ]
 
                 placeholders = ', '.join(['?'] * len(columns))
@@ -853,7 +856,7 @@ def json_run_tflite_to_db():
                     extra_vals['npu_duration'], extra_vals['npu_min_duration'], extra_vals['npu_max_duration'], extra_vals['npu_std_dev'], extra_vals['npu_error'],
                     extra_vals['total_ram_kb'], extra_vals['free_ram_kb'], extra_vals['available_ram_kb'], extra_vals['cached_kb'],
                     extra_vals['in_dim_0'], extra_vals['in_dim_1'], extra_vals['in_dim_2'], extra_vals['in_dim_3'],
-                    analytics_json, precision_type
+                    analytics_json, precision_type, run_type
                 ]
 
                 try:
@@ -901,7 +904,7 @@ def json_prun_to_db():
 
     total_files = 0
     for pruning_dir in stat_run_pt_dir.iterdir():
-        if pruning_dir.is_dir():
+        if pruning_dir.is_dir() and pruning_dir != stat_run_pt_fp32_dir:
             for config_dir in pruning_dir.iterdir():
                 if config_dir.is_dir():
                     all_models_path = config_dir / 'all_models.json'
@@ -916,7 +919,7 @@ def json_prun_to_db():
     processed = 0
     with tqdm(total=total_files, desc="Importing pruning data") as pbar:
         for pruning_method_dir in stat_run_pt_dir.iterdir():
-            if not pruning_method_dir.is_dir():
+            if not pruning_method_dir.is_dir() or pruning_method_dir == stat_run_pt_fp32_dir:
                 continue
 
             pruning_method = pruning_method_dir.name

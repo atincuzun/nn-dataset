@@ -102,7 +102,7 @@ def data_withnonnullvalue(
 
 
 @functools.lru_cache(maxsize=10)
-def run_data(model_name=None, device_type=None, max_rows=None) -> DataFrame:
+def run_data(model_name=None, device_type=None, max_rows=None, type=None) -> DataFrame:
     """
     Get comprehensive runtime and tflite analytics as a pandas DataFrame.
     
@@ -114,6 +114,8 @@ def run_data(model_name=None, device_type=None, max_rows=None) -> DataFrame:
       - model_name (str | None): filter by model name (FK to nn.name)
       - device_type (str | None): filter by device type (only applies to run table)
       - max_rows (int | None): maximum number of results
+      - type (str | None): filter by runtime: "tflite" (mobile) or "pt" (workstation, PyTorch).
+          For "pt" rows, 'duration' is the CPU latency and 'unit' is the GPU name.
 
     Returns:
       - A pandas DataFrame with columns from both tables:
@@ -124,7 +126,7 @@ def run_data(model_name=None, device_type=None, max_rows=None) -> DataFrame:
         'cpu_std_dev', 'cpu_error', 'gpu_duration', 'gpu_min_duration', 'gpu_max_duration', 
         'gpu_std_dev', 'gpu_error', 'npu_duration', 'npu_min_duration', 'npu_max_duration', 
         'npu_std_dev', 'npu_error', 'total_ram_kb', 'free_ram_kb', 'available_ram_kb', 'cached_kb',
-        'in_dim_0', 'in_dim_1', 'in_dim_2', 'in_dim_3', 'device_analytics', 'precision_type'
+        'in_dim_0', 'in_dim_1', 'in_dim_2', 'in_dim_3', 'device_analytics', 'precision_type', 'type'
         
         ** From tflite table (model metrics) **
         'tflite_id', 'tflite_accuracy', 'tflite_transform', 'tflite_precision_type'
@@ -137,7 +139,8 @@ def run_data(model_name=None, device_type=None, max_rows=None) -> DataFrame:
     run_recs: tuple[dict, ...] = DB_Read.run_data(
         model_name=model_name, 
         device_type=device_type, 
-        max_rows=max_rows
+        max_rows=max_rows,
+        type=type
     )
     
     # Get tflite data
@@ -154,8 +157,8 @@ def run_data(model_name=None, device_type=None, max_rows=None) -> DataFrame:
     for run_rec in run_recs:
         merged_rec = dict(run_rec)
         
-        # Join with tflite data if available
-        if merged_rec['model_name'] in tflite_map:
+        # Join with tflite data if available (only for tflite runs)
+        if merged_rec.get('type') == 'tflite' and merged_rec['model_name'] in tflite_map:
             tflite_rec = tflite_map[merged_rec['model_name']]
             merged_rec['tflite_id'] = tflite_rec.get('id')
             merged_rec['tflite_accuracy'] = tflite_rec.get('accuracy')

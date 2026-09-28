@@ -166,12 +166,14 @@ def init_db():
         
         device_analytics_json TEXT,
         precision_type TEXT,
+        type TEXT,
         FOREIGN KEY (model_name) REFERENCES nn (name) ON DELETE CASCADE
     )
     """)
     # Indexes for mobile analytics
     cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{run_table}_model ON {run_table} (model_name);")
     cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{run_table}_device ON {run_table} (device_type);")
+    cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{run_table}_type ON {run_table} (type);")
 
     # Create TFLite model metadata table
     cursor.execute(f"""
