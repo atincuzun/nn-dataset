@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.3013,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.0001,
+    "architecture": "UNet2D",
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "model_id": "lr-4813",
+    "source_id": "lr_4813",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4813/3.json",
+    "code_hash": "bcf5d6766ab0d64185ed9d7edefdbc6b3a5130d0c866a1292d3808a4077dab37",
+    "uid": "lr-84dbfe8690b224b59218aaf6b9d08e5b"
+  }
+]

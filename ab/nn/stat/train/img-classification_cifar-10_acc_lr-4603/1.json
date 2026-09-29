@@ -1,0 +1,37 @@
+[
+  {
+    "accuracy": 0.5941,
+    "architecture": "SwinTransformer",
+    "batch": 64,
+    "code_hash": "3ba11b606a38644a006b9e314c1229cecbbf2723b5f154d62c2f90e5c5692e1c",
+    "epoch_metrics": {
+      "T_max": 0.2,
+      "attention_dropout": 0.0,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "T_max": 0.2,
+      "attention_dropout": 0.0,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr-4603",
+    "momentum": 0.9,
+    "scheduler": "CosineAnnealingLR_T5",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-fd3fa7cb29469a7c5bf48b017fe53513",
+    "weight_decay": 0.0001
+  }
+]

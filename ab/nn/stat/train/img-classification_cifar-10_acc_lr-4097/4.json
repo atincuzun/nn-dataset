@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.7376,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 1e-05,
+    "architecture": "ResNet",
+    "scheduler": "MultiStepLR_m5_10_g05",
+    "model_id": "lr-4097",
+    "source_id": "lr_4097",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4097/4.json",
+    "code_hash": "d593dcb689d284114a68d16edafaacd334dec87e34c387a23e5d3f9d72b994b4",
+    "uid": "lr-cc281aa9cfb009822f79e1bbb08f77da"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.3818,
+    "epoch": 2,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 5e-05,
+    "architecture": "InceptionV3-1",
+    "scheduler": "StepLR_s10_g05",
+    "model_id": "lr-2978",
+    "source_id": "lr_2978",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2978/2.json",
+    "code_hash": "23b523637bb19248e86bfc4e73b356a8f435bb1334b18617f460bc57c650de55",
+    "uid": "lr-3cf1f2ccfca19cdd3db463ba9eeddff7"
+  }
+]

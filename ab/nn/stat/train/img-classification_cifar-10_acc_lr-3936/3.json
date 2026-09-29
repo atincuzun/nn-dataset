@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.6756,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 1e-05,
+    "architecture": "RegNet",
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "model_id": "lr-3936",
+    "source_id": "lr_3936",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_3936/3.json",
+    "code_hash": "66c369f0ddc49c8deb32283c24c42eff6d05236260e32fe2acfe57dca012eace",
+    "uid": "lr-ad8eb60005c838f94fff63d40aa3c3df"
+  }
+]

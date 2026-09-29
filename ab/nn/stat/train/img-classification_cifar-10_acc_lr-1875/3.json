@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.6055,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "base_lr": 0.0001,
+    "max_lr": 0.1,
+    "weight_decay": 0.001,
+    "architecture": "DarkNet",
+    "scheduler": "CyclicLR_tri2",
+    "model_id": "lr-1875",
+    "source_id": "lr_1875",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1875/3.json",
+    "code_hash": "12e4da791c9c1daa87df54c70311d7b1614fa7b471a00f06ababb17013771d50",
+    "uid": "lr_1738"
+  }
+]

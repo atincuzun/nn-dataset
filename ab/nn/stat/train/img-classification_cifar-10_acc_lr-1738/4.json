@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.4318,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "start_factor": 0.1,
+    "total_iters": 0.1,
+    "weight_decay": 1e-05,
+    "architecture": "DPN68",
+    "scheduler": "LinearLR_sf01",
+    "model_id": "lr-1738",
+    "source_id": "lr_1738",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1738/4.json",
+    "code_hash": "02ec03c499d390a7ae6d92ce04271675ee8ec527d8e39fa2f93b9dd8976dc3c5",
+    "uid": "lr-b0b9ae3796d4fe64c31449f29dfeb23b"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "accuracy": 0.6597,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 1e-05,
+    "architecture": "AirNet",
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "model_id": "lr-0086",
+    "source_id": "lr_0086",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0086/4.json",
+    "code_hash": "33ab60caa2a8e1efbfadd917dd017dd43c3a1a7e7d2b5f1ae8d6a0783dc1e8e0",
+    "uid": "lr-3ee525f50a8cad7440dd4f793a6dce83"
+  }
+]

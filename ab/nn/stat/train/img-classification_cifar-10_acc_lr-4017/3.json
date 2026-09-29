@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.456,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "start_factor": 0.1,
+    "total_iters": 0.1,
+    "weight_decay": 0.001,
+    "architecture": "RegNet",
+    "scheduler": "LinearLR_sf01",
+    "model_id": "lr-4017",
+    "source_id": "lr_4017",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4017/3.json",
+    "code_hash": "6570326923ac647de16e3edbf2fcf60c24b0b38d1691d0eecc1612302b5557cd",
+    "uid": "lr-dda339991bc87ac476bf98790a274ba5"
+  }
+]

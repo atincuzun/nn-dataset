@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.767,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_max": 0.2,
+    "eta_min": 1e-06,
+    "weight_decay": 0.001,
+    "architecture": "VGG",
+    "scheduler": "CosineAnnealingLR_T10",
+    "model_id": "lr-4962",
+    "source_id": "lr_4962",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4962/4.json",
+    "code_hash": "7458d5b7cff5a39a550c5a3eddc3b13c33e95251f51b92ef7038150ae44d6b8e",
+    "uid": "lr-79fe5f7003c8cfd99ff5fd6b88e46ff4"
+  }
+]

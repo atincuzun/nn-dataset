@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.2255,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3,
+    "weight_decay": 1e-05,
+    "architecture": "DPN107",
+    "scheduler": "ReduceLROnPlateau_f01_p5",
+    "model_id": "lr-1332",
+    "source_id": "lr_1332",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1332/3.json",
+    "code_hash": "a3d82cd81fe9445ae3ce1db988a082945f6eabe87663c7f8af2449b5b07a94bf",
+    "uid": "lr_0068"
+  }
+]

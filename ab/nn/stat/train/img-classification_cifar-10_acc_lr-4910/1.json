@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.7865,
+    "architecture": "VGG",
+    "batch": 64,
+    "code_hash": "5a4027445b66a58b41ccd712b187986bca4cb9e94100399c2e4838c8650f7bcb",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 5e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-4910",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s5_g03",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-82cf75fca4cd4b89a4c9c7882718f34f",
+    "weight_decay": 5e-05
+  }
+]

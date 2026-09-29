@@ -1,0 +1,35 @@
+[
+  {
+    "accuracy": 0.3994,
+    "architecture": "SwinTransformer",
+    "batch": 64,
+    "code_hash": "cc36f58a3b6046088b77edf47e78217b97f6eb92d10676dd9eaecfe2aacea297",
+    "epoch_metrics": {
+      "attention_dropout": 0.0,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "attention_dropout": 0.0,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-4627",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m5_10_g05",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-3663ac3a35670e88889d17a8ac48cfa9",
+    "weight_decay": 0.005
+  }
+]

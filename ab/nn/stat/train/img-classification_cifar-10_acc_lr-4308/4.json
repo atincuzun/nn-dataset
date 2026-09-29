@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.1556,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "factor": 0.5,
+    "patience": 3,
+    "weight_decay": 5e-05,
+    "architecture": "ShuffleNet",
+    "scheduler": "ReduceLROnPlateau_f01_p5",
+    "model_id": "lr-4308",
+    "source_id": "lr_4308",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4308/4.json",
+    "code_hash": "a725cc364f9a07f868c6cc30a4314e118f1b8c4f81f403ca5be89cac87ab5c65",
+    "uid": "lr-3f9b815b132b676f26c0cf3ad4e705e7"
+  }
+]

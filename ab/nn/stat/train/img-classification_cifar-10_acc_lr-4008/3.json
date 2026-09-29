@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.6538,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "T_0": 0.1,
+    "eta_min": 1e-06,
+    "weight_decay": 0.0001,
+    "architecture": "RegNet",
+    "scheduler": "CosineWarmRestarts_T2",
+    "model_id": "lr-4008",
+    "source_id": "lr_4008",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4008/3.json",
+    "code_hash": "838cf22222564ef06db929ae81e29c70397c24f42b41b9e8dff0a46504f9f8d2",
+    "uid": "lr-0e5334a36cc22e60a9402a685dafaf37"
+  }
+]

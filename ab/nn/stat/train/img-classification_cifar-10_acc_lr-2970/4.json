@@ -1,0 +1,22 @@
+[
+  {
+    "accuracy": 0.3316,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "total_iters": 0.1,
+    "power": 2.0,
+    "weight_decay": 1e-05,
+    "architecture": "ICNet",
+    "scheduler": "PolynomialLR_p2",
+    "model_id": "lr-2970",
+    "source_id": "lr_2970",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2970/4.json",
+    "code_hash": "c372399f096152729dc8e78221bf2a62b2fdb8ce2b798cc456c6f4c11d86135f",
+    "uid": "lr-b2fceef20f3b4452ae8cb9f275e8502d"
+  }
+]

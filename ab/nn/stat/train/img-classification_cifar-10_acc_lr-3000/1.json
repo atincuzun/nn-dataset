@@ -1,0 +1,33 @@
+[
+  {
+    "accuracy": 0.5666,
+    "architecture": "InceptionV3-1",
+    "batch": 64,
+    "code_hash": "3df3fc97ffe20c5c8977eb33c629c38101dab5d48ae60b9de51d92bb069161ad",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr-3000",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s3_g01",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-a3223a600d1a6a4051cd7bd6ba20e34d",
+    "weight_decay": 0.0001
+  }
+]

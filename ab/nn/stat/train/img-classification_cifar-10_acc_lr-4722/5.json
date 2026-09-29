@@ -1,0 +1,24 @@
+[
+  {
+    "accuracy": 0.5896,
+    "epoch": 5,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "attention_dropout": 0.0,
+    "stochastic_depth_prob": 0.1,
+    "total_iters": 0.1,
+    "power": 2.0,
+    "weight_decay": 0.0001,
+    "architecture": "SwinTransformer",
+    "scheduler": "PolynomialLR_p2",
+    "model_id": "lr-4722",
+    "source_id": "lr_4722",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4722/5.json",
+    "code_hash": "1bf4f078b423eb39999b128efa77546c2a25d6a9f3a43be49f7738fa6fd22649",
+    "uid": "lr-2acac2be43010c5f70e4e907f6e028fe"
+  }
+]
