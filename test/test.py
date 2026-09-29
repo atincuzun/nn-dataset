@@ -109,8 +109,11 @@ class Testing(unittest.TestCase):
     def test_run_data(self):
         # Fetch first 10 rows from `run`
         df = api.run_data(max_rows=10)
-
         print("Total rows available:", len(api.run_data()))
+
+        df = api.run_data(max_rows=10, type='pt')
+        print("Total PT rows available:", len(api.run_data()))
+
         print("Showing first 10 rows:")
         print(df.to_string(index=False))
 
