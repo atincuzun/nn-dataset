@@ -112,7 +112,7 @@ class Testing(unittest.TestCase):
         print("Total rows available:", len(api.run_data()))
 
         df = api.run_data(max_rows=10, type='pt')
-        print("Total PT rows available:", len(api.run_data()))
+        print("Total PT rows available:", len(df ))
 
         print("Showing first 10 rows:")
         print(df.to_string(index=False))
