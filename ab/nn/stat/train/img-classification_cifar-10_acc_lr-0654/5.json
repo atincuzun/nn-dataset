@@ -1,23 +1,16 @@
 [
-  {
-    "accuracy": 0.3764,
-    "epoch": 5,
-    "lr": 0.01,
-    "batch": 64,
-    "dropout": 0.2,
-    "momentum": 0.9,
-    "transform": "norm_256_flip",
-    "epoch_max": 50,
-    "base_lr": 0.0001,
-    "max_lr": 0.1,
-    "gamma": 0.5,
-    "weight_decay": 5e-05,
-    "architecture": "BagNet",
-    "scheduler": "CyclicLR_exp",
-    "model_id": "lr-0654",
-    "source_id": "lr_0654",
-    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0654/5.json",
-    "code_hash": "3f91dc8970d801a720eed8f053862c57b53de400eee0bc65f82f349e64cb32d3",
-    "uid": "lr-76ed5c604b44dc9ecd15ebd4a0d8f754"
-  }
+    {
+        "accuracy": 0.3764,
+        "lr": 0.01,
+        "batch": 64,
+        "dropout": 0.2,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "epoch_max": 50,
+        "base_lr": 0.0001,
+        "max_lr": 0.1,
+        "gamma": 0.5,
+        "weight_decay": 5e-05,
+        "uid": "lr-76ed5c604b44dc9ecd15ebd4a0d8f754"
+    }
 ]

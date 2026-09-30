@@ -1,22 +1,15 @@
 [
-  {
-    "accuracy": 0.4447,
-    "epoch": 4,
-    "lr": 0.01,
-    "batch": 64,
-    "dropout": 0.2,
-    "momentum": 0.9,
-    "transform": "norm_256_flip",
-    "epoch_max": 50,
-    "T_max": 0.2,
-    "eta_min": 1e-06,
-    "weight_decay": 1e-05,
-    "architecture": "DPN68",
-    "scheduler": "CosineAnnealingLR_T20",
-    "model_id": "lr-1640",
-    "source_id": "lr_1640",
-    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1640/4.json",
-    "code_hash": "7413f7a18e764f538bf146a91340763b6b6f3ee0ad4fee97bbe3b1f3253feaba",
-    "uid": "lr_1236"
-  }
+    {
+        "accuracy": 0.4447,
+        "lr": 0.01,
+        "batch": 64,
+        "dropout": 0.2,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "epoch_max": 50,
+        "T_max": 0.2,
+        "eta_min": 1e-06,
+        "weight_decay": 1e-05,
+        "uid": "lr_1236"
+    }
 ]

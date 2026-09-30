@@ -1,33 +1,15 @@
 [
-  {
-    "accuracy": 0.8413,
-    "architecture": "ResNet",
-    "batch": 64,
-    "code_hash": "9eaa673bbc5ae2fc09ddb8e334583f76ffb15ca708cf4f3603a184101f0d5932",
-    "epoch_metrics": {
-      "base_lr": 0.0001,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "max_lr": 0.1
-    },
-    "hyperparameters": {
-      "base_lr": 0.0001,
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "lr": 0.01,
-      "max_lr": 0.1,
-      "momentum": 0.9,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.005
-    },
-    "lr": 0.01,
-    "model_id": "lr-4151",
-    "momentum": 0.9,
-    "scheduler": "CyclicLR_tri2",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-69db8d5d7128c6b0a7642bce1c6c4b19",
-    "weight_decay": 0.005
-  }
+    {
+        "accuracy": 0.8413,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-69db8d5d7128c6b0a7642bce1c6c4b19",
+        "weight_decay": 0.005,
+        "base_lr": 0.0001,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "max_lr": 0.1
+    }
 ]

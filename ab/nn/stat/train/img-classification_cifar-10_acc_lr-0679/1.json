@@ -1,33 +1,15 @@
 [
-  {
-    "accuracy": 0.7737,
-    "architecture": "BagNet",
-    "batch": 64,
-    "code_hash": "9270c365523cfd5c2a9b5c90cb594ee026e589c7e3a86cd0e841bb668d72f26f",
-    "epoch_metrics": {
-      "T_0": 0.1,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "eta_min": 1e-06
-    },
-    "hyperparameters": {
-      "T_0": 0.1,
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "eta_min": 1e-06,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.005
-    },
-    "lr": 0.01,
-    "model_id": "lr-0679",
-    "momentum": 0.9,
-    "scheduler": "CosineWarmRestarts_T5",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-06641c0ab333fcfc9be766c8e35e9fb1",
-    "weight_decay": 0.005
-  }
+    {
+        "accuracy": 0.7737,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-06641c0ab333fcfc9be766c8e35e9fb1",
+        "weight_decay": 0.005,
+        "T_0": 0.1,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "eta_min": 1e-06
+    }
 ]

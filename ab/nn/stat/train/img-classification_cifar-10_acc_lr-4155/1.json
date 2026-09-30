@@ -1,35 +1,16 @@
 [
-  {
-    "accuracy": 0.3821,
-    "architecture": "ResNet",
-    "batch": 64,
-    "code_hash": "b018a9e09461ea44435f1d53b6cffa95397bae80da258a8312ed0522755228e3",
-    "epoch_metrics": {
-      "base_lr": 0.0001,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "max_lr": 0.1
-    },
-    "hyperparameters": {
-      "base_lr": 0.0001,
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "lr": 0.01,
-      "max_lr": 0.1,
-      "momentum": 0.9,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.0001
-    },
-    "lr": 0.01,
-    "model_id": "lr-4155",
-    "momentum": 0.9,
-    "scheduler": "CyclicLR_exp",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-8bea17f182d0786a22f2aaab7a746b45",
-    "weight_decay": 0.0001
-  }
+    {
+        "accuracy": 0.3821,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-8bea17f182d0786a22f2aaab7a746b45",
+        "weight_decay": 0.0001,
+        "base_lr": 0.0001,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "gamma": 0.5,
+        "max_lr": 0.1
+    }
 ]
