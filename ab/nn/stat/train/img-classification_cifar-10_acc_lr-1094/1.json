@@ -1,37 +1,17 @@
 [
-  {
-    "accuracy": 0.3137,
-    "architecture": "ConvNeXt",
-    "batch": 64,
-    "code_hash": "48e485c0efd9e94d714294a5f8f65f853a0882a3ab12312904bc0ea518c776b8",
-    "epoch_metrics": {
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "norm_eps": 1e-06,
-      "norm_std": 0.02,
-      "stochastic_depth_prob": 0.1
-    },
-    "hyperparameters": {
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "norm_eps": 1e-06,
-      "norm_std": 0.02,
-      "stochastic_depth_prob": 0.1,
-      "transform": "norm_256_flip",
-      "weight_decay": 1e-05
-    },
-    "lr": 0.01,
-    "model_id": "lr-1094",
-    "momentum": 0.9,
-    "scheduler": "ExponentialLR_g098",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-0dfa793bb7d75c5eeae43aec05356b1a",
-    "weight_decay": 1e-05
-  }
+    {
+        "accuracy": 0.3137,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-0dfa793bb7d75c5eeae43aec05356b1a",
+        "weight_decay": 1e-05,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "gamma": 0.5,
+        "norm_eps": 1e-06,
+        "norm_std": 0.02,
+        "stochastic_depth_prob": 0.1
+    }
 ]

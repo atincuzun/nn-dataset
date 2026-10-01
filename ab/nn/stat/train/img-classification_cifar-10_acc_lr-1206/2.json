@@ -1,25 +1,18 @@
 [
-  {
-    "accuracy": 0.2835,
-    "epoch": 2,
-    "lr": 0.01,
-    "batch": 64,
-    "dropout": 0.2,
-    "momentum": 0.9,
-    "transform": "norm_256_flip",
-    "epoch_max": 50,
-    "stochastic_depth_prob": 0.1,
-    "norm_eps": 1e-06,
-    "norm_std": 0.02,
-    "T_0": 0.1,
-    "eta_min": 1e-06,
-    "weight_decay": 1e-05,
-    "architecture": "ConvNeXt",
-    "scheduler": "CosineWarmRestarts_T2",
-    "model_id": "lr-1206",
-    "source_id": "lr_1206",
-    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_1206/2.json",
-    "code_hash": "c7e7a5c74c3549229ae3731e6ed6af9cd1c09c55c9377ef1b9f8c8bef12b0476",
-    "uid": "lr-dd1d37bbd4b3564369a6c5b0ff5b8af3"
-  }
+    {
+        "accuracy": 0.2835,
+        "lr": 0.01,
+        "batch": 64,
+        "dropout": 0.2,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "epoch_max": 50,
+        "stochastic_depth_prob": 0.1,
+        "norm_eps": 1e-06,
+        "norm_std": 0.02,
+        "T_0": 0.1,
+        "eta_min": 1e-06,
+        "weight_decay": 1e-05,
+        "uid": "lr-dd1d37bbd4b3564369a6c5b0ff5b8af3"
+    }
 ]

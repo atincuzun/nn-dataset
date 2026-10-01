@@ -1,22 +1,15 @@
 [
-  {
-    "accuracy": 0.734,
-    "epoch": 4,
-    "lr": 0.01,
-    "batch": 64,
-    "dropout": 0.2,
-    "momentum": 0.9,
-    "transform": "norm_256_flip",
-    "epoch_max": 50,
-    "step_size": 0.5,
-    "gamma": 0.5,
-    "weight_decay": 0.001,
-    "architecture": "AlexNet",
-    "scheduler": "StepLR_s5_g03",
-    "model_id": "lr-0363",
-    "source_id": "lr_0363",
-    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0363/4.json",
-    "code_hash": "c4aec5b57a999bcf63196116d80e111dde0ed2fab02575c130225752d55c01cc",
-    "uid": "lr-7cd0b19f0d535b992c89f862c171f491"
-  }
+    {
+        "accuracy": 0.734,
+        "lr": 0.01,
+        "batch": 64,
+        "dropout": 0.2,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "epoch_max": 50,
+        "step_size": 0.5,
+        "gamma": 0.5,
+        "weight_decay": 0.001,
+        "uid": "lr-7cd0b19f0d535b992c89f862c171f491"
+    }
 ]
