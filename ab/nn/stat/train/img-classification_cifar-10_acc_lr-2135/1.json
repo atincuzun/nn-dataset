@@ -1,31 +1,14 @@
 [
-  {
-    "accuracy": 0.2619,
-    "architecture": "Diffuser",
-    "batch": 64,
-    "code_hash": "867252e717012bf334cfb9486a984f9f758a63a3d39d50e2ab09f7e12851a5ab",
-    "epoch_metrics": {
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5
-    },
-    "hyperparameters": {
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.005
-    },
-    "lr": 0.01,
-    "model_id": "lr-2135",
-    "momentum": 0.9,
-    "scheduler": "ExponentialLR_g095",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-dcd99db8c802d329180f39f795bde9c5",
-    "weight_decay": 0.005
-  }
+    {
+        "accuracy": 0.2619,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-dcd99db8c802d329180f39f795bde9c5",
+        "weight_decay": 0.005,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "gamma": 0.5
+    }
 ]

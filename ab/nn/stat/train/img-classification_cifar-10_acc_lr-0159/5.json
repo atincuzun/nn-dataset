@@ -1,7 +1,6 @@
 [
     {
         "accuracy": 0.7536,
-        "epoch": 5,
         "lr": 0.01,
         "batch": 64,
         "dropout": 0.2,
@@ -11,49 +10,6 @@
         "T_0": 0.1,
         "eta_min": 1e-06,
         "weight_decay": 0.0005,
-        "architecture": "AirNet",
-        "scheduler": "CosineWarmRestarts_T2",
-        "model_id": "lr-0159",
-        "source_id": "lr_0159",
-        "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0159/5.json",
-        "code_hash": "81cdb586a1b5d9a54ad1d8f4ad350367794ab517a6989cc8e621023ac6e1ed09",
         "uid": "lr-fa1167b414f5dc2a011fbb7238723fa1"
-    },
-    {
-        "T_0": 0.1,
-        "accuracy": 0.7231,
-        "batch": 64,
-        "dropout": 0.2,
-        "duration": 591973411508,
-        "duration_seconds": 591.97,
-        "epoch_max": 5,
-        "eta_min": 1e-06,
-        "lr": 0.01,
-        "metric_acc": 0.7231,
-        "momentum": 0.9,
-        "train_stat": {
-            "train_loss": 0.7442104513078089,
-            "test_loss": 0.7857828481941466,
-            "train_accuracy": 0.74054,
-            "gradient_norm": 2.9999993128968923,
-            "samples_per_second": 425.1106894662131,
-            "epoch_max": 5,
-            "best_accuracy": 0.7231,
-            "best_epoch": 5,
-            "cpu_count": 24,
-            "cpu_type": "x86_64",
-            "cpu_usage_percent": 4.6,
-            "total_ram_kb": 32627536.0,
-            "occupied_ram_kb": 14140664.0,
-            "ram_usage_percent": 43.3,
-            "gpu_type": "NVIDIA GeForce RTX 4090",
-            "gpu_memory_kb": 2942729.0,
-            "gpu_total_memory_kb": 24688320.0,
-            "occupied_gpu_memory_kb": 76466.0,
-            "gpu_memory_usage_percent": 0.31
-        },
-        "transform": "norm_256_flip",
-        "uid": "3958825ea21e05e5ecef2584231bae1a",
-        "weight_decay": 0.0005
     }
 ]
