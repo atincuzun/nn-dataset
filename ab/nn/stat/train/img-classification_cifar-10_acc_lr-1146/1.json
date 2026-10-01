@@ -1,18 +1,39 @@
 [
-    {
-        "accuracy": 0.2489,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-e76054534a49e0a133b5da9bf9f58472",
-        "weight_decay": 0.0005,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "factor": 0.5,
-        "norm_eps": 1e-06,
-        "norm_std": 0.02,
-        "patience": 3,
-        "stochastic_depth_prob": 0.1
-    }
+  {
+    "accuracy": 0.2489,
+    "architecture": "ConvNeXt",
+    "batch": 64,
+    "code_hash": "36f1d44e2f8dd96029a359906062680be6493b6ca659cfa4592289a41935ae55",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "patience": 3,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "patience": 3,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0005
+    },
+    "lr": 0.01,
+    "model_id": "lr-1146",
+    "momentum": 0.9,
+    "scheduler": "ReduceLROnPlateau_f05_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-e76054534a49e0a133b5da9bf9f58472",
+    "weight_decay": 0.0005
+  }
 ]

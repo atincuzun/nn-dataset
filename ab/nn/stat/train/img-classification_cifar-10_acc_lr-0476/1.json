@@ -1,15 +1,33 @@
 [
-    {
-        "accuracy": 0.6852,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-9c8d4f943e1788da42f52a7842f5eda8",
-        "weight_decay": 0.005,
-        "base_lr": 0.0001,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "max_lr": 0.1
-    }
+  {
+    "accuracy": 0.6852,
+    "architecture": "AlexNet",
+    "batch": 64,
+    "code_hash": "d37306ea5884ad1d653b70de2f5d51dfb1e8adda6838e02f7a40d0e75e41c0ef",
+    "epoch_metrics": {
+      "base_lr": 0.0001,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "max_lr": 0.1
+    },
+    "hyperparameters": {
+      "base_lr": 0.0001,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "lr": 0.01,
+      "max_lr": 0.1,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-0476",
+    "momentum": 0.9,
+    "scheduler": "CyclicLR_tri2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-9c8d4f943e1788da42f52a7842f5eda8",
+    "weight_decay": 0.005
+  }
 ]

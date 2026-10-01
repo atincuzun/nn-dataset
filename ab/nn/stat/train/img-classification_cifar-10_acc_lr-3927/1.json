@@ -1,14 +1,31 @@
 [
-    {
-        "accuracy": 0.7529,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-49c123b195241f92a6cc1f7a9025597f",
-        "weight_decay": 0.005,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "gamma": 0.5
-    }
+  {
+    "accuracy": 0.7529,
+    "architecture": "RegNet",
+    "batch": 64,
+    "code_hash": "7d5ae8a3631cb9b953eb008644088493bd794f700d14eca58921d151e9c8ad1d",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-3927",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m5_10_g05",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-49c123b195241f92a6cc1f7a9025597f",
+    "weight_decay": 0.005
+  }
 ]

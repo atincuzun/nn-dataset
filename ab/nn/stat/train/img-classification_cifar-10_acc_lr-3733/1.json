@@ -1,17 +1,37 @@
 [
-    {
-        "accuracy": 0.7887,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-da9c3a8234478bbeb9e5d51a79c64233",
-        "weight_decay": 1e-05,
-        "T_max": 0.2,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "eta_min": 1e-06,
-        "norm_eps": 0.001,
-        "norm_momentum": 0.01
-    }
+  {
+    "accuracy": 0.7887,
+    "architecture": "MobileNetV3",
+    "batch": 64,
+    "code_hash": "bc93aa8a54429a22f27eaa24d64dc2226bc53df552ee4642de858763208e487f",
+    "epoch_metrics": {
+      "T_max": 0.2,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01
+    },
+    "hyperparameters": {
+      "T_max": 0.2,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-3733",
+    "momentum": 0.9,
+    "scheduler": "CosineAnnealingLR_T10",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-da9c3a8234478bbeb9e5d51a79c64233",
+    "weight_decay": 1e-05
+  }
 ]

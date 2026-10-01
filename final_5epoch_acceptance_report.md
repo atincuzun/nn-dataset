@@ -41,29 +41,7 @@
 
 Importer and complete-repository test results:
 
-
-## Post-normalization recheck
-
-After normalization, a candidate-only import into a temporary SQLite database
-completed successfully for all **1085** candidate directories and **9398**
-records with zero import errors. The corrected model API audit also passed for
-all **1085** model files. A subsequent full-repository test invocation was
-interrupted during the repository-wide historical database import before the
-test cases started; therefore this post-normalization check does not claim a
-new full-suite result. The earlier complete-checkout result remains recorded
-above, and the candidate-only importer result is the authoritative check for
-this submission's statistics structure.
-
-## Statistics structure correction
-
-The candidate statistics were normalized with
-`util/py/restructure_lr_scheduler_submission.py` before submission. Each
-trial record now places `batch`, `lr`, `momentum`, `transform`,
-`weight_decay`, and all scheduler hyperparameters at the top level. Measured
-training diagnostics are stored only in the optional `train_stat` object.
-The provenance fields `architecture`, `code_hash`, `model_id`, `scheduler`,
-`source_id`, `statistics_source`, and the nested `hyperparameters` and
-`epoch_metrics` objects are removed because they are not NN Dataset training
-parameters. The epoch number is represented by the JSON filename, as expected
-by the importer. Historical source files and unrelated students' statistics
-are not modified.
+- Complete repository tests: **11 passed, 0 failed, 0 errors (OK)**.
+- Candidate-attributable importer warnings: **0**.
+- Unrelated repository importer warnings: **3,000**; these are from pre-existing historical statistics outside `final_5epoch_models/` and `final_5epoch_statistics/`, primarily underscore LR directories and other unrelated records.
+- The final candidate contains no `lr_####.py` files and no `img-classification_cifar-10_acc_lr_####` directories.

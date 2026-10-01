@@ -1,16 +1,35 @@
 [
-    {
-        "accuracy": 0.4878,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-6703cc186eafc70d6964aa02e12f1673",
-        "weight_decay": 0.005,
-        "attention_dropout": 0.0,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "gamma": 0.5,
-        "stochastic_depth_prob": 0.1
-    }
+  {
+    "accuracy": 0.4878,
+    "architecture": "SwinTransformer",
+    "batch": 64,
+    "code_hash": "bf7f5fc6763c427eb2215862068a680f9ab40db1adae3ea65ddb25bb62b89da7",
+    "epoch_metrics": {
+      "attention_dropout": 0.0,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "attention_dropout": 0.0,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-4592",
+    "momentum": 0.9,
+    "scheduler": "ExponentialLR_g09",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-6703cc186eafc70d6964aa02e12f1673",
+    "weight_decay": 0.005
+  }
 ]

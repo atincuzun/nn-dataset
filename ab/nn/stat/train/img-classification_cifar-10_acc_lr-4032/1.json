@@ -1,15 +1,33 @@
 [
-    {
-        "accuracy": 0.7849,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-5cb2cbb8f38c2f5e24320b4981aa4a43",
-        "weight_decay": 0.005,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "gamma": 0.5,
-        "step_size": 0.5
-    }
+  {
+    "accuracy": 0.7849,
+    "architecture": "ResNet",
+    "batch": 64,
+    "code_hash": "211f5f816804aa48560da61bd81c1e231f12cf134836b598df975ae0f2a4476d",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "step_size": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "step_size": 0.5,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-4032",
+    "momentum": 0.9,
+    "scheduler": "StepLR_s10_g05",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-5cb2cbb8f38c2f5e24320b4981aa4a43",
+    "weight_decay": 0.005
+  }
 ]

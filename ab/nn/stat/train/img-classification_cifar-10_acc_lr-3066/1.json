@@ -1,14 +1,31 @@
 [
-    {
-        "accuracy": 0.6928,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-3c59e61cf3d342d1f66cc7eafc90379b",
-        "weight_decay": 0.005,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "gamma": 0.5
-    }
+  {
+    "accuracy": 0.6928,
+    "architecture": "InceptionV3-1",
+    "batch": 64,
+    "code_hash": "c47f1bfe4d8efd335fc308970bb6e5216cf51c46f2147799eaf5393abb4e181a",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.005
+    },
+    "lr": 0.01,
+    "model_id": "lr-3066",
+    "momentum": 0.9,
+    "scheduler": "MultiStepLR_m2_4_g01",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-3c59e61cf3d342d1f66cc7eafc90379b",
+    "weight_decay": 0.005
+  }
 ]

@@ -1,17 +1,37 @@
 [
-    {
-        "accuracy": 0.1605,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-d47ce72504a36aff8cb39e41e2d3c27d",
-        "weight_decay": 5e-05,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "factor": 0.5,
-        "norm_eps": 0.001,
-        "norm_momentum": 0.01,
-        "patience": 3
-    }
+  {
+    "accuracy": 0.1605,
+    "architecture": "MobileNetV3",
+    "batch": 64,
+    "code_hash": "33a9ed67d143768ad9d5611238f9532e06661c8531bc8cdbf99b568665cc2973",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01,
+      "patience": 3
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "factor": 0.5,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 0.001,
+      "norm_momentum": 0.01,
+      "patience": 3,
+      "transform": "norm_256_flip",
+      "weight_decay": 5e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-3769",
+    "momentum": 0.9,
+    "scheduler": "ReduceLROnPlateau_f05_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-d47ce72504a36aff8cb39e41e2d3c27d",
+    "weight_decay": 5e-05
+  }
 ]

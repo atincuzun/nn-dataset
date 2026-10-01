@@ -1,14 +1,21 @@
 [
-    {
-        "accuracy": 0.3075,
-        "lr": 0.01,
-        "batch": 64,
-        "dropout": 0.2,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "epoch_max": 50,
-        "gamma": 0.5,
-        "weight_decay": 5e-05,
-        "uid": "lr-0a77dec94c0f034b8cd3e70251cbe05d"
-    }
+  {
+    "accuracy": 0.3075,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 5e-05,
+    "architecture": "ICNet",
+    "scheduler": "ExponentialLR_g098",
+    "model_id": "lr-2845",
+    "source_id": "lr_2845",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_2845/4.json",
+    "code_hash": "53ec3edf20e1aade90c52e1c56cadbedb49ddeae20d9ce8a68d94a37d496d9a4",
+    "uid": "lr-0a77dec94c0f034b8cd3e70251cbe05d"
+  }
 ]

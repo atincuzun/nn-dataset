@@ -1,15 +1,33 @@
 [
-    {
-        "accuracy": 0.2948,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-feffa3074deca956280ad565d276f3dd",
-        "weight_decay": 0.0001,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "power": 2.0,
-        "total_iters": 0.1
-    }
+  {
+    "accuracy": 0.2948,
+    "architecture": "Diffuser",
+    "batch": 64,
+    "code_hash": "8657f93574362b25cc31c1c3620f7a60a759272644dd29cc569504750f0bdea9",
+    "epoch_metrics": {
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "power": 2.0,
+      "total_iters": 0.1
+    },
+    "hyperparameters": {
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "power": 2.0,
+      "total_iters": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 0.0001
+    },
+    "lr": 0.01,
+    "model_id": "lr-2272",
+    "momentum": 0.9,
+    "scheduler": "PolynomialLR_p2",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-feffa3074deca956280ad565d276f3dd",
+    "weight_decay": 0.0001
+  }
 ]
