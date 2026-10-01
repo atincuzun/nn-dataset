@@ -1,37 +1,17 @@
 [
-  {
-    "accuracy": 0.7513,
-    "architecture": "MobileNetV3",
-    "batch": 64,
-    "code_hash": "355f5c0c9974017b74300ca7753648f47db05ae61f31f2d2877afa1eada1bd36",
-    "epoch_metrics": {
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "norm_eps": 0.001,
-      "norm_momentum": 0.01,
-      "power": 2.0,
-      "total_iters": 0.1
-    },
-    "hyperparameters": {
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "norm_eps": 0.001,
-      "norm_momentum": 0.01,
-      "power": 2.0,
-      "total_iters": 0.1,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.0005
-    },
-    "lr": 0.01,
-    "model_id": "lr-3848",
-    "momentum": 0.9,
-    "scheduler": "PolynomialLR_p2",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-77a94081e33055f1622161d4e15c463b",
-    "weight_decay": 0.0005
-  }
+    {
+        "accuracy": 0.7513,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-77a94081e33055f1622161d4e15c463b",
+        "weight_decay": 0.0005,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "norm_eps": 0.001,
+        "norm_momentum": 0.01,
+        "power": 2.0,
+        "total_iters": 0.1
+    }
 ]

@@ -1,37 +1,17 @@
 [
-  {
-    "accuracy": 0.5905,
-    "architecture": "SwinTransformer",
-    "batch": 64,
-    "code_hash": "0ac3030aced7b5fe04374e112aa9f4de991147e3045e3aaf96e516aec1247c02",
-    "epoch_metrics": {
-      "attention_dropout": 0.0,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "step_size": 0.5,
-      "stochastic_depth_prob": 0.1
-    },
-    "hyperparameters": {
-      "attention_dropout": 0.0,
-      "batch": 64,
-      "dropout": 0.2,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "step_size": 0.5,
-      "stochastic_depth_prob": 0.1,
-      "transform": "norm_256_flip",
-      "weight_decay": 5e-05
-    },
-    "lr": 0.01,
-    "model_id": "lr-4567",
-    "momentum": 0.9,
-    "scheduler": "StepLR_s20_g07",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-827ab5d2c85e930cba0569e88dcfe9a6",
-    "weight_decay": 5e-05
-  }
+    {
+        "accuracy": 0.5905,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-827ab5d2c85e930cba0569e88dcfe9a6",
+        "weight_decay": 5e-05,
+        "attention_dropout": 0.0,
+        "dropout": 0.2,
+        "epoch_max": 50,
+        "gamma": 0.5,
+        "step_size": 0.5,
+        "stochastic_depth_prob": 0.1
+    }
 ]

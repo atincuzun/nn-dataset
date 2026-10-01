@@ -1,33 +1,15 @@
 [
-  {
-    "accuracy": 0.8333,
-    "architecture": "GoogLeNet",
-    "batch": 64,
-    "code_hash": "ee633a36d52b53068223f6894093b17031164efb9ffd3e36dfc39ada7cc73dde",
-    "epoch_metrics": {
-      "dropout": 0.2,
-      "dropout_aux": 0.7,
-      "epoch_max": 50,
-      "gamma": 0.5
-    },
-    "hyperparameters": {
-      "batch": 64,
-      "dropout": 0.2,
-      "dropout_aux": 0.7,
-      "epoch_max": 50,
-      "gamma": 0.5,
-      "lr": 0.01,
-      "momentum": 0.9,
-      "transform": "norm_256_flip",
-      "weight_decay": 0.0005
-    },
-    "lr": 0.01,
-    "model_id": "lr-2665",
-    "momentum": 0.9,
-    "scheduler": "ExponentialLR_g09",
-    "statistics_source": "actual eval_info.json",
-    "transform": "norm_256_flip",
-    "uid": "lr-26d3e216141fc2be39f1e43de51820e8",
-    "weight_decay": 0.0005
-  }
+    {
+        "accuracy": 0.8333,
+        "batch": 64,
+        "lr": 0.01,
+        "momentum": 0.9,
+        "transform": "norm_256_flip",
+        "uid": "lr-26d3e216141fc2be39f1e43de51820e8",
+        "weight_decay": 0.0005,
+        "dropout": 0.2,
+        "dropout_aux": 0.7,
+        "epoch_max": 50,
+        "gamma": 0.5
+    }
 ]
