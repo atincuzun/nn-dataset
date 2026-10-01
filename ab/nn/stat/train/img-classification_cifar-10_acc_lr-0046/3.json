@@ -1,14 +1,21 @@
 [
-    {
-        "accuracy": 0.6509,
-        "lr": 0.01,
-        "batch": 64,
-        "dropout": 0.2,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "epoch_max": 50,
-        "gamma": 0.5,
-        "weight_decay": 0.0001,
-        "uid": "lr-b204e186ad133db17f1aadad76132807"
-    }
+  {
+    "accuracy": 0.6509,
+    "epoch": 3,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "gamma": 0.5,
+    "weight_decay": 0.0001,
+    "architecture": "AirNet",
+    "scheduler": "ExponentialLR_g098",
+    "model_id": "lr-0046",
+    "source_id": "lr_0046",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_0046/3.json",
+    "code_hash": "62579533c3fef07d6ac4e484a09a0c110751827684c997fe0d50e9ee36235486",
+    "uid": "lr-b204e186ad133db17f1aadad76132807"
+  }
 ]

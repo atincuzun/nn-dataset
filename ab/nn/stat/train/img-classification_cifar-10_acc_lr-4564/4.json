@@ -1,17 +1,24 @@
 [
-    {
-        "accuracy": 0.4365,
-        "lr": 0.01,
-        "batch": 64,
-        "dropout": 0.2,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "epoch_max": 50,
-        "attention_dropout": 0.0,
-        "stochastic_depth_prob": 0.1,
-        "step_size": 0.5,
-        "gamma": 0.5,
-        "weight_decay": 0.005,
-        "uid": "lr-140b85d1f9f6885d804f5bd0e318d61e"
-    }
+  {
+    "accuracy": 0.4365,
+    "epoch": 4,
+    "lr": 0.01,
+    "batch": 64,
+    "dropout": 0.2,
+    "momentum": 0.9,
+    "transform": "norm_256_flip",
+    "epoch_max": 50,
+    "attention_dropout": 0.0,
+    "stochastic_depth_prob": 0.1,
+    "step_size": 0.5,
+    "gamma": 0.5,
+    "weight_decay": 0.005,
+    "architecture": "SwinTransformer",
+    "scheduler": "StepLR_s5_g03",
+    "model_id": "lr-4564",
+    "source_id": "lr_4564",
+    "statistics_source": "nn-gpt/out/nngpt/llm/epoch/A0/synth_nn/lr_4564/4.json",
+    "code_hash": "861eb0889593258697cbf0a4a29cb83ab3c0890eb71f9171cb2dff3ac91130a8",
+    "uid": "lr-140b85d1f9f6885d804f5bd0e318d61e"
+  }
 ]

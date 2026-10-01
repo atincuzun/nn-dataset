@@ -1,16 +1,35 @@
 [
-    {
-        "accuracy": 0.2323,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-e17d60c7f0b3fc06e894a1adfce23c8a",
-        "weight_decay": 1e-05,
-        "base_lr": 0.0001,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "gamma": 0.5,
-        "max_lr": 0.1
-    }
+  {
+    "accuracy": 0.2323,
+    "architecture": "MobileNetV2",
+    "batch": 64,
+    "code_hash": "c02ab1c860f27c689e24593a08984e37b1a17f601afc940b7a7201d0d7514c59",
+    "epoch_metrics": {
+      "base_lr": 0.0001,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "max_lr": 0.1
+    },
+    "hyperparameters": {
+      "base_lr": 0.0001,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "gamma": 0.5,
+      "lr": 0.01,
+      "max_lr": 0.1,
+      "momentum": 0.9,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-3628",
+    "momentum": 0.9,
+    "scheduler": "CyclicLR_exp",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-e17d60c7f0b3fc06e894a1adfce23c8a",
+    "weight_decay": 1e-05
+  }
 ]

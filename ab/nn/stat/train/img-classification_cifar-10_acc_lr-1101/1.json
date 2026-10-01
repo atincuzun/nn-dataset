@@ -1,18 +1,39 @@
 [
-    {
-        "accuracy": 0.3203,
-        "batch": 64,
-        "lr": 0.01,
-        "momentum": 0.9,
-        "transform": "norm_256_flip",
-        "uid": "lr-01a6656b17e7e659a52d8e6a32484113",
-        "weight_decay": 1e-05,
-        "T_max": 0.2,
-        "dropout": 0.2,
-        "epoch_max": 50,
-        "eta_min": 1e-06,
-        "norm_eps": 1e-06,
-        "norm_std": 0.02,
-        "stochastic_depth_prob": 0.1
-    }
+  {
+    "accuracy": 0.3203,
+    "architecture": "ConvNeXt",
+    "batch": 64,
+    "code_hash": "5451c4c9368d5edac60fc8166826ec3e947deb7ecd33be599e0964489f3c13eb",
+    "epoch_metrics": {
+      "T_max": 0.2,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "stochastic_depth_prob": 0.1
+    },
+    "hyperparameters": {
+      "T_max": 0.2,
+      "batch": 64,
+      "dropout": 0.2,
+      "epoch_max": 50,
+      "eta_min": 1e-06,
+      "lr": 0.01,
+      "momentum": 0.9,
+      "norm_eps": 1e-06,
+      "norm_std": 0.02,
+      "stochastic_depth_prob": 0.1,
+      "transform": "norm_256_flip",
+      "weight_decay": 1e-05
+    },
+    "lr": 0.01,
+    "model_id": "lr-1101",
+    "momentum": 0.9,
+    "scheduler": "CosineAnnealingLR_T5",
+    "statistics_source": "actual eval_info.json",
+    "transform": "norm_256_flip",
+    "uid": "lr-01a6656b17e7e659a52d8e6a32484113",
+    "weight_decay": 1e-05
+  }
 ]
