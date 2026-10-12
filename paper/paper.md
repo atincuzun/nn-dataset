@@ -63,12 +63,12 @@ bibliography: paper.bib
 program submitted as code into a trained, measured, and named record. It is
 available at https://github.com/ABrain-One/nn-dataset [@nndataset2026].
 
-The cost of a training run is not only its GPU hours. It is also the
-attention it demands, and the trust that research can place in what it leaves
-behind. `nn-dataset` is built so none of these costs falls on the researcher:
-**Learning:** it trains the model within a per-epoch budget,
-forecast from the first batches of each epoch, adapts when the run fails, and
-keeps the epochs a
+The cost of a training run is not only its GPU-hours. It is also the
+attention it demands, and the trust that researchers can place in what it
+leaves behind. `nn-dataset` is built so none of these costs falls on the researcher:
+**Learning:** it trains the model within
+a per-epoch budget forecast from the first batches of each epoch, adapts when
+the run fails, and keeps the epochs a
 stopped run completed. **Evaluation:** it grades the submission's code with standard
 Python linters, refuses runs that do no better than random guessing, and keeps
 per-epoch health signals such as gradient stability and processing speed. **Modeling:** it
@@ -83,23 +83,26 @@ analysis tools run on CPU. It is pip-installable under the MIT licence.
 
 # Statement of need
 
-Research that generates or searches over neural-network code produces candidates
-faster than they can be trained. Testing candidates one at a time spends GPU time
-on runs that fail for reasons the system could have handled, and what was
+An experiment with neural-network code starts before the first epoch. The
+submission must first prove that it trains, that it does not waste compute, and
+that its results stay attached to the code that produced them. Runs that fail
+for reasons the system could have handled spend GPU time anyway, and what was
 learned from failed or interrupted runs is usually discarded. Renamed or
 reformatted copies of one architecture are hard to recognize, so collections
-fill with duplicates. What is missing is a training
-procedure that reports the quality of a submission before training, keeps every
-run within a time limit, adjusts the run when it fails, and stores enough about
-both the run and the code that the work remains usable. The package provides this
-procedure — candidates are stopped, repaired, or skipped before wasting GPU
-time — and generators such as NNGPT [@kochnev2026nngpt] use it to train and
-measure what they write. The dataset papers and the generator work
-describe the template, the corpora, and the generation methods
-[@goodarzi2025lemur; @uzun2026lemur2; @kochnev2026nngpt]; the time-limited run,
-recovery from memory failures, retries, the accuracy floor, code scoring,
-per-layer measurements, source-structure naming, and per-machine CPU/GPU timing reports are described
-here.
+fill with duplicates. None of these problems is solved by training more, and
+none is confined to one project. Related problems are documented when
+machine-learning runs are reproduced [@henderson2018rl], compared
+[@bouthillier2021variance], and maintained [@sculley2015debt]. What is missing
+is the procedure that covers the whole life of a run. Before training, it must
+report the quality of a submission. During the run, it must keep the run within
+a time limit, adjust the run when it fails, and record what happens while it is
+running, from per-epoch health signals to the machine it used. After the run,
+the store must keep the code and its measurements together, so the work can be
+rebuilt, compared across machines, and reused later. The time limit, the
+recovery from memory failures, the retries, the accuracy floor, the code check,
+the per-layer measurements, the source-structure naming, and the per-machine
+timing reports are the parts of that procedure, and a run without them returns
+less research for the same GPU time.
 
 # State of the field
 
@@ -195,7 +198,7 @@ a fuzzer that rewrites real
 models with both edit kinds.
 
 **Unified research.** If the store is missing, the package rebuilds it from
-per-run files or a compressed snapshot. Campaigns resume:
+per-run files or a compressed snapshot. Runs resume:
 reissuing a command runs only the missing trials.
 Runs that prune trained models are
 recorded alongside training runs, and old model files keep training, because
