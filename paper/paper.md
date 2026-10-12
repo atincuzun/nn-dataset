@@ -63,17 +63,18 @@ bibliography: paper.bib
 program submitted as code into a trained, measured, and named record. It is
 available at https://github.com/ABrain-One/nn-dataset [@nndataset2026].
 
-Three questions decide whether a submitted model is useful for research: can it
-be trained, how well does it perform, what exactly is it — and the package keeps
-the answers together. **Learning:** it trains the program
-under a per-epoch time limit, adjusts the run when it fails, and can stop and
-continue later. **Evaluation:** it grades the submission's code with standard
+The cost of a training run is not only its GPU hours. It is also the
+attention it demands, and the trust that research can place in what it leaves
+behind. `nn-dataset` is built so none of these costs falls on the researcher:
+**Learning:** it trains the model within a per-epoch budget,
+forecast from the first batches of each epoch, adapts when the run fails, and
+keeps the epochs a
+stopped run completed. **Evaluation:** it grades the submission's code with standard
 Python linters, refuses runs that do no better than random guessing, and keeps
 per-epoch health signals such as gradient stability and processing speed. **Modeling:** it
 describes the model from its own code and names it from the source structure, so
 renamed or rewritten copies of one architecture are recognized as the same
-model. A researcher can start a campaign and leave it: failures are
-adjusted or retried and stopped runs keep the epochs they finished.
+model. The researcher designs the experiments; the package supervises them.
 
 The package is intended for researchers who generate, search over, or compare
 neural-network programs — for example, neural architecture search, AutoML, and
@@ -87,12 +88,12 @@ faster than they can be trained. Testing candidates one at a time spends GPU tim
 on runs that fail for reasons the system could have handled, and what was
 learned from failed or interrupted runs is usually discarded. Renamed or
 reformatted copies of one architecture are hard to recognize, so collections
-fill with duplicates. In short, candidates are stopped, repaired, or skipped
-before wasting GPU time. What is missing is a training
+fill with duplicates. What is missing is a training
 procedure that reports the quality of a submission before training, keeps every
 run within a time limit, adjusts the run when it fails, and stores enough about
 both the run and the code that the work remains usable. The package provides this
-procedure: generators such as NNGPT [@kochnev2026nngpt] use it to train and
+procedure — candidates are stopped, repaired, or skipped before wasting GPU
+time — and generators such as NNGPT [@kochnev2026nngpt] use it to train and
 measure what they write. The dataset papers and the generator work
 describe the template, the corpora, and the generation methods
 [@goodarzi2025lemur; @uzun2026lemur2; @kochnev2026nngpt]; the time-limited run,
@@ -185,8 +186,8 @@ name across machines. Earlier work rejects repeated source text by hashing it
 not this one. Before training, a candidate is checked
 against a name index built from stored code: a repeat costs a lookup
 rather than a training run. Different code with similar text can
-be found through a MinHash measure [@broder1997syntactic]
-This differs from `torch.fx` This differs from `torch.fx` [@reed2022torchfx], which traces an instantiated
+be found through a MinHash measure [@broder1997syntactic].
+This differs from `torch.fx` [@reed2022torchfx], which traces an instantiated
 module, whereas the name comes from source text alone. The naming rules are covered by 47 structured tests in
 `test/test_arch_uid.py` — 21 edits that must keep one name, 20 that must change
 it, and 6 graded cases for the structural similarity measure — supplemented by
@@ -207,7 +208,8 @@ local files only after compression and upload pass in the same run.
 
 The package is the training and
 measurement layer for seven publications from our group. Three are built on it
-directly: the LEMUR dataset [@goodarzi2025lemur], whose successor corpus LEMUR
+directly: the LEMUR (Learning, Evaluation, and Modeling for Unified Research)
+dataset [@goodarzi2025lemur], whose successor corpus LEMUR
 2 — over 14,000 architectures [@uzun2026lemur2] — was produced through this
 pipeline, and the NNGPT generator [@kochnev2026nngpt], which trains and scores
 every generated model through it. Four further studies relied on its time limits,
