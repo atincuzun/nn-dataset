@@ -127,30 +127,48 @@ runs.
 
 # Software design
 
-The package is written in Python (>= 3.10) and follows one procedure from
-submission to stored result: training, measurement, and description. A submission is one PyTorch [@paszke2019pytorch]
-file against the model template of [@goodarzi2025lemur]: a `Net` class
-with `train_setup`, `learn`, and a module-level declaration of its supported
-hyperparameters. Submitted code runs in the caller's environment; the operator
-chooses the container or machine boundary.
+**One interface for every model.** The package is written in Python (>= 3.10)
+and runs every submission through the same three steps, training, measurement,
+and description. The model defines only how it trains. The package does the
+rest. To connect the two, a submission follows one rule, taken from the model
+template of [@goodarzi2025lemur]: a PyTorch [@paszke2019pytorch] file that
+declares its supported hyperparameters beside a class named `Net`, gives that
+class `train_setup` and `learn` methods, and is constructed as
+`Net(in_shape, out_shape, prm, device)`. Those names and that one signature are
+the whole interface, and they tell the package what to build, how the model
+trains, and which values it may vary. Because the names are the same in every
+model, the package can load any file the same way, prepare the device and data
+loaders it needs, and write the results into the same store that keeps the
+model, all through one call, `check_nn` in `ab/nn/api.py`, with the description
+step running as part of the campaign. So adding a model is a matter of adding
+a file, not changing the pipeline.
 
-**Learning.** Generated and hand-written models follow the same path.
-Training runs under a per-epoch time
-limit, 30 minutes by default: after a few batches the package estimates the full
-epoch from current throughput and stops an epoch that would exceed it.
-A stopped run keeps its completed epochs and returns a small positive score,
-above a failed trial and below a completed one, so the search keeps
-partial-run signal without paying for a restart. Recoverable failures change the run instead of ending it: a
-CUDA out-of-memory error halves the batch size by powers of two and restarts
-the search; other exceptions are retried up to thirty times per model, the
-counter resetting after a good result. The hyperparameter search
-remains the Optuna-driven procedure of [@goodarzi2025lemur]; described here is
-the bounded, recovering wrapper around it. Saved weights
-carry their best score in a sidecar
-record, so a later run that resumes from the checkpoint replaces it only when
-it beats the recorded best.
+**Bounded, self-repairing runs.** The design bounds cost per epoch rather than
+per study, so one slow model cannot hide inside an average. Training runs
+under a per-epoch time limit of 30 minutes by default. After the first five
+batches the package divides the elapsed time by the batches processed and
+projects how long the full epoch will take, and it stops the run once that
+projection exceeds the limit. The limit is an input rather than a constant, so
+a researcher can tighten it to study how networks behave under a smaller
+compute budget. A stopped run keeps its completed epochs and
+returns a small positive score, above a failed trial and below a completed
+one, so the search keeps partial-run signal without paying for a restart.
+Recoverable failures change the run instead of ending it. A CUDA
+out-of-memory error steps the batch size down to the next lower power of two
+and restarts that model's search. Other exceptions are retried up to thirty
+times per model, and the counter resets after a result that passes the
+accuracy check. Every completed epoch of a run that stores its results is
+written to a JSON file. The file records the losses and accuracy of that
+epoch, gradient norm, and throughput, together with the run's maximum number
+of epochs, the best accuracy so far and the epoch that reached it, and the
+machine's type, capacities, and CPU, RAM, and GPU usage, so each run leaves
+the measurements that later statistical analysis needs. The hyperparameter search itself remains the Optuna-driven
+procedure of [@goodarzi2025lemur], and what is added here is the bounding and
+recovery around each trial. Each checkpoint is accompanied by a small JSON
+file that records its best score, so a later run that resumes from the
+checkpoint replaces it only when the new score is higher.
 
-**Evaluation.** Before training, the package exercises the submission: it imports
+**Acceptance and health signals.** Before training, the package exercises the submission: it imports
 the file, builds `Net`, calls `train_setup`, and runs `learn` on two small
 random batches, recording a pass or the error; a
 related acceptance check is described with the generator work
@@ -160,20 +178,23 @@ returns it with the training result; the check is advisory, and a broken
 submission fails at its own import. Earlier work logged accuracy, duration,
 GPU utilization, and the code revision [@goodarzi2025lemur;
 @kochnev2026nngpt]; this package additionally stores gradient norm, throughput,
-and CPU, RAM, and GPU-memory use together with the machine's identity. A run whose accuracy does not exceed 1.2 times the task's random-guess
+and CPU, RAM, and
+GPU-memory use together with the machine's identity, so timings stay
+attributable to the hardware that made them. A run whose accuracy does not exceed 1.2 times the task's random-guess
 level is refused and not stored, because a chance-level row carries no signal;
 the caller still receives the failure and recoverable failures are retried.
 Caption tasks, whose
 scores move slowly, are exempt from the floor and keep
 training. Optionally, it measures per-layer properties — weight
 spectra, effective rank, redundancy, dead units, Taylor
-importance, and zero-out sensitivity — per layer.
+importance, and zero-out sensitivity.
 Trained models can be rebuilt from their records and timed without further
 training: warm-up passes, repeated CPU and GPU runs, per-machine minimum
 (fastest), maximum, and standard-deviation times, in a batch mode that skips
-measured models.
+measured models, so an inventory of finished models can gain measurements at
+any later time.
 
-**Modeling.** Stored model code can be described automatically: FLOPs and memory
+**Description and naming from the source.** Stored model code can be described automatically: FLOPs and memory
 footprint from one forward pass over the main layer types, plus depth, layer
 composition, and architecture patterns such as residual or transformer-like
 families; parameter counts and layer details are already part of the recorded
@@ -186,7 +207,7 @@ same architecture attaches its measurements to the existing entry. The name is
 computed with a fixed hash over exact parameter values, so one file keeps one
 name across machines. Earlier work rejects repeated source text by hashing it
 [@uzun2026lemur2; @kochnev2026nngpt]; a renamed copy passes such a check but
-not this one. Before training, a candidate is checked
+not this one. Before training, a candidate can be checked
 against a name index built from stored code: a repeat costs a lookup
 rather than a training run. Different code with similar text can
 be found through a MinHash measure [@broder1997syntactic].
@@ -197,15 +218,18 @@ it, and 6 graded cases for the structural similarity measure — supplemented by
 a fuzzer that rewrites real
 models with both edit kinds.
 
-**Unified research.** If the store is missing, the package rebuilds it from
-per-run files or a compressed snapshot. Runs resume:
+**A derived store and a checked archive.** The per-run files are the primary
+record, and the database and the published snapshot are derived from them, so
+a lost database is an inconvenience, not a loss. If it is missing, the package
+rebuilds the store from the per-run files or a compressed snapshot. Runs resume:
 reissuing a command runs only the missing trials.
 Runs that prune trained models are
 recorded alongside training runs, and old model files keep training, because
 the loop takes the loss from wherever the model
 provides it. A repository script keeps the store and the published snapshot
 in step: it verifies recorded code by hash, writes an audit sheet, and deletes
-local files only after compression and upload pass in the same run.
+local files only after compression and upload pass in the same run, so the
+published snapshot never runs ahead of what was verified.
 
 # Research impact statement
 
