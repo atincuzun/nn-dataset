@@ -233,30 +233,32 @@ published snapshot never runs ahead of what was verified.
 
 # Research impact statement
 
-The package is the training and
-measurement layer for seven publications from our group. Three are built on it
-directly: the LEMUR (Learning, Evaluation, and Modeling for Unified Research)
-dataset [@goodarzi2025lemur], whose successor corpus LEMUR
-2 — over 14,000 architectures [@uzun2026lemur2] — was produced through this
-pipeline, and the NNGPT generator [@kochnev2026nngpt], which trains and scores
-every generated model through it. Four further studies relied on its time limits,
-failure handling, and run recording:
-learning-rate scheduling [@mateen2026scheduling], loss--optimizer pairing
-[@abramochkin2026lossoptimizer], delta-based NAS [@adhikari2026delta], and
-retrieval-augmented generation from model code [@khalid2025nnrag]. Companion
-packages build on it: `nn-gpt` depends
-on `nn-dataset`, and `nn-stat` ships as an optional extra. Development has been
-public since October 2024 under the MIT licence, with more than thirty tagged
-releases, a thousand-plus commits, a changelog, a contribution guide, and tests
-on Python 3.10 and 3.11. The software is
-released on PyPI as `nn-dataset` (alias `lmur`; ~190 PyPI downloads in
-September 2026); snapshots and checkpoints are shared on Hugging
-Face (https://huggingface.co/NN-Dataset), and the container image
-`abrainone/ai-linux` documents a reproducible environment. Releases are
-archived on GitHub; a citable DOI is minted on acceptance.
-All confirmed uses so
-far are inside our group; the package is public, installable, and documented for
-others to build on.
+The LEMUR papers present the datasets themselves, and the training and
+measurement runs behind those datasets came from this package. The LEMUR
+dataset [@goodarzi2025lemur] and its successor corpus LEMUR 2 with over 14,000
+architectures [@uzun2026lemur2] were trained and measured with it, and the
+NNGPT generator [@kochnev2026nngpt] trains and scores every generated model
+the same way.
+
+Four further studies have already used the package. A systematic evaluation of
+25 learning-rate schedules across 30 architectures found the choice to be
+architecture dependent and contributed the resulting accuracy landscape back
+to the dataset [@mateen2026scheduling]. A study of all 18 loss and optimizer
+pairings across 33 architectures and six datasets showed that no single
+pairing is universally optimal [@abramochkin2026lossoptimizer]. A delta-based
+generation study trained 1,100 candidates per language model and confirmed
+that first-epoch rankings predict the rankings of full training
+[@adhikari2026delta]. A retrieval-augmented pipeline validated 941 of 1,289
+candidate blocks from 19 repositories, supplying the majority of novel
+architectures in the LEMUR dataset [@khalid2025nnrag].
+
+Development has been public since October 2024 under the MIT licence, with
+more than thirty tagged releases, a thousand-plus commits, a changelog, a
+contribution guide, and tests on Python 3.10 and 3.11. The software is
+released on PyPI as `nn-dataset` (alias `lmur`) with around 30,000 downloads
+in total. Snapshots and checkpoints are shared on Hugging Face
+(https://huggingface.co/NN-Dataset), and the container image
+`abrainone/ai-linux` documents a reproducible environment.
 
 # AI usage disclosure
 
