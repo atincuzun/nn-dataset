@@ -87,10 +87,9 @@ the recording procedures harder to compare.
 and a database of measurements. Researchers can evaluate their own model code
 without selecting a model from the published collection or using a generator.
 
-Retrieving code, settings, training history, and layer measurements together
-supports analysis across experiments. Explicit selection criteria also help
-researchers compare runs with common data and evaluation conditions and construct
-tables containing the measurements required for a particular study.
+The number of runs grows as studies vary models, datasets, and training settings.
+Common records and explicit selection criteria support comparisons at this scale
+and allow completed experiments to be reused for follow-up questions.
 
 # State of the field
 
@@ -120,26 +119,31 @@ can support equivalent extensions when researchers provide these components.
 
 # Software design
 
+Shared execution and recording support comparisons across many models, datasets,
+and training settings. Recorded conditions support rechecking results and
+extending completed experiments.
+
 **Model interface.** The model interface and core training framework retain
 the original design [@goodarzi2025lemur]. A PyTorch [@paszke2019pytorch] file
 declares supported hyperparameters and provides a `Net` class with training
 setup and learning methods. Model modules own the loss, optimizer, and learning
 steps. The common engine handles data loading, evaluation, and recording. This
 separation lets different training procedures reuse measurement code while keeping
-their scientific choices in ordinary Python files. Loaders, transformations, and
-evaluation measures are separate modules, so changes to preprocessing can use
-the same result format. The `check_nn` API accepts researcher-supplied source.
+their scientific choices in ordinary Python files. Reruns with a study's data
+and settings support checks of published results, while a declared common
+protocol supports comparisons across implementations. Loaders, transformations,
+and evaluation measures are separate modules, so changes to preprocessing can
+use the same result format. The `check_nn` API accepts researcher-supplied source.
 Model modules run as trusted Python code with the process's permissions.
 
 **Training control.** The API evaluates caller-selected settings. The training
 script coordinates Optuna trials, retries, and reductions in the range of batch
 sizes searched following CUDA out-of-memory errors. Keeping these decisions in
 the trial runner separates search management from each model's learning method.
-An iterator estimates epoch duration from early batch timings
-and interrupts learning when the forecast
-exceeds the chosen budget. The estimate applies to training batches, giving
-researchers an explicit cost criterion for configurations with different
-learning procedures. Existing epoch records remain available after interruptions.
+An iterator estimates epoch duration from early training batches and interrupts
+learning when the forecast exceeds the budget. This lets researchers select
+configurations by expected training cost. Existing epoch records remain available
+after interruptions.
 Advisory Pylint [@pylint2024] and Radon [@radon2024] reports and a brief test
 using synthetic image batches provide feedback on code issues, initialization,
 and learning steps before longer runs.
@@ -147,10 +151,11 @@ and learning steps before longer runs.
 **Training and layer measurements.** Epochs provide a common recording unit.
 With recording enabled, losses, scores, gradient norm, estimated processing rate,
 and best score are stored with experiment settings and hardware information.
-Sampling CPU, RAM, and GPU-memory use at recording time gives resource
-measurements a defined context. Linking these observations by experiment and
-epoch allows researchers to examine learning progress and account for hardware
-when comparing running time or memory use.
+Host CPU/RAM samples and GPU allocation statistics accompany the scores and
+settings. These observations help researchers assess performance together with
+computational requirements and choose feasible experiments for available
+hardware. Hardware and batch-size information retain the conditions in which
+running-time and memory measurements were taken.
 
 Optional layer analysis records gradient norms, the fraction of activations near
 zero, layer importance estimated from weights and gradients
@@ -159,16 +164,21 @@ similarity through centered kernel alignment
 [@kornblith2019cka]. It also measures loss changes after zeroing layer weights
 and collects WeightWatcher statistics [@martin2021weightwatcher] when its optional
 dependency is installed. Selected batches and supported convolutional and linear
-layers define the analysis scope. Making these calculations optional lets users
-choose where to spend additional forward passes, gradient calculations, and
-matrix operations. Layer records retain the experiment identifier, so their
-measurements can be read alongside the corresponding scores and settings.
+layers define the analysis scope. Different learning curves and layer properties
+can accompany similar final scores. Recording both lets researchers investigate
+these differences and design follow-up experiments. Making these calculations
+optional lets users choose where to spend additional forward passes, gradient
+calculations, and matrix operations. Layer records retain the experiment
+identifier, so their measurements can be read alongside the corresponding scores
+and settings.
 Model summaries add parameter counts, layer types, module nesting depth, and
 operation estimates for covered layers. Configuration identifiers connect these
 summaries to the settings used to construct the model, supporting analysis of
 size and computational requirements under specified conditions.
 
-**Code comparison.** Source comparison uses a Python syntax graph, allowing
+**Code comparison.** Grouping candidate source matches helps researchers compare
+related implementations and examine which code differences accompany changes
+in recorded performance. Source comparison uses a Python syntax graph, allowing
 fingerprints to be calculated without constructing a model or loading its data.
 Graph labels are refined using the Weisfeiler-Leman method
 [@weisfeiler1968reduction] and hashed into an identifier. Selected renamings,
@@ -185,10 +195,11 @@ code without recomputing signatures from its full text for each query.
 **Record selection.** SQLite tables link source code, configurations, results,
 model summaries, and layer measurements through identifiers. Queries return
 pandas DataFrames [@mckinney2010pandas], allowing analysis with existing statistical
-and plotting tools. Pairwise queries can hold task, dataset, evaluation measure,
-and epoch count constant while selecting different models. This makes the
-comparison conditions explicit rather than reconstructing them from filenames
-or training logs.
+and plotting tools. A shared table format lets completed runs support new
+questions across projects while retaining their experimental conditions.
+Pairwise queries can match task, dataset, evaluation measure, and epoch count
+while varying the model, making comparison criteria explicit in the retrieval
+step.
 
 Additional selection routines require chosen result fields, model descriptors,
 or hyperparameters to be present. They also expand parameter dictionaries into
@@ -201,8 +212,9 @@ configuration dictionaries.
 
 **Storage and sharing.** Per-epoch JSON exports support inspection and file-based
 exchange. SQLite reuses source and configuration entries across results and
-supports queries spanning runs. These storage forms serve different purposes
-while retaining the same experimental fields. Database rebuilding uses retained
+supports queries spanning runs. Retaining the same experimental fields in both
+formats lets later studies inspect, query, and extend completed work after the
+original training jobs have ended. Database rebuilding uses retained
 code and measurement files or a compatible compressed snapshot. Continuing a
 search uses completed-trial counts to determine additional work. Reproducing a
 particular run also requires its inputs, code, software environment, and random
