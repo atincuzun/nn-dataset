@@ -9,44 +9,10 @@ tags:
   - reproducibility
   - PyTorch
 authors:
+  - name: Dmitry Ignatov
+    affiliation: 1
   - name: Tolgay Atinc Uzun
     corresponding: true
-    affiliation: 1
-  - name: Waleed Khalid
-    affiliation: 1
-  - name: Saif U Din
-    affiliation: 1
-  - name: Sai Revanth Mulukuledu
-    affiliation: 1
-  - name: Akashdeep Singh
-    affiliation: 1
-  - name: Chandini Vysyaraju
-    affiliation: 1
-  - name: Raghuvir Duvvuri
-    affiliation: 1
-  - name: Avi Goyal
-    affiliation: 1
-  - name: Yashkumar Rajeshbhai Lukhi
-    affiliation: 1
-  - name: Muhammad A. Hussain
-    affiliation: 1
-  - name: Krunal Jesani
-    affiliation: 1
-  - name: Usha Shrestha
-    affiliation: 1
-  - name: Yash Mittal
-    affiliation: 1
-  - name: Roman Kochnev
-    affiliation: 1
-  - name: Pritam Kadam
-    affiliation: 1
-  - name: Mohsin Ikram
-    affiliation: 1
-  - name: Harsh Rameshbhai Moradiya
-    affiliation: 1
-  - name: Alice Arslanian
-    affiliation: 1
-  - name: Dmitry Ignatov
     affiliation: 1
   - name: Radu Timofte
     affiliation: 1
@@ -73,11 +39,8 @@ https://github.com/ABrain-One/nn-dataset [@nndataset2026].
 
 # Statement of need
 
-Hundreds of different neural network structures are produced in the domain of computer science, targeted to specific tasks. This introduces the problem of reimplementing the repetitive code across independent research. Scientist must write the similar loops to train a neural network. Even though this is still a manageable problem, many ideas need to be tried, tested and compared, producing a growing number of results that must be stored together with the 
-model code and training settings used to obtain them.
-
-Comparing neural networks requires records of their training settings and
-behaviour, not only their final scores. Differences in learning procedures,
+Hundreds of different neural network structures are produced in the domain of computer science, targeted to specific tasks. This introduces the problem of reimplementing the repetitive code across independent research. Scientist must write the similar loops to train a neural network. Many ideas need to be tried, tested and compared, producing a growing number of results that must be stored together with the 
+model code and training settings used to obtain them, including the differences in learning procedures,
 memory requirements, and hardware affect interpretation. Studies of benchmark
 variability [@bouthillier2021variance] and software maintenance
 [@sculley2015debt] support the need for consistent recording and shared code.
@@ -122,74 +85,44 @@ can support equivalent extensions when researchers provide these components.
 separate. The analytical routines use this foundation to relate the implementations to their
 learning behaviour and computational requirements under recorded conditions.
 
-**Data Interface** PyTorch [@paszke2019pytorch] model modules contain their
-loss, optimizer, learning steps and hyperparameters while the engine handles data preparation,
+**Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their
+loss, optimizer, learning steps, and hyperparameters while the engine handles data preparation,
 evaluation, and recording under a declared common
-protocol. Compatible code written under the interface helps the unification of the pipeline while allowing the user defined custom training procedures. Importantly, this permits decoupling networks structure, learning and evaluation loops, allowing researchers to narrow down the scope of their work. Model files are expected to be Python files that provide a small set of functions. These constraints have been described in the LEMUR dataset such as `Net(nn.Module)` naming and `train_setup(self, prm)`, `learn(self, train_data)` functions.
+protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. Importantly, this separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down the scope of their work. Model files are expected to be Python files that provide a `Net` class with the required methods. These conventions were described with the LEMUR dataset [@goodarzi2025lemur], including the `Net(nn.Module)` class and its `train_setup(self, prm)` and `learn(self, train_data)` methods.
 
-A complete training cycle also requires a dataset, a transformation, and an evaluation measure. Beyond the model file naming, the same principles are applied to these components. For example, a dataset file provides `loader(transform_fn, task)`, a transformation file provides `transform(norm)`, and an evaluation measure file provides `create_metric(out_shape)`. Therefore, researchers can easily write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects like structural network-level modifications rather than execution code.
+A complete training cycle also requires a dataset, a transformation, and an evaluation measure. As with model modules, the same principles are applied to these components. For example, a dataset file provides `loader(transform_fn, task)`, a transformation file provides `transform(norm)`, and an evaluation measure file provides `create_metric(out_shape)`. Therefore, researchers can easily write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects like structural network-level modifications rather than execution code.
 
+**Dynamic Imports** Aside from the definitions, the name based dynamic imports were extensively used to compose the system. The components described above are loaded dynamically and combined in the
+training engine in `ab/nn/util/Train.py`. Loading helpers import each component's
+Python module by name and get the class or function required by its interface.
 
-**Dynamic Imports**
-Aside from the definitions, the name based dynamic imports were extensively used to compose the system. Experiment configurations select models, dataset loaders, transformations, and
-evaluation measures by name. The corresponding Python modules are imported at
-runtime, and their expected classes or functions are obtained through the common
-interfaces. New compatible modules can therefore be selected for experiments
-without rewriting the central execution procedure.
+The command-line entry point in `ab/nn/train.py` lets users specify these names.
+For example,
+`python -m ab.nn.train --config img-classification_cifar-10_acc_AlexNet --transform norm`
+selects AlexNet, CIFAR-10, accuracy, and normalization for image classification.
+The entry point reads the configuration as task, dataset, metric, and model and
+passes these names to `Train.py` with the transformation name. The engine then
+loads the selected modules and combines them through the interfaces above.
+Researchers can add a custom model, dataset loader, transformation, or metric in
+the corresponding package directory and select it by name. The new file must
+follow the required interface and work with a supported task. It can then be used
+without changing the shared training, evaluation, or recording code.
 
-This separates experimental choices from the code that coordinates a run.
-Researchers can compare implementations or preprocessing methods while reusing
-evaluation and recording logic. For model, metric, and transformation modules,
-the loading helper can recover stored source from the database when a module
-file is missing. Imported code runs with the Python process's permissions, so
-the selected modules and their dependencies must be available and trusted.
+**Failure handling and recovery.** The execution of the neural network can fail due to various issues. The code may contain mistakes, the GPU may run out of memory, an epoch may exceed its time budget, or accuracy may stay below the dataset minimum. The package handles each case and returns a recorded result instead of stopping the whole experiment. Mistakes in the code are caught before training. Pylint [@pylint2024] reports errors, unused variables, and style problems, and Radon [@radon2024] reports the complexity of each function. A quick test then builds the network and trains two batches of random images to confirm that the code works. During runtime, OOM errors are handled by lowering the maximum batch size until a suitable small batch is found.
 
+Crashes can still occur due to the transient dynamics of the environment. The common causes are download failures, fragmentation errors, resource contentions, unlucky sampling and many more. To handle these external influences, retrials are introduced so the experiments can continue without disruption.
 
+**Budget Allocation** While training a neural network, certain criteria can be
+taken into account such as training time and performance. The time limit is
+declared by the researcher and is 30 minutes per epoch by default. For each
+epoch, an estimator predicts the total duration from the first batches, and
+the epoch is stopped between batches when the prediction exceeds the limit.
+For performance, a network that stays below the random guess baseline for its
+dataset is stopped early.
 
+**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in a different way must stay one entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler-Leman procedure [@weisfeiler1968reduction] into a single certificate stored as a blake2b hash. The same network written differently receives the same certificate, and this certificate keys the recorded results of that architecture. For graded comparison rather than exact identity, the package also measures similarity between two architectures and stores MinHash signatures [@broder1997syntactic] over the code text for retrieving close variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
 
-Trial retries and batch-size search bounds belong to the runner rather than
-the learning method. The training iterator estimates epoch duration from early
-batches and stops iteration when the forecast exceeds the budget. Checks occur
-between batches, so this is a forecast-based cost rule, not a hard limit on total
-process time. Existing epoch records remain available after interruption.
-Advisory Pylint [@pylint2024] and Radon [@radon2024] reports and a synthetic-image
-execution check provide earlier feedback before spending time on longer runs.
-
-**Learning and execution.**
-
-**Measurement resolution.** Recording at epoch boundaries limits the volume of
-stored observations across many trials. It retains learning progress at coarser
-resolution than batch-level profiling, with settings linked to each observation.
-Hardware descriptions and batch size accompany host CPU/RAM samples and CUDA
-allocation statistics, making their measurement context available when comparing
-computational requirements.
-
-Similar final scores can conceal different learning curves and layer behaviour.
-Optional analysis therefore adds importance estimates from activations and their
-gradients [@molchanov2017pruning], effective rank [@roy2007effectiverank],
-representation similarity [@kornblith2019cka], relative loss changes after zeroing
-layer weights and biases, and WeightWatcher statistics [@martin2021weightwatcher].
-Sampling selected epochs and batches limits the additional passes and matrix
-operations. The resulting
-trade-off is more internal information at additional cost, with coverage defined
-by supported convolutional and linear layers. These observations guide further
-experiments rather than automatically explaining why one model performs better.
-
-**Code relationships.** Exact-text duplicate checks in earlier pipelines
-[@uzun2026lemur2] and [@kochnev2026nngpt] address repeated submissions. Comparing
-related implementations additionally requires recognizing selected rewritings.
-Source-graph fingerprints normalize supported renamings and constant expressions
-using Weisfeiler-Leman refinement [@weisfeiler1968reduction]. Unlike tracing an
-instantiated model with `torch.fx` [@reed2022torchfx], source fingerprints can be
-computed without model construction or data loading. MinHash signatures
-[@broder1997syntactic] provide graded text similarity for retrieving candidate variants.
-
-The choice of source analysis reduces execution requirements but also defines
-the interpretation of a match. A fingerprint is a structural summary, not proof
-of architectural or behavioural equivalence. Source inspection, runtime settings,
-and trained weights remain necessary for interpreting model differences.
-The fingerprint and structural-similarity routines have 47 tests covering selected
-renamings, constant expressions, structural changes, and similarity cases.
+**Layer statistics.** Optional analysis adds an inside view of the model beyond its score. When enabled, every selected epoch stores measurements for each convolutional and linear layer, including how much the layer contributes to the loss [@molchanov2017pruning], how much of its representation carries information [@roy2007effectiverank], how similar its output is to that of other layers [@kornblith2019cka], how much the loss changes when its weights and biases are zeroed, the size of its gradients, the fraction of its dead neurons, and a statistic of its weight matrix [@martin2021weightwatcher]. The measurements need extra forward and backward passes, so they are computed only in the first five epochs and every fifth epoch afterwards, on a few batches. They point to where the next experiment should look and do not explain on their own why one model scores higher.
 
 **Persistent comparisons.** SQLite links available source, configurations,
 results, and layer observations so that comparisons can select matching
@@ -220,7 +153,7 @@ repositories [@khalid2025nnrag] also used the evaluation procedures. These uses
 document the reuse of training and query components for different experimental
 questions.
 
-PyPI reported 31,992 cumulative PyPI downloads of `nn-dataset` as of
+PePy reported 31,992 cumulative downloads of `nn-dataset` as of
 15 October 2026, including automated downloads [@pepy2026downloads].
 
 Development history dates to October 2024. Source version 2.2.13 includes the
@@ -247,8 +180,12 @@ separate from AI-assisted software and manuscript preparation.
 
 # Acknowledgements
 
-Contributions to `nn-dataset` are gratefully acknowledged. The Alexander von
-Humboldt Foundation provided partial support. The foundation had no role in the
-design, implementation, or reporting of the work.
+Contributions to `nn-dataset` are gratefully acknowledged. Waleed Khalid,
+Saif U Din, Sai Revanth Mulukuledu, Akashdeep Singh, Chandini Vysyaraju,
+Raghuvir Duvvuri, Avi Goyal, Yashkumar Rajeshbhai Lukhi, Muhammad A. Hussain,
+Krunal Jesani, Usha Shrestha, Yash Mittal, Roman Kochnev, Pritam Kadam,
+Mohsin Ikram, Harsh Rameshbhai Moradiya, and Alice Arslanian contributed to
+the dataset and software. The Alexander von
+Humboldt Foundation provided partial support.
 
 # References
