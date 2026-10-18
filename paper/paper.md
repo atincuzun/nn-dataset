@@ -79,6 +79,8 @@ studies reuse the same procedures while retaining each model's learning method.
 `nn-dataset` was designed with modularity in mind. Data interfaces, processing, and recording are kept separate. The analytical routines use this foundation to relate the implementations to their
 learning behaviour and computational requirements under recorded conditions.
 
+![Overview of the `nn-dataset` workflow, recorded information, and the source-analysis path.](diagram.png)
+
 **Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their
 loss, optimizer, learning steps, and hyperparameters while the engine handles data preparation,
 evaluation, and recording under a declared common
