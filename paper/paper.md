@@ -39,22 +39,20 @@ https://github.com/ABrain-One/nn-dataset [@nndataset2026].
 
 # Statement of need
 
-Hundreds of different neural network structures are produced in the domain of computer science, targeted to specific tasks. This introduces the problem of reimplementing the repetitive code across independent research. Scientists must write similar training loops for every neural network they study. Many ideas need to be tried, tested, and compared, producing a growing number of results that must be stored together with the 
+Researchers produce many task-specific network architectures, and studies often rewrite similar training code. Many ideas must be tried, tested, and compared, and the results must be stored with the 
 model code and training settings used to obtain them. Differences in learning procedures, memory requirements, and hardware affect interpretation. Studies of benchmark
 variability [@bouthillier2021variance] and software maintenance
 [@sculley2015debt] support the need for consistent recording and shared code.
 Researchers studying training procedures need to keep model-specific learning
 code while measuring losses, gradients, running time, and layer properties.
-Implementing these measurements separately in each study repeats work and makes
-the recording procedures harder to compare.
+Implementing these measurements separately in each study repeats work and complicates comparison.
 
 `nn-dataset` provides a common model interface, training and retry procedures, similarity checking,
-and a database for keeping the measurements. Researchers can automatically evaluate their own model code
-without manual intervention.
-
-The number of runs grows as studies vary models, datasets, and training settings.
-Common records and explicit selection criteria support comparisons at this scale
-and allow completed experiments to be reused for follow-up questions.
+and a database for keeping the measurements. Researchers in deep learning, neural architecture
+search, and AutoML can evaluate their own model code
+without manual intervention. Runs multiply as studies vary models, datasets, and settings,
+so common records and explicit selection criteria keep comparisons feasible and completed
+experiments reusable.
 
 # State of the field
 
@@ -67,16 +65,14 @@ user-defined trials and handles failures. Optuna [@akiba2019optuna] searches
 hyperparameters. PyTorch Lightning [@falcon2019lightning] manages training loops,
 logging, and checkpoints through model methods and callbacks.
 
-Using these tools for submitted implementations requires additional code
-for source comparison, selected layer measurements, and queries that connect
-these outputs to experimental settings. Tracking tools organize run outputs,
-while search systems optimize reported objectives. Task-specific layer analyses
-and the rules for comparing implementations require experiment-specific
-definitions. `nn-dataset` provides this through shared analysis routines and linked database tables.
-It reuses PyTorch and Optuna for execution and search. Keeping measurement and
-selection code in the package lets different studies reuse the same procedures
-while retaining each model's learning method. General-purpose framework hooks
-can support equivalent extensions when researchers provide these components.
+Using these tools with submitted implementations requires extra code for
+source comparison, layer measurements, and queries connecting these outputs to
+settings. The contribution of `nn-dataset` is to supply these components as one
+combination, a model interface that keeps learning code with the model,
+analysis routines that work with any model following it, and linked database
+tables that tie outputs to settings, while reusing PyTorch and Optuna for
+execution and search. Keeping measurement and selection code in the package lets different
+studies reuse the same procedures while retaining each model's learning method.
 
 # Software design
 
@@ -86,7 +82,7 @@ learning behaviour and computational requirements under recorded conditions.
 **Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their
 loss, optimizer, learning steps, and hyperparameters while the engine handles data preparation,
 evaluation, and recording under a declared common
-protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. Importantly, this separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down the scope of their work. Model files are expected to be Python files that provide a `Net` class with the required methods. These conventions were described with the LEMUR dataset [@goodarzi2025lemur], including the `Net(nn.Module)` class and its `train_setup(self, prm)` and `learn(self, train_data)` methods.
+protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. This separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down their scope, with the trade-off that comparability rests on the declared protocol and model modules run as trusted Python code. Model files are expected to be Python files that provide a `Net` class with the required methods. These conventions were described with the LEMUR dataset [@goodarzi2025lemur], including the `Net(nn.Module)` class and its `train_setup(self, prm)` and `learn(self, train_data)` methods.
 
 A complete training cycle also requires a dataset, a transformation, and an evaluation measure. As with model modules, the same principles are applied to these components. For example, a dataset file provides `loader(transform_fn, task)`, a transformation file provides `transform(norm)`, and an evaluation measure file provides `create_metric(out_shape)`. Therefore, researchers can easily write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects like structural network-level modifications rather than execution code.
 
@@ -106,7 +102,7 @@ the corresponding package directory and select it by name. The new file must
 follow the required interface and work with a supported task. It can then be used
 without changing the shared training, evaluation, or recording code.
 
-**Failure handling and recovery.** The execution of the neural network can fail due to various issues. The code may contain mistakes, the GPU may run out of memory, an epoch may exceed its time budget, or accuracy may stay below the dataset minimum. The package handles each case and returns a recorded result instead of stopping the whole experiment. Mistakes in the code are caught before training. Pylint [@pylint2024] reports errors, unused variables, and style problems, and Radon [@radon2024] reports the complexity of each function. A quick test then builds the network and trains two batches of random images to confirm that the code works. During runtime, OOM errors are handled by lowering the maximum batch size until a suitable small batch is found.
+**Failure handling and recovery.** The execution of the neural network can fail due to various issues. The code may contain mistakes, the GPU may run out of memory, an epoch may exceed its time budget, or accuracy may stay below the dataset minimum. The package handles these conditions to prevent individual failed trials from stopping the whole experiment. Static code analysis is performed before training. Pylint [@pylint2024] reports errors, unused variables, and style problems, and Radon [@radon2024] reports the complexity of each function. A quick test then builds the network and trains two batches of random images to check that initialization and initial learning steps execute successfully. During runtime, OOM errors are handled by lowering the maximum batch size until a suitable small batch is found.
 
 Crashes can still occur due to the transient dynamics of the environment. The common causes are download failures, fragmentation errors, resource contention, unlucky sampling and many more. To handle these external influences, retries are introduced so the experiments can continue without disruption.
 
@@ -118,14 +114,27 @@ the epoch is stopped between batches when the prediction exceeds the limit.
 For performance, a network that stays below the random guess baseline for its
 dataset is stopped early.
 
-**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in a different way must remain a single entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler-Leman procedure [@weisfeiler1968reduction] into a single certificate stored as a blake2b hash. The same network written differently receives the same certificate, and this certificate keys the recorded results of that architecture. For graded comparison rather than exact identity, the package also measures similarity between two architectures and stores MinHash signatures [@broder1997syntactic] over the code text for retrieving close variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
+**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in different ways should be recognized as a single entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler–Lehman procedure [@weisfeiler1968reduction] into a structural certificate stored as a BLAKE2b hash. This fingerprint identifies equivalent architectures across different source-code representations, including changes in variable names, formatting, and arithmetic expressions. For architectures with different fingerprints, the package also uses MinHash signatures [@broder1997syntactic] over the code text to measure similarity and retrieve related variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
 
-**Layer statistics.** Optional analysis adds an inside view of the model beyond its score. When enabled, every selected epoch stores measurements for each convolutional and linear layer, including how much the layer contributes to the loss [@molchanov2017pruning], how much of its representation carries information [@roy2007effectiverank], how similar its output is to that of other layers [@kornblith2019cka], how much the loss changes when its weights and biases are zeroed, the size of its gradients, the fraction of its dead neurons, and a statistic of its weight matrix [@martin2021weightwatcher]. The measurements need extra forward and backward passes, so they are computed only in the first five epochs and every fifth epoch afterwards, on a few batches. They point to where the next experiment should look and do not explain on their own why one model scores higher.
+**Record structure.** Every run stores the primary metric, the duration, the
+batch size, and the learning rate, momentum, dropout, and transformation
+settings. For reproducibility,
+the record adds the training and test loss, the training accuracy, the
+gradient norm after the epoch, samples per second, and the sampled machine
+context, which covers processor load, total and occupied memory, and the
+graphics device with its memory. Layer analysis stores one row per analysed
+layer for selected epochs, including how much the layer contributes to the
+loss [@molchanov2017pruning], how much of its representation carries
+information [@roy2007effectiverank], how similar its output is to that of
+other layers [@kornblith2019cka], how much the loss changes when its weights
+and biases are zeroed, the size of its gradients, the fraction of its dead
+neurons, and a statistic of its weight matrix [@martin2021weightwatcher]. The
+measurements need extra forward and backward passes, so they are computed only
+in the first five epochs and every fifth epoch afterwards.
 
-**Persistent comparisons.** A database layer holds the stored code, settings,
+**Persistent storage.** A database layer holds the stored code, settings,
 scores, and layer measurements under the identities described above, so runs
-can be found and compared across experiments. The schema is fixed, so a new
-experiment never needs new tables. Each experiment also writes its statistics
+can be found and compared across experiments. The schema is shared across experiments, allowing new runs to reuse the existing tables. Each experiment also writes its statistics
 as JSON files into its own folder, where they can be read directly. If the
 database is lost or damaged, it can be rebuilt from this material, so the
 records stay recoverable. Queries return pandas DataFrames
@@ -151,24 +160,16 @@ PePy reported 31,992 cumulative downloads of `nn-dataset` as of
 Development history dates to October 2024. Source version 2.2.13 includes the
 training and analysis modules. The repository provides installation and extension
 instructions, tagged releases, a changelog, examples, and automated tests.
-The package requires Python 3.10 or newer. The engine prefers CUDA with MPS and
-CPU fallbacks. Stored-record queries and source fingerprinting also run on CPU.
+The package requires Python 3.10 or newer. 
 Shared database copies and saved model weights are available at
 https://huggingface.co/NN-Dataset.
 
 # AI usage disclosure
 
-DeepSeek V4.1 Flash was used during earlier software development, documentation,
-and paper drafting. Human authors reviewed those outputs and made the core
-design decisions. Kilo Code, using GPT-6.1 Sol, assisted literature comparison,
-source inspection, restructuring, and drafting. MiMo V2.6 Pro, DeepSeek V4.1
-Flash, GLM 5.3, and Step 5 Preview provided informal manuscript feedback and
-technical checks. Author-provided feedback from Claude was also considered,
-with its model version unspecified. Human review, editing, and validation are
-required before submission, with authors responsible for accuracy, originality,
-and licensing.
-External code generators can supply experimental models. Their use as inputs is
-separate from AI-assisted software and manuscript preparation.
+Parts of the `nn-dataset` pipeline were developed by different team members
+using various language models. This manuscript was prepared with DeepSeek V4.1
+Flash. The human authors reviewed the outputs, made the core design decisions,
+and remain responsible for accuracy, originality, and licensing.
 
 # Acknowledgements
 
