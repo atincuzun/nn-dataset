@@ -39,9 +39,8 @@ https://github.com/ABrain-One/nn-dataset [@nndataset2026].
 
 # Statement of need
 
-Hundreds of different neural network structures are produced in the domain of computer science, targeted to specific tasks. This introduces the problem of reimplementing the repetitive code across independent research. Scientist must write the similar loops to train a neural network. Many ideas need to be tried, tested and compared, producing a growing number of results that must be stored together with the 
-model code and training settings used to obtain them, including the differences in learning procedures,
-memory requirements, and hardware affect interpretation. Studies of benchmark
+Hundreds of different neural network structures are produced in the domain of computer science, targeted to specific tasks. This introduces the problem of reimplementing the repetitive code across independent research. Scientists must write similar training loops for every neural network they study. Many ideas need to be tried, tested, and compared, producing a growing number of results that must be stored together with the 
+model code and training settings used to obtain them. Differences in learning procedures, memory requirements, and hardware affect interpretation. Studies of benchmark
 variability [@bouthillier2021variance] and software maintenance
 [@sculley2015debt] support the need for consistent recording and shared code.
 Researchers studying training procedures need to keep model-specific learning
@@ -70,10 +69,10 @@ logging, and checkpoints through model methods and callbacks.
 
 Using these tools for submitted implementations requires additional code
 for source comparison, selected layer measurements, and queries that connect
-these outputs to experimental settings. Trackng tools organize run outputs,
+these outputs to experimental settings. Tracking tools organize run outputs,
 while search systems optimize reported objectives. Task-specific layer analyses
-and the rules for comparing implementations riequire experiment-specific
-definitions. `nn-dataset` provides this through shared analysis routines, and linked database tables.
+and the rules for comparing implementations require experiment-specific
+definitions. `nn-dataset` provides this through shared analysis routines and linked database tables.
 It reuses PyTorch and Optuna for execution and search. Keeping measurement and
 selection code in the package lets different studies reuse the same procedures
 while retaining each model's learning method. General-purpose framework hooks
@@ -81,8 +80,7 @@ can support equivalent extensions when researchers provide these components.
 
 # Software design
 
-`nn-dataset` was designed with modularity in mind. Data interface, processing,  and had been kept
-separate. The analytical routines use this foundation to relate the implementations to their
+`nn-dataset` was designed with modularity in mind. Data interfaces, processing, and recording are kept separate. The analytical routines use this foundation to relate the implementations to their
 learning behaviour and computational requirements under recorded conditions.
 
 **Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their
@@ -92,7 +90,7 @@ protocol. Compatible code written to the interface unifies the pipeline while al
 
 A complete training cycle also requires a dataset, a transformation, and an evaluation measure. As with model modules, the same principles are applied to these components. For example, a dataset file provides `loader(transform_fn, task)`, a transformation file provides `transform(norm)`, and an evaluation measure file provides `create_metric(out_shape)`. Therefore, researchers can easily write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects like structural network-level modifications rather than execution code.
 
-**Dynamic Imports** Aside from the definitions, the name based dynamic imports were extensively used to compose the system. The components described above are loaded dynamically and combined in the
+**Dynamic imports.** Aside from the definitions, the name-based dynamic imports were extensively used to compose the system. The components described above are loaded dynamically and combined by the
 training engine in `ab/nn/util/Train.py`. Loading helpers import each component's
 Python module by name and get the class or function required by its interface.
 
@@ -110,9 +108,9 @@ without changing the shared training, evaluation, or recording code.
 
 **Failure handling and recovery.** The execution of the neural network can fail due to various issues. The code may contain mistakes, the GPU may run out of memory, an epoch may exceed its time budget, or accuracy may stay below the dataset minimum. The package handles each case and returns a recorded result instead of stopping the whole experiment. Mistakes in the code are caught before training. Pylint [@pylint2024] reports errors, unused variables, and style problems, and Radon [@radon2024] reports the complexity of each function. A quick test then builds the network and trains two batches of random images to confirm that the code works. During runtime, OOM errors are handled by lowering the maximum batch size until a suitable small batch is found.
 
-Crashes can still occur due to the transient dynamics of the environment. The common causes are download failures, fragmentation errors, resource contentions, unlucky sampling and many more. To handle these external influences, retrials are introduced so the experiments can continue without disruption.
+Crashes can still occur due to the transient dynamics of the environment. The common causes are download failures, fragmentation errors, resource contention, unlucky sampling and many more. To handle these external influences, retries are introduced so the experiments can continue without disruption.
 
-**Budget Allocation** While training a neural network, certain criteria can be
+**Budget allocation.** While training a neural network, certain criteria can be
 taken into account such as training time and performance. The time limit is
 declared by the researcher and is 30 minutes per epoch by default. For each
 epoch, an estimator predicts the total duration from the first batches, and
@@ -120,31 +118,25 @@ the epoch is stopped between batches when the prediction exceeds the limit.
 For performance, a network that stays below the random guess baseline for its
 dataset is stopped early.
 
-**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in a different way must stay one entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler-Leman procedure [@weisfeiler1968reduction] into a single certificate stored as a blake2b hash. The same network written differently receives the same certificate, and this certificate keys the recorded results of that architecture. For graded comparison rather than exact identity, the package also measures similarity between two architectures and stores MinHash signatures [@broder1997syntactic] over the code text for retrieving close variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
+**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in a different way must remain a single entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler-Leman procedure [@weisfeiler1968reduction] into a single certificate stored as a blake2b hash. The same network written differently receives the same certificate, and this certificate keys the recorded results of that architecture. For graded comparison rather than exact identity, the package also measures similarity between two architectures and stores MinHash signatures [@broder1997syntactic] over the code text for retrieving close variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
 
 **Layer statistics.** Optional analysis adds an inside view of the model beyond its score. When enabled, every selected epoch stores measurements for each convolutional and linear layer, including how much the layer contributes to the loss [@molchanov2017pruning], how much of its representation carries information [@roy2007effectiverank], how similar its output is to that of other layers [@kornblith2019cka], how much the loss changes when its weights and biases are zeroed, the size of its gradients, the fraction of its dead neurons, and a statistic of its weight matrix [@martin2021weightwatcher]. The measurements need extra forward and backward passes, so they are computed only in the first five epochs and every fifth epoch afterwards, on a few batches. They point to where the next experiment should look and do not explain on their own why one model scores higher.
 
-**Persistent comparisons.** SQLite links available source, configurations,
-results, and layer observations so that comparisons can select matching
-experimental conditions and required measurements. Returning pandas DataFrames
-[@mckinney2010pandas] keeps statistical analysis separate from execution, allowing
-completed runs to be reused when research questions change.
-
-The inherited dual storage serves different access patterns. JSON exports remain
-readable and exchangeable, while SQLite avoids repeating stored source and
-configuration entries across results. Keeping both requires synchronization
-between files and the query store. Retained sources and measurements or compatible
-snapshots can rebuild that store. Search continuation counts completed trials
-rather than restoring optimizer or search-sampler state. Reproducing individual
-runs additionally requires their retained code, data preparation, software
-environment, and random states.
+**Persistent comparisons.** A database layer holds the stored code, settings,
+scores, and layer measurements under the identities described above, so runs
+can be found and compared across experiments. The schema is fixed, so a new
+experiment never needs new tables. Each experiment also writes its statistics
+as JSON files into its own folder, where they can be read directly. If the
+database is lost or damaged, it can be rebuilt from this material, so the
+records stay recoverable. Queries return pandas DataFrames
+[@mckinney2010pandas], so analysis happens outside the training environment.
 
 # Research impact statement
 
 The neural network dataset that is introduced with LEMUR
-[@goodarzi2025lemur] was gathered using `nn-dataset` package. The package also granted extension and evaluation software for the
-LEMUR 2 collection [@uzun2026lemur2] and supplied API to NNGPT
-[@kochnev2026nngpt]. Applications of the research angle include
+[@goodarzi2025lemur] was gathered with the `nn-dataset` package. The package also provided extension and evaluation software for the
+LEMUR 2 collection [@uzun2026lemur2] and an API for NNGPT
+[@kochnev2026nngpt]. Applications include
 a study of 25 learning-rate schedules across 30 architectures
 [@mateen2026scheduling] and 18 loss-optimizer pairings across 33 architectures
 and six datasets [@abramochkin2026lossoptimizer]. Studies of model generation
