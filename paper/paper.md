@@ -1,5 +1,5 @@
 ---
-title: 'nn-dataset for training and analysing neural networks'
+title: 'LEMUR: Learning, Evaluation, and Modeling for Unified Research, for training and analysing neural networks'
 tags:
   - Python
   - deep learning
@@ -25,7 +25,7 @@ bibliography: paper.bib
 
 # Summary
 
-`nn-dataset` is an open-source Python package for training neural networks and
+The LEMUR framework, distributed as `nn-dataset`, is an open-source Python package for training neural networks and
 analysing their results. Researchers supply model code and select a task,
 dataset, and evaluation measure. The package records evaluation scores, training
 losses, hardware information, and resource use. Additional analyses measure
@@ -47,7 +47,7 @@ Researchers studying training procedures need to keep model-specific learning
 code while measuring losses, gradients, running time, and layer properties.
 Implementing these measurements separately in each study repeats work and complicates comparison.
 
-`nn-dataset` provides a common model interface, training and retry procedures, similarity checking,
+The LEMUR framework provides a common model interface, training and retry procedures, similarity checking,
 and a database for keeping the measurements. Researchers in deep learning, neural architecture
 search, and AutoML can evaluate their own model code
 without manual intervention. Runs multiply as studies vary models, datasets, and settings,
@@ -67,7 +67,7 @@ logging, and checkpoints through model methods and callbacks.
 
 Using these tools with submitted implementations requires extra code for
 source comparison, layer measurements, and queries connecting these outputs to
-settings. The contribution of `nn-dataset` is to supply these components as one
+settings. The contribution of the LEMUR framework is to supply these components as one
 combination, a model interface that keeps learning code with the model,
 analysis routines that work with any model following it, and linked database
 tables that tie outputs to settings, while reusing PyTorch and Optuna for
@@ -76,10 +76,10 @@ studies reuse the same procedures while retaining each model's learning method.
 
 # Software design
 
-`nn-dataset` was designed with modularity in mind. Data interfaces, processing, and recording are kept separate. The analytical routines use this foundation to relate the implementations to their
+The LEMUR framework was designed with modularity in mind. Data interfaces, processing, and recording are kept separate. The analytical routines use this foundation to relate the implementations to their
 learning behaviour and computational requirements under recorded conditions.
 
-![Overview of the `nn-dataset` workflow, recorded information, and the source-analysis path.](diagram.png)
+![Overview of the LEMUR framework workflow, recorded information, and the source-analysis path.](diagram.png)
 
 **Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their loss, optimizer, learning steps, and hyperparameters, while the engine handles data preparation, evaluation, and recording under a declared common protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. This separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down their scope to individual components while reusing the engine. These conventions were described with LEMUR [@goodarzi2025lemur].
 
@@ -130,7 +130,7 @@ records stay recoverable. Queries return pandas DataFrames
 # Research impact statement
 
 The neural network dataset that is introduced with LEMUR
-[@goodarzi2025lemur] was gathered with the `nn-dataset` package. The package also provided extension and evaluation software for the
+[@goodarzi2025lemur] was gathered with this framework. The package also provided extension and evaluation software for the
 LEMUR 2 collection [@uzun2026lemur2] and an API for NNGPT
 [@kochnev2026nngpt]. Applications include
 a study of 25 learning-rate schedules across 30 architectures
@@ -141,7 +141,7 @@ repositories [@khalid2025nnrag] also used the evaluation procedures. These uses
 document the reuse of training and query components for different experimental
 questions.
 
-PePy reported 31,992 cumulative downloads of `nn-dataset` as of
+PePy reported 31,992 cumulative downloads of the LEMUR framework as of
 15 October 2026, including automated downloads [@pepy2026downloads].
 
 Development history dates to October 2024. Source version 2.2.13 includes the
@@ -153,14 +153,14 @@ https://huggingface.co/NN-Dataset.
 
 # AI usage disclosure
 
-Parts of the `nn-dataset` pipeline were developed by different team members
+Parts of the LEMUR framework pipeline were developed by different team members
 using various language models. This manuscript was prepared with DeepSeek V4.1
 Flash. The human authors reviewed the outputs, made the core design decisions,
 and remain responsible for accuracy, originality, and licensing.
 
 # Acknowledgements
 
-Contributions to `nn-dataset` are gratefully acknowledged. Waleed Khalid,
+Contributions to the LEMUR framework are gratefully acknowledged. Waleed Khalid,
 Saif U Din, Sai Revanth Mulukuledu, Akashdeep Singh, Chandini Vysyaraju,
 Raghuvir Duvvuri, Avi Goyal, Yashkumar Rajeshbhai Lukhi, Muhammad A. Hussain,
 Krunal Jesani, Usha Shrestha, Yash Mittal, Roman Kochnev, Pritam Kadam,
