@@ -81,28 +81,13 @@ learning behaviour and computational requirements under recorded conditions.
 
 ![Overview of the `nn-dataset` workflow, recorded information, and the source-analysis path.](diagram.png)
 
-**Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their
-loss, optimizer, learning steps, and hyperparameters while the engine handles data preparation,
-evaluation, and recording under a declared common
-protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. This separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down their scope, with the trade-off that comparability rests on the declared protocol and model modules run as trusted Python code. Model files are expected to be Python files that provide a `Net` class with the required methods. These conventions were described with the LEMUR dataset [@goodarzi2025lemur], including the `Net(nn.Module)` class and its `train_setup(self, prm)` and `learn(self, train_data)` methods.
+**Component interfaces.** In the package, PyTorch [@paszke2019pytorch] model modules contain their loss, optimizer, learning steps, and hyperparameters, while the engine handles data preparation, evaluation, and recording under a declared common protocol. Compatible code written to the interface unifies the pipeline while allowing user-defined custom training procedures. This separates model-specific learning from shared evaluation and recording, allowing researchers to narrow down their scope to individual components while reusing the engine. These conventions were described with LEMUR [@goodarzi2025lemur].
 
-A complete training cycle also requires a dataset, a transformation, and an evaluation measure. As with model modules, the same principles are applied to these components. For example, a dataset file provides `loader(transform_fn, task)`, a transformation file provides `transform(norm)`, and an evaluation measure file provides `create_metric(out_shape)`. Therefore, researchers can easily write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects like structural network-level modifications rather than execution code.
+A complete training cycle also requires a dataset, a transformation, and an evaluation measure. As with model modules, the same principles are applied to these components. Each dataset, transformation, and evaluation measure is provided as a single Python file that follows its declared interface. Therefore, researchers can write their own datasets, transformations, or measures following the same convention and reuse the full training engine, focusing on particular aspects such as structural network-level modifications rather than execution code.
 
-**Dynamic imports.** Aside from the definitions, the name-based dynamic imports were extensively used to compose the system. The components described above are loaded dynamically and combined by the
-training engine in `ab/nn/util/Train.py`. Loading helpers import each component's
-Python module by name and get the class or function required by its interface.
+**Dynamic imports.** In addition to these interface conventions, name-based dynamic imports are used to compose the system. The training engine loads the selected Python modules dynamically and combines them through their declared interfaces. Component names identify the implementations, while the interfaces define how they interact with the shared engine.
 
-The command-line entry point in `ab/nn/train.py` lets users specify these names.
-For example,
-`python -m ab.nn.train --config img-classification_cifar-10_acc_AlexNet --transform norm`
-selects AlexNet, CIFAR-10, accuracy, and normalization for image classification.
-The entry point reads the configuration as task, dataset, metric, and model and
-passes these names to `Train.py` with the transformation name. The engine then
-loads the selected modules and combines them through the interfaces above.
-Researchers can add a custom model, dataset loader, transformation, or metric in
-the corresponding package directory and select it by name. The new file must
-follow the required interface and work with a supported task. It can then be used
-without changing the shared training, evaluation, or recording code.
+The experiment configuration identifies the task, dataset, metric, and model. Together with the transformation name, these selections determine which modules the engine loads and combines. For example, an image classification experiment can combine AlexNet, CIFAR-10, accuracy, and normalization. This design allows researchers to introduce custom models, dataset loaders, transformations, or metrics through the same interfaces and select them by name for supported tasks. Researchers can therefore extend the system with new components while reusing the shared training, evaluation, and recording code.
 
 **Failure handling and recovery.** The execution of the neural network can fail due to various issues. The code may contain mistakes, the GPU may run out of memory, an epoch may exceed its time budget, or accuracy may stay below the dataset minimum. The package handles these conditions to prevent individual failed trials from stopping the whole experiment. Static code analysis is performed before training. Pylint [@pylint2024] reports errors, unused variables, and style problems, and Radon [@radon2024] reports the complexity of each function. A quick test then builds the network and trains two batches of random images to check that initialization and initial learning steps execute successfully. During runtime, OOM errors are handled by lowering the maximum batch size until a suitable small batch is found.
 
