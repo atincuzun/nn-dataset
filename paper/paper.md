@@ -93,19 +93,13 @@ The experiment configuration identifies the task, dataset, metric, and model. To
 
 Crashes can still occur due to the transient dynamics of the environment. The common causes are download failures, fragmentation errors, resource contention, unlucky sampling and many more. To handle these external influences, retries are introduced so the experiments can continue without disruption.
 
-**Budget allocation.** While training a neural network, certain criteria can be
-taken into account such as training time and performance. The time limit is
-declared by the researcher and is 30 minutes per epoch by default. For each
-epoch, an estimator predicts the total duration from the first batches, and
-the epoch is stopped between batches when the prediction exceeds the limit.
-For performance, a network that stays below the random guess baseline for its
-dataset is stopped early.
+**Budget allocation.** Without a time limit, a slow model could consume time intended for other models, and the cost would become known only after the run. The limit is therefore set before training, so the cost is decided in advance. The time limit is declared by the researcher and is 30 minutes per epoch by default. For each epoch, an estimator predicts the total duration from the first batches, and the epoch is stopped between batches when the prediction exceeds the limit. For performance, a network that stays below 1.2 times the random guess baseline for its dataset is stopped early.
 
-**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in different ways should be recognized as a single entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler–Lehman procedure [@weisfeiler1968reduction] into a structural certificate stored as a BLAKE2b hash. This fingerprint identifies equivalent architectures across different source-code representations, including changes in variable names, formatting, and arithmetic expressions. For architectures with different fingerprints, the package also uses MinHash signatures [@broder1997syntactic] over the code text to measure similarity and retrieve related variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
+**Record identity.** Different architectures must stay distinct in the database, and the same architecture written in different ways should be recognized as a single entry. The package therefore gives model code its own fingerprint. It reads the model source as Python syntax, follows the layers and their settings, ignores variable names and formatting, folds simple arithmetic such as `256 * 6 * 6` into one number, and refines the resulting graph with the Weisfeiler–Lehman procedure [@weisfeiler1968reduction] into a structural certificate stored as a BLAKE2b hash. Computing the identity from a trained model would require building every candidate first, which is the cost that the check is intended to avoid, and exact comparison of source files would require comparing candidates in pairs. The certificate is computed from the source, so a duplicate is identified before training. Renaming and formatting changes preserve the same identity, and MinHash similarity identifies related models. For architectures with different fingerprints, the package also uses MinHash signatures [@broder1997syntactic] over the code text to measure similarity and retrieve related variants. Values that are not model code, such as hyperparameter sets, receive a plain content hash of their text instead.
 
 **Record structure.** Every run stores the primary metric, the duration, the
 batch size, and the learning rate, momentum, dropout, and transformation
-settings. For reproducibility,
+settings. Records are written once per epoch rather than once per batch, which keeps the stored data small across many trials while still showing the learning curve. For reproducibility,
 the record adds the training and test loss, the training accuracy, the
 gradient norm after the epoch, samples per second, and the sampled machine
 context, which covers processor load, total and occupied memory, and the
@@ -114,18 +108,15 @@ layer for selected epochs, including how much the layer contributes to the
 loss [@molchanov2017pruning], how much of its representation carries
 information [@roy2007effectiverank], how similar its output is to that of
 other layers [@kornblith2019cka], how much the loss changes when its weights
-and biases are zeroed, the size of its gradients, the fraction of its dead
-neurons, and a statistic of its weight matrix [@martin2021weightwatcher]. The
-measurements need extra forward and backward passes, so they are computed only
-in the first five epochs and every fifth epoch afterwards.
+and biases are zeroed, the size of its gradients, the fraction of its near-zero outputs, and a statistic of its weight matrix [@martin2021weightwatcher]. 
 
 **Persistent storage.** A database layer holds the stored code, settings,
 scores, and layer measurements under the identities described above, so runs
-can be found and compared across experiments. The schema is shared across experiments, allowing new runs to reuse the existing tables. Each experiment also writes its statistics
-as JSON files into its own folder, where they can be read directly. If the
+can be found and compared across experiments. The schema is shared across experiments, allowing new runs to reuse the existing tables. If the
 database is lost or damaged, it can be rebuilt from this material, so the
 records stay recoverable. Queries return pandas DataFrames
-[@mckinney2010pandas], so analysis happens outside the training environment.
+[@mckinney2010pandas], so analysis happens outside the training environment. Each experiment also writes its statistics
+as JSON files into its own folder, where they can be read directly.
 
 # Research impact statement
 
@@ -153,10 +144,12 @@ https://huggingface.co/NN-Dataset.
 
 # AI usage disclosure
 
-Parts of the LEMUR framework pipeline were developed by different team members
-using various language models. This manuscript was prepared with DeepSeek V4.1
-Flash. The human authors reviewed the outputs, made the core design decisions,
-and remain responsible for accuracy, originality, and licensing.
+DeepSeek V4.1 Flash, used through the Kilo Code assistant, supported drafting,
+restructuring, and editing of this manuscript, code inspection, and
+documentation. The human authors reviewed, edited, and validated all AI-assisted
+output, checked technical claims against the source code, made the core design
+and scientific decisions, and remain responsible for accuracy, originality, and
+licensing.
 
 # Acknowledgements
 
