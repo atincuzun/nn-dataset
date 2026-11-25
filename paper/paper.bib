@@ -1,35 +1,50 @@
-@article{goodarzi2025lemur,
-  title   = {{LEMUR} Neural Network Dataset: Towards Seamless {AutoML}},
-  author  = {Goodarzi, Arash Torabi and Kochnev, Roman and Khalid, Waleed and Torabi Goudarzi, Hojjat and Qin, Furui and Uzun, Tolgay Atinc and Dhameliya, Yashkumar Sanjaybhai and Kathiriya, Yash Kanubhai and Bentyn, Zofia Antonina and Ignatov, Dmitry and Timofte, Radu},
-  journal = {arXiv preprint arXiv:2504.10552},
-  doi     = {10.48550/arXiv.2504.10552},
-  year    = {2025}
+% ============================================================
+% The software itself
+% ============================================================
+
+@software{nndataset2026,
+  title        = {{nn-dataset}},
+  author       = {{ABrain One and contributors}},
+  year         = {2026},
+  version      = {2.2.13},
+  url          = {https://github.com/ABrain-One/nn-dataset},
+  note         = {Source version 2.2.13, MIT licence}
 }
 
-@inproceedings{uzun2026lemur2,
-  title     = {{LEMUR} 2: Unlocking Neural Network Diversity for {AI}},
-  author    = {Uzun, Tolgay Atinc and Khalid, Waleed and Din, Saif U and Mulukuledu, Sai Revanth and Singh, Akashdeep and Vysyaraju, Chandini and Duvvuri, Raghuvir and Goyal, Avi and Lukhi, Yashkumar Rajeshbhai and Hussain, Muhammad A. and Jesani, Krunal and Shrestha, Usha and Mittal, Yash and Kochnev, Roman and Kadam, Pritam and Ikram, Mohsin and Moradiya, Harsh Rameshbhai and Arslanian, Alice and Ignatov, Dmitry and Timofte, Radu},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
-  pages     = {3291--3300},
-  url       = {https://openaccess.thecvf.com/content/CVPR2026W/CVPR-NAS26/html/Uzun_LEMUR_2_Unlocking_Neural_Network_Diversity_for_AI_CVPRW_2026_paper.html},
-  year      = {2026}
+@misc{pepy2026downloads,
+  author       = {{PePy}},
+  title        = {{PyPI} download statistics for {nn-dataset}},
+  year         = {2026},
+  howpublished = {\url{https://pepy.tech/projects/nn-dataset}},
+  note         = {Accessed 16 November 2026}
 }
 
-@inproceedings{kochnev2026nngpt,
-  title     = {{NNGPT}: Rethinking {AutoML} with Large Language Models},
-  author    = {Kochnev, Roman and Khalid, Waleed and Uzun, Tolgay Atinc and Zhang, Xi and Dhameliya, Yashkumar Sanjaybhai and Qin, Furui and Vysyaraju, Chandini and Duvvuri, Raghuvir and Goyal, Avi and Ignatov, Dmitry and Timofte, Radu},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
-  pages     = {3262--3272},
-  url       = {https://openaccess.thecvf.com/content/CVPR2026W/CVPR-NAS26/html/Kochnev_NNGPT_Rethinking_AutoML_with_Large_Language_Models_CVPRW_2026_paper.html},
-  year      = {2026}
+% ============================================================
+% Related tools, benchmarks, and methods
+% ============================================================
+
+@inproceedings{paszke2019pytorch,
+  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and K{\"o}pf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32},
+  year      = {2019}
 }
 
-@article{adhikari2026delta,
-  title   = {Delta-Based Neural Architecture Search: {LLM} Fine-Tuning via Code Diffs},
-  author  = {Adhikari, Santosh Premi and Timofte, Radu and Ignatov, Dmitry},
-  journal = {arXiv preprint arXiv:2605.04903},
-  doi     = {10.48550/arXiv.2605.04903},
-  year    = {2026}
+@software{falcon2019lightning,
+  title   = {{PyTorch Lightning}},
+  author  = {Falcon, William and {The PyTorch Lightning team}},
+  year    = {2019},
+  doi     = {10.5281/zenodo.3828935},
+  url     = {https://github.com/Lightning-AI/pytorch-lightning}
+}
+
+@misc{wightman2019timm,
+  title        = {{PyTorch} Image Models},
+  author       = {Wightman, Ross},
+  year         = {2019},
+  howpublished = {\url{https://github.com/huggingface/pytorch-image-models}},
+  doi          = {10.5281/zenodo.4414861}
 }
 
 @inproceedings{akiba2019optuna,
@@ -39,6 +54,32 @@
   pages     = {2623--2631},
   doi       = {10.1145/3292500.3330701},
   year      = {2019}
+}
+
+@article{liaw2018tune,
+  title   = {Tune: A Research Platform for Distributed Model Selection and Training},
+  author  = {Liaw, Richard and Liang, Eric and Nishihara, Robert and Moritz, Philipp and Gonzalez, Joseph E. and Stoica, Ion},
+  journal = {arXiv preprint arXiv:1807.05118},
+  doi     = {10.48550/arXiv.1807.05118},
+  year    = {2018}
+}
+
+@article{zaharia2018mlflow,
+  title   = {Accelerating the Machine Learning Lifecycle with {MLflow}},
+  author  = {Zaharia, Matei and Chen, Andrew and Davidson, Aaron and Ghodsi, Ali and Hong, Sue Ann and Konwinski, Andy and Murching, Siddharth and Nykodym, Tomas and Ogilvie, Paul and Parkhe, Mani and Xie, Fen and Zumar, Corey},
+  journal = {IEEE Data Engineering Bulletin},
+  volume  = {41},
+  number  = {4},
+  pages   = {39--45},
+  year    = {2018}
+}
+
+@misc{biewald2020wandb,
+  title        = {Experiment Tracking with {Weights and Biases}},
+  author       = {Biewald, Lukas},
+  year         = {2020},
+  howpublished = {\url{https://wandb.com}},
+  note         = {Software available from wandb.com}
 }
 
 @inproceedings{ying2019nasbench101,
@@ -56,149 +97,12 @@
   year      = {2020}
 }
 
-@article{dong2021natsbench,
-  title   = {{NATS-Bench}: Benchmarking {NAS} Algorithms for Architecture Topology and Size},
-  author  = {Dong, Xuanyi and Liu, Lu and Musial, Katarzyna and Gabrys, Bogdan},
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  doi     = {10.1109/TPAMI.2021.3054824},
-  year    = {2021}
-}
-
 @inproceedings{mattson2020mlperf,
   title     = {{MLPerf} Training Benchmark},
   author    = {Mattson, Peter and Cheng, Christine and Diamos, Gregory and Coleman, Cody and Micikevicius, Paulius and Patterson, David and Tang, Hanlin and Wei, Gu-Yeon and Bailis, Peter and Bittorf, Victor and others},
   booktitle = {Proceedings of Machine Learning and Systems (MLSys)},
   pages     = {474--483},
   year      = {2020}
-}
-
-@inproceedings{paszke2019pytorch,
-  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
-  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and K{\"o}pf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
-  booktitle = {Advances in Neural Information Processing Systems},
-  volume    = {32},
-  year      = {2019}
-}
-
-@inproceedings{reed2022torchfx,
-  title     = {Torch.fx: Practical Program Capture and Transformation for Deep Learning in Python},
-  author    = {Reed, James K. and DeVito, Zachary and He, Horace and Ussery, Ansley and Ansel, Jason},
-  booktitle = {Proceedings of Machine Learning and Systems (MLSys)},
-  volume    = {4},
-  pages     = {638--651},
-  year      = {2022}
-}
-
-@misc{wightman2019timm,
-  title        = {{PyTorch} Image Models},
-  author       = {Wightman, Ross},
-  year         = {2019},
-  howpublished = {\url{https://github.com/huggingface/pytorch-image-models}},
-  doi          = {10.5281/zenodo.4414861}
-}
-
-@article{zaharia2018mlflow,
-  title   = {Accelerating the Machine Learning Lifecycle with {MLflow}},
-  author  = {Zaharia, Matei and Chen, Andrew and Davidson, Aaron and Ghodsi, Ali and Hong, Sue Ann and Konwinski, Andy and Murching, Siddharth and Nykodym, Tomas and Ogilvie, Paul and Parkhe, Mani and Xie, Fen and Zumar, Corey},
-  journal = {IEEE Data Engineering Bulletin},
-  volume  = {41},
-  number  = {4},
-  pages   = {39--45},
-  year    = {2018}
-}
-
-@article{liaw2018tune,
-  title   = {Tune: A Research Platform for Distributed Model Selection and Training},
-  author  = {Liaw, Richard and Liang, Eric and Nishihara, Robert and Moritz, Philipp and Gonzalez, Joseph E. and Stoica, Ion},
-  journal = {arXiv preprint arXiv:1807.05118},
-  doi     = {10.48550/arXiv.1807.05118},
-  year    = {2018}
-}
-
-@misc{biewald2020wandb,
-  title        = {Experiment Tracking with {Weights and Biases}},
-  author       = {Biewald, Lukas},
-  year         = {2020},
-  howpublished = {\url{https://wandb.com}},
-  note         = {Software available from wandb.com}
-}
-
-@article{khalid2025nnrag,
-  title   = {A Retrieval-Augmented Generation Approach to Extracting Algorithmic Logic from Neural Networks},
-  author  = {Khalid, Waleed and Ignatov, Dmitry and Timofte, Radu},
-  journal = {arXiv preprint arXiv:2512.04329},
-  doi     = {10.48550/arXiv.2512.04329},
-  year    = {2025}
-}
-
-@article{mateen2026scheduling,
-  title   = {Systematic Evaluation of Learning Rate Scheduling Strategies Across Heterogeneous Architectures},
-  author  = {Mateen, Hafsa and Timofte, Radu and Ignatov, Dmitry},
-  journal = {arXiv preprint arXiv:2607.08511},
-  doi     = {10.48550/arXiv.2607.08511},
-  year    = {2026}
-}
-
-@article{abramochkin2026lossoptimizer,
-  title   = {Towards Robust Training in {NNGPT} {AutoML} Pipeline: A Loss-Optimizer Pairing Selection Study},
-  author  = {Abramochkin, Anton and Timofte, Radu and Ignatov, Dmitry},
-  journal = {arXiv preprint arXiv:2606.20933},
-  doi     = {10.48550/arXiv.2606.20933},
-  year    = {2026}
-}
-
-@article{weisfeiler1968reduction,
-  title   = {A reduction of a graph to a canonical form and an algebra arising during this reduction},
-  author  = {Weisfeiler, Boris and Leman, Andrei A.},
-  journal = {Nauchno-Technicheskaya Informatsia, Ser. 2},
-  volume  = {9},
-  pages   = {12--16},
-  year    = {1968}
-}
-
-@article{broder1997syntactic,
-  title   = {Syntactic clustering of the {Web}},
-  author  = {Broder, Andrei Z. and Glassman, Steven C. and Manasse, Mark S. and Zweig, Geoffrey},
-  journal = {Computer Networks and {ISDN} Systems},
-  volume  = {29},
-  number  = {8--13},
-  pages   = {1157--1166},
-  doi     = {10.1016/S0169-7552(97)00031-7},
-  year    = {1997}
-}
-
-@misc{pylint2024,
-  title        = {Pylint: Static code analysis for {Python}},
-  author       = {{PyCQA}},
-  year         = {2024},
-  howpublished = {\url{https://pylint.readthedocs.io}},
-  note         = {Software, version 3.x}
-}
-
-@misc{radon2024,
-  title        = {Radon: Cyclomatic complexity analysis for {Python}},
-  author       = {Lacchia, Michele},
-  year         = {2024},
-  howpublished = {\url{https://radon.readthedocs.io}},
-  note         = {Software}
-}
-
-@software{nndataset2026,
-  title        = {{nn-dataset}},
-  author       = {{ABrain One and contributors}},
-  year         = {2026},
-  version      = {2.2.13},
-  url          = {https://github.com/ABrain-One/nn-dataset},
-  note         = {Source version 2.2.13, MIT licence}
-}
-
-@inproceedings{henderson2018rl,
-  title     = {Deep Reinforcement Learning {That} Matters},
-  author    = {Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle and Precup, Doina and Meger, David},
-  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence (AAAI)},
-  pages     = {3207--3214},
-  doi       = {10.1609/aaai.v32i1.11694},
-  year      = {2018}
 }
 
 @inproceedings{bouthillier2021variance,
@@ -219,12 +123,24 @@
   year      = {2015}
 }
 
-@software{falcon2019lightning,
-  title   = {{PyTorch Lightning}},
-  author  = {Falcon, William and {The PyTorch Lightning team}},
-  year    = {2019},
-  doi     = {10.5281/zenodo.3828935},
-  url     = {https://github.com/Lightning-AI/pytorch-lightning}
+@article{weisfeiler1968reduction,
+  title   = {A reduction of a graph to a canonical form and an algebra arising during this reduction},
+  author  = {Weisfeiler, Boris and Leman, Andrei A.},
+  journal = {Nauchno-Technicheskaya Informatsia, Ser. 2},
+  volume  = {9},
+  pages   = {12--16},
+  year    = {1968}
+}
+
+@article{broder1997syntactic,
+  title   = {Syntactic clustering of the {Web}},
+  author  = {Broder, Andrei Z. and Glassman, Steven C. and Manasse, Mark S. and Zweig, Geoffrey},
+  journal = {Computer Networks and {ISDN} Systems},
+  volume  = {29},
+  number  = {8--13},
+  pages   = {1157--1166},
+  doi     = {10.1016/S0169-7552(97)00031-7},
+  year    = {1997}
 }
 
 @inproceedings{molchanov2017pruning,
@@ -274,10 +190,283 @@
   doi       = {10.25080/Majora-92bf1922-00a}
 }
 
-@misc{pepy2026downloads,
-  title   = {{PyPI} download statistics for {nn-dataset}},
-  author  = {{PePy}},
-  year    = {2026},
-  url     = {https://pepy.tech/projects/nn-dataset},
-  urldate = {2026-11-16}
+% ============================================================
+% Collections and systems built on the framework
+% ============================================================
+
+@article{ABrain.NN-Dataset,
+  title   = {{LEMUR} Neural Network Dataset: Towards Seamless {AutoML}},
+  author  = {Goodarzi, Arash Torabi and Kochnev, Roman and Khalid, Waleed and Torabi Goudarzi, Hojjat and Qin, Furui and Uzun, Tolgay Atinc and Dhameliya, Yashkumar Sanjaybhai and Kathiriya, Yash Kanubhai and Bentyn, Zofia Antonina and Ignatov, Dmitry and Timofte, Radu},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2504.10552},
+  doi     = {10.48550/arXiv.2504.10552},
+  url     = {https://arxiv.org/abs/2504.10552},
+  year    = {2025}
+}
+
+@inproceedings{ABrain.LEMUR2,
+  title     = {{LEMUR} 2: Unlocking Neural Network Diversity for {AI}},
+  author    = {Uzun, Tolgay Atinc and Khalid, Waleed and Din, Saif U and Mulukuledu, Sai Revanth and Singh, Akashdeep and Vysyaraju, Chandini and Duvvuri, Raghuvir and Goyal, Avi and Lukhi, Yashkumar Rajeshbhai and Hussain, Muhammad Ahsan and Jesani, Krunal and Shrestha, Usha and Mittal, Yash and Kochnev, Roman and Kadam, Pritam and Ikram, Mohsin and Moradiya, Harsh Rameshbhai and Arslanian, Alice and Ignatov, Dmitry and Timofte, Radu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages     = {3291--3300},
+  month     = {June},
+  year      = {2026}
+}
+
+@inproceedings{ABrain.NNGPT,
+  title     = {{NNGPT}: Rethinking {AutoML} with Large Language Models},
+  author    = {Kochnev, Roman and Khalid, Waleed and Uzun, Tolgay Atinc and Zhang, Xi and Dhameliya, Yashkumar Sanjaybhai and Qin, Furui and Vysyaraju, Chandini and Duvvuri, Raghuvir and Goyal, Avi and Ignatov, Dmitry and Timofte, Radu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages     = {3262--3272},
+  month     = {June},
+  year      = {2026}
+}
+
+@inproceedings{ABrain.HPGPT,
+  title     = {Optuna vs {Code Llama}: Are {LLMs} a New Paradigm for Hyperparameter Tuning?},
+  author    = {Kochnev, Roman and Goodarzi, Arash Torabi and Bentyn, Zofia Antonina and Ignatov, Dmitry and Timofte, Radu},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision Workshops (ICCVW)},
+  pages     = {5664--5674},
+  month     = {October},
+  year      = {2025},
+  doi       = {10.1109/ICCVW69036.2025.00598}
+}
+
+% ============================================================
+% Theoretical work enabled by the framework
+% ============================================================
+
+@misc{ABrain.Rank,
+  author       = {Ignatov, Dmitry},
+  title        = {A Frontier-Based Theory of Quality--Resource Trade-offs for {AI} Model Selection},
+  year         = {2026},
+  howpublished = {Preprint, SSRN},
+  doi          = {10.2139/ssrn.7683960},
+  url          = {https://doi.org/10.2139/ssrn.7683960},
+  note         = {Software: \url{https://github.com/ABrain-One/nn-rank}}
+}
+
+@misc{ABrain.Multi-Rank,
+  author = {Ignatov, Dmitry},
+  title  = {A Differential Theory of Quality--Resource Trade-offs for {AI} Model Selection: The Multiresource Frontier and Its Minimax Price},
+  year   = {2026},
+  note   = {Software: \url{https://github.com/ABrain-One/nn-rank}}
+}
+
+@article{ABrain.Converg,
+  author  = {Adhikari, Santosh Premi and Timofte, Radu and Ignatov, Dmitry},
+  title   = {Convergence Theory for Iterative {LLM}-Based Neural Architecture Search: A Parametric Cross-Entropy Framework with Closed-Form Proxy Reliability},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2605.30103},
+  doi     = {10.48550/arXiv.2605.30103},
+  url     = {https://arxiv.org/abs/2605.30103},
+  year    = {2026}
+}
+
+% ============================================================
+% Training-protocol studies
+% ============================================================
+
+@article{ABrain.LR_Scheduling,
+  title   = {Systematic Evaluation of Learning Rate Scheduling Strategies Across Heterogeneous Architectures},
+  author  = {Mateen, Hafsa and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2607.08511},
+  doi     = {10.48550/arXiv.2607.08511},
+  url     = {https://arxiv.org/abs/2607.08511},
+  year    = {2026}
+}
+
+@article{ABrain.Loss-Optimizer,
+  title   = {Towards Robust Training in {NNGPT} {AutoML} Pipeline: A Loss-Optimizer Pairing Selection Study},
+  author  = {Abramochkin, Anton and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2606.20933},
+  doi     = {10.48550/arXiv.2606.20933},
+  url     = {https://arxiv.org/abs/2606.20933},
+  year    = {2026}
+}
+
+@inproceedings{ABrain.Transform2,
+  title     = {Semantic Synthesis over Brute-Force Search: {LLM}-Guided Transformation Design for Efficient Learning},
+  author    = {Shrestha, Usha and Timofte, Radu and Ignatov, Dmitry},
+  booktitle = {Computer Vision -- ECCV 2026 Workshops},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  address   = {Cham},
+  year      = {2026},
+  note      = {To appear}
+}
+
+% ============================================================
+% Architecture generation and search
+% ============================================================
+
+@inproceedings{ABrain.Prompt,
+  title     = {Enhancing {LLM}-Based Neural Network Generation: Few-Shot Prompting and Efficient Validation for Automated Architecture Design},
+  author    = {Duvvuri, Raghuvir and Vysyaraju, Chandini and Goyal, Avi and Ignatov, Dmitry and Timofte, Radu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages     = {3242--3251},
+  month     = {June},
+  year      = {2026}
+}
+
+@inproceedings{ABrain.Architect,
+  title     = {From Memorization to Creativity: {LLM} as a Designer of Novel Neural Architectures},
+  author    = {Khalid, Waleed and Ignatov, Dmitry and Timofte, Radu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages     = {3252--3261},
+  month     = {June},
+  year      = {2026}
+}
+
+@article{ABrain.NN-Captioning_2025,
+  title   = {{LLM} as a Neural Architect: Controlled Generation of Image Captioning Models Under Strict {API} Contracts},
+  author  = {Jesani, Krunal and Ignatov, Dmitry and Timofte, Radu},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2512.14706},
+  doi     = {10.48550/arXiv.2512.14706},
+  url     = {https://arxiv.org/abs/2512.14706},
+  year    = {2025}
+}
+
+@article{ABrain.Delta,
+  title   = {Delta-Based Neural Architecture Search: {LLM} Fine-Tuning via Code Diffs},
+  author  = {Adhikari, Santosh Premi and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2605.04903},
+  doi     = {10.48550/arXiv.2605.04903},
+  url     = {https://arxiv.org/abs/2605.04903},
+  year    = {2026}
+}
+
+@article{ABrain.Feedback_Memory,
+  title   = {Resource-Efficient Iterative {LLM}-Based {NAS} with Feedback Memory},
+  author  = {Gu, Xiaojie and Ignatov, Dmitry and Timofte, Radu},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2603.12091},
+  doi     = {10.48550/arXiv.2603.12091},
+  url     = {https://arxiv.org/abs/2603.12091},
+  year    = {2026}
+}
+
+@article{ABrain.Similarity,
+  title   = {Similarity-Guided Curriculum Fine-Tuning of {LLMs} for Neural Architecture Synthesis},
+  author  = {Vijayakumar, Anujaya and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2607.11591},
+  doi     = {10.48550/arXiv.2607.11591},
+  url     = {https://arxiv.org/abs/2607.11591},
+  year    = {2026}
+}
+
+@inproceedings{ABrain.CV_Channel,
+  author    = {Uzun, Tolgay Atinc and Ignatov, Dmitry and Timofte, Radu},
+  title     = {Closed-Loop {LLM} Discovery of Non-standard Channel Priors in Vision Models},
+  booktitle = {Pattern Recognition. ICPR 2026},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {16823},
+  publisher = {Springer},
+  address   = {Cham},
+  pages     = {627--641},
+  isbn      = {978-3-032-31920-3},
+  doi       = {10.1007/978-3-032-31920-3_42},
+  year      = {2027}
+}
+
+@inproceedings{ABrain.CV_Channel_WS,
+  author    = {Uzun, Tolgay Atinc and Timofte, Radu and Ignatov, Dmitry},
+  title     = {Scaling Closed-Loop Feature Channel Configuration with {LLMs}},
+  booktitle = {Pattern Recognition. ICPR 2026 International Workshops},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  address   = {Cham},
+  year      = {2027},
+  note      = {ICPR 2026 Workshop on Reproducible Research in Pattern Recognition (RRPR), to appear}
+}
+
+@article{ABrain.MoE,
+  title   = {Systematic Exploration of 4-Expert Heterogeneous Mixture-of-Experts via Automated Pipeline Search},
+  author  = {Lukhi, Yashkumar R and Moradiya, Harsh Rameshbhai and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2606.23739},
+  url     = {https://arxiv.org/abs/2606.23739},
+  year    = {2026}
+}
+
+% ============================================================
+% Surrogate models, corpus construction, and deployment
+% ============================================================
+
+@article{ABrain.NN-Stat,
+  author         = {Dhanani, Divyesh Rameshbhai and Kayani, Faraz and U Din, Saif and Arslanian, Alice and Ignatov, Dmitry and Timofte, Radu},
+  title          = {Understanding the Performance of Deep Computer Vision Models: A Symbolic Regression Approach to Accuracy and Latency Prediction},
+  journal        = {Sensors},
+  volume         = {26},
+  number         = {13},
+  pages          = {1--39},
+  year           = {2026},
+  doi            = {10.3390/s26134093},
+  issn           = {1424-8220},
+  article-number = {4093}
+}
+
+@article{ABrain.NN-Perf,
+  title   = {From Code to Prediction: Fine-Tuning {LLMs} for Neural Network Performance Classification in {NNGPT}},
+  author  = {Hanouneh, Mahmoud and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2605.03686},
+  doi     = {10.48550/arXiv.2605.03686},
+  url     = {https://arxiv.org/abs/2605.03686},
+  year    = {2026}
+}
+
+@article{ABrain.NN-RAG,
+  title   = {A Retrieval-Augmented Generation Approach to Extracting Algorithmic Logic from Neural Networks},
+  author  = {Khalid, Waleed and Ignatov, Dmitry and Timofte, Radu},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2512.04329},
+  doi     = {10.48550/arXiv.2512.04329},
+  url     = {https://arxiv.org/abs/2512.04329},
+  year    = {2025}
+}
+
+@inproceedings{ABrain.Analog,
+  title     = {Curating Same-Family Neural Networks for {LLM}-Guided Model Improvement: A Controlled Case Study},
+  author    = {Baghel, Kabir Dev Paul and Timofte, Radu and Ignatov, Dmitry},
+  booktitle = {Computer Vision -- ECCV 2026 Workshops},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  address   = {Cham},
+  year      = {2026},
+  note      = {To appear}
+}
+
+@article{ABrain.NN-Lite,
+  title     = {{AI} on the Edge: An Automated Pipeline for {PyTorch-to-Android} Deployment and Benchmarking},
+  author    = {Din, Saif U and Hussain, Muhammad Ahsan and Ikram, Mohsin and Kayani, Faraz and Ignatov, Dmitry and Timofte, Radu},
+  journal   = {Preprints},
+  publisher = {Preprints},
+  month     = {November},
+  year      = {2025},
+  doi       = {10.20944/preprints202511.1831.v1},
+  url       = {https://doi.org/10.20944/preprints202511.1831.v1}
+}
+
+@inproceedings{ABrain.NN-Lite-Mobile,
+  title     = {Vision Model Inference on Mobile Devices: A Large-Scale Delegate-Aware Benchmark Beyond {FLOPs}},
+  author    = {Din, Saif U and Kayani, Faraz and Timofte, Radu and Ignatov, Dmitry},
+  booktitle = {Proceedings of the British Machine Vision Conference (BMVC)},
+  year      = {2026},
+  note      = {To appear}
+}
+
+@article{ABrain.Device-First,
+  title   = {Device-First Feedback: Toward Mobile-Native {LLM}-Driven Neural Architecture Search},
+  author  = {Din, Saif U and Hussain, Muhammad Ahsan and Timofte, Radu and Ignatov, Dmitry},
+  journal = {arXiv preprint},
+  volume  = {arXiv:2608.00078},
+  doi     = {10.48550/arXiv.2608.00078},
+  url     = {https://arxiv.org/abs/2608.00078},
+  year    = {2026}
 }
