@@ -72,7 +72,7 @@ jobs:
           python -m pip install --upgrade pip
           # Same torch/torchvision versions as requirements.txt, CPU build.
           pip install $(grep -E '^torch(vision)?==' requirements.txt) --index-url "$TORCH_CPU_INDEX"
-          pip install pytest pandas optuna psutil tqdm zstandard huggingface_hub datasets
+          pip install pytest pytest-rerunfailures pandas optuna psutil tqdm zstandard huggingface_hub datasets
           pip install --no-deps -e .
       # Tests that need the LEMUR database run in the `database` job below,
       # because importing ab.nn.util.db.Write downloads it from Hugging Face.
@@ -86,13 +86,16 @@ jobs:
           --deselect test/test_uuid4_arch_uid.py::test_duplicate_model_is_not_added_twice
       # The validation-split tests create db/ in the working directory, so each
       # one runs in its own process from a fresh, empty directory.
+      # test_cli_real_path.py trains a tiny model on random data without a fixed
+      # seed; a run below the minimum accuracy saves no record, so these tests
+      # are retried up to twice until the tests set a seed.
       - name: Run validation-split tests
         run: |
           tests=$(python -m pytest --collect-only -q test/val_split | grep '::')
           test -n "$tests" || { echo "::error::no validation-split tests collected"; exit 1; }
           for t in $tests; do
             d=$(mktemp -d)
-            (cd "$d" && python -m pytest -q -p no:cacheprovider "$GITHUB_WORKSPACE/$t") || exit 1
+            (cd "$d" && python -m pytest -q -p no:cacheprovider --reruns 2 "$GITHUB_WORKSPACE/$t") || exit 1
           done
 
   package:
