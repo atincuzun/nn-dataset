@@ -1,626 +1,958 @@
 # Changelog
 
-All notable changes to nn-dataset (LEMUR) are documented in this file.
+All notable changes to nn-dataset (LEMUR) are documented in this file. The format
+follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
+[Semantic Versioning](https://semver.org/). Releases are tagged on GitHub and published
+on PyPI as `nn-dataset`.
 
-The project follows [Semantic Versioning](https://semver.org/) and releases are
-tagged on GitHub and published on PyPI as `nn-dataset`. Entries are derived from
-the code diff between consecutive release tags and explain why each change was
-made; bulk model and training-statistic additions are summarised as counts.
+Each entry was checked against the release tags, merged pull requests, and commits.
+Reasons for a change are given only where a pull request, commit, or code comment
+states them. Bulk model and training-statistic additions are summarised as counts.
+Dates are GitHub release dates, or tag dates for tags without a release.
 
-## [Unreleased] (2.2.13)
-
-### Added
-- JOSS submission support: paper (`paper/`), continuous integration,
-  citation metadata (`CITATION.cff`), contribution guidelines, and this changelog.
-
-### Fixed
-- `psutil` added to `requirements.txt`; `ab/nn/util/Train.py`, `Util.py` and
-  `Inference.py` import it unconditionally, so a clean `pip install nn-dataset`
-  failed with `ModuleNotFoundError`.
-
-## [2.2.12] - 2026-08-07
+## [Unreleased]
 
 ### Added
-- Top-level `info.py`, a read-only query tool (`cmd_list_tasks`, `cmd_task_summary`, `cmd_extract_code`, `cmd_best_accuracy`), so users can explore and export the dataset without SQL; it imports `ab.nn.api.data` lazily and picks `.xlsx`/CSV/TXT by file extension.
-- `phase2_ensure_db()` and `phase3_ingest_stats()` in `syncDB2HF.py`, so archival runs on a fresh checkout: the DB is fetched from Hugging Face when absent, and local stat JSON is ingested before verification, so newly trained runs verify instead of being held back by the deletion gate.
-- `_layer_snapshot_to_table()`/`_save_layer_stat()` in `ab/nn/util/db/Write.py`, so the training-JSON path and historical ingest share one set of table-creation and insert statements.
-- A self-contained `util/sh/run_layer_analysis.sh` that freezes the highest-numbered numeric JSON, replays `records[0]`'s exact hyperparameters/batch/transform and retrains for 50 epochs, so layer stats stay comparable to the archived run; it backs up SQLite and rolls back JSON before writeback because that update is expensive and destructive.
-- `test.py` moved to `test/test.py`, plus new `test/test_nonnull.py` (gated by `RUN_SLOW_TESTS=1`) and `test-ext/test_utkface.py`, so slow and extended suites stay out of the default run, and `LEMUR_PIPELINE_README.md`/`LEMUR_QUERY_README.md`, so both entry points document their 10-phase flow and safety guarantees.
+- Loaders: `imagenet16-120` (NAS-Bench-201 ImageNet16-120; downloads checksum-pinned
+  files from Hugging Face on first use)
+  [#356](https://github.com/ABrain-One/nn-dataset/pull/356),
+  [#358](https://github.com/ABrain-One/nn-dataset/pull/358),
+  [#359](https://github.com/ABrain-One/nn-dataset/pull/359); denoising loaders
+  `awgn-color`, `denoise-awgn`, `sidd` and `sidd-bench` with RGB metrics `psnrrgb` and
+  `ssimrgb` [#364](https://github.com/ABrain-One/nn-dataset/pull/364).
+- `ab/nn/imp/prun_adaptive.py`: adaptive pruning pipeline.
+  [#362](https://github.com/ABrain-One/nn-dataset/pull/362)
+- JOSS paper (`paper/paper.md`, `paper/paper.bib`, overview figure) and a GitHub Actions
+  workflow that builds the draft PDF.
+- GitHub Actions test workflow: byte-compiles `ab` and `test`; runs the test suite on
+  Python 3.10 to 3.13, with `test/val_split` one test per process; builds and checks the
+  sdist and wheel; installs the package with all declared dependencies and imports the
+  public API; checks the latest PyPI release; and runs the tests that need the full LEMUR
+  database weekly and on demand. `.gitignore` no longer hides `.github/`.
+- README: statement of need, requirements and the first-use database download (network
+  access and disk space), a worked `data()`/`check_nn()` example, the remaining query
+  functions of `ab.nn.api`, and corrected command examples and contents links;
+  `CONTRIBUTING.md` explains how to add loaders, transformations and metrics.
+- `CITATION.cff`, `CONTRIBUTING.md` (development setup, tests, pull requests, getting
+  help, governance), this changelog, and a README section "Support and Contributing".
+- Models: 8,136 new models in `ab/nn/nn` (45,457 in total), among them 5,036 `divpo-*`
+  CIFAR-10 models [#365](https://github.com/ABrain-One/nn-dataset/pull/365), 1,056
+  denoising models, 608 `nnweb-*` models
+  [#375](https://github.com/ABrain-One/nn-dataset/pull/375) and 91 loss/optimizer
+  variants of LEMUR models [#368](https://github.com/ABrain-One/nn-dataset/pull/368);
+  8,135 new folders in `ab/nn/stat/train`.
 
 ### Changed
-- Layer stats now travel with the DB payload: `Train.py` builds a `layer_stat_group` under `prm['layer_stat']` and moves `epoch_max` top-level, so one prm row reconstructs the run; `layer_stat` is re-inserted after `train_stat` to keep the saved JSON readable.
-- `Inference.py` treats an output dir as existing only if `model_name` and, when given, `args.dataset` match, so a cached run is not reused for another dataset sharing the same model.
-- `checkpoints_to_hugging_face.py` uses `unique_nn_cls(...)` and `dt['prm']`, relying on the DB's canonical best-parameter rows instead of its own fallback search.
+- Training holds out a validation set by default for `cifar-10`, `cifar-100`, `mnist`,
+  `svhn` and `celeba-gender`, taken from the training split (e.g. CIFAR-10: 40,000
+  training and 10,000 validation images instead of 50,000 training images). Validation
+  accuracy selects the best epoch, drives the minimum-accuracy check, the save decision
+  and the Optuna objective, and is stored as `accuracy_val`; `accuracy` is still the
+  test accuracy. `--test_only` (CLI) or `test_only=True` (API) restores the previous
+  behaviour. [#366](https://github.com/ABrain-One/nn-dataset/pull/366),
+  [#376](https://github.com/ABrain-One/nn-dataset/pull/376)
+- `utkface` and WikiText loaders return a held-out test set in the test slot; reported
+  accuracies for these datasets are not comparable with earlier records
+  [#367](https://github.com/ABrain-One/nn-dataset/pull/367). Loader `imdb_wiki` renamed
+  to `imdb-wiki`.
+- `check_nn()` and `Train.train_new()` return `(name, accuracy, accuracy_to_time)`: the
+  code-quality score is gone with `ab/nn/util/CodeEval.py` and the `flake8`,
+  `flake8-json`, `radon` and `pylint` requirements.
+- `syncDB2HF.py` stops without a valid Hugging Face token, takes the version from the
+  installed package (else the `version` file) and skips the upload when the two differ;
+  READMEs renamed to `info_README.md` and `syncDB2HF_README.md`.
+  [#360](https://github.com/ABrain-One/nn-dataset/pull/360)
+- `psutil` declared in `requirements.txt`; `ab/nn/util/Train.py`, `Util.py` and
+  `Inference.py` import it directly, and it was previously installed only as a
+  dependency of `accelerate`.
 
-### Fixed
-- `save_layer_stat` no longer collides across epochs (epoch in the row id plus `@_serialized_db_write`); `save_stat` pops `layer_stat` so it is not nested in prm.
-- `json_train_to_db()` warns and skips non-list `layers` or nameless rows instead of aborting, and `syncDB2HF.py` verifies generated variants via `SELECT 1 FROM stat WHERE nn = ?` when `nn_code` is NULL.
-- `Train.py` creates the summary directory before writing `training_summary.json`, so a missing output dir no longer drops the summary.
+## [2.2.13] - 2026-10-26
+
+### Added
+- Architecture identity: `ab/nn/util/ArchUID.py` fingerprints a model's architecture
+  from its source code; `ab/nn/util/ArchUIDMerge.py` merges models with the same
+  architecture and writes a JSON log.
+  [#316](https://github.com/ABrain-One/nn-dataset/pull/316)
+- Data API: `data()` gains `min_accuracy` (applied in SQL, so it composes with
+  `max_rows`) [#323](https://github.com/ABrain-One/nn-dataset/pull/323),
+  `include_layer_stats` [#324](https://github.com/ABrain-One/nn-dataset/pull/324) and
+  `pair_seed` (reproducible `sql=JoinConf` pairing, shuffled by default); `run_data()`
+  gains `duration` and `type` filters (`"tflite"` for mobile, `"pt"` for workstation
+  PyTorch runs, now loaded into the `run` table)
+  [#337](https://github.com/ABrain-One/nn-dataset/pull/337),
+  [#345](https://github.com/ABrain-One/nn-dataset/pull/345).
+- Layer statistics can be restricted to selected features via `ACTIVE_LAYER_FEATURES` in
+  `ab/nn/util/LayerAnalysis.py` or the `NN_DATASET_LAYER_FEATURES` environment variable
+  (default: all seven). [#352](https://github.com/ABrain-One/nn-dataset/pull/352)
+- Models: 14,486 new models in `ab/nn/nn`, among them 8,297 `divpo-*` CIFAR-10 models
+  [#355](https://github.com/ABrain-One/nn-dataset/pull/355), 2,828 denoising models,
+  2,000 `ast-dimension-AirNet-*` variants with CIFAR-100 statistics
+  [#344](https://github.com/ABrain-One/nn-dataset/pull/344) and 1,085 `lr-*`
+  learning-rate-scheduler models
+  [#335](https://github.com/ABrain-One/nn-dataset/pull/335); layer-wise learning-rate
+  study records [#348](https://github.com/ABrain-One/nn-dataset/pull/348),
+  [#349](https://github.com/ABrain-One/nn-dataset/pull/349), ImageNet-100 training
+  statistics [#329](https://github.com/ABrain-One/nn-dataset/pull/329) and Android
+  TFLite benchmarks [#330](https://github.com/ABrain-One/nn-dataset/pull/330),
+  [#332](https://github.com/ABrain-One/nn-dataset/pull/332).
+
+### Changed
+- `uuid4()` returns the architecture certificate for model code, so `nn.id` identifies
+  an architecture; `code_to_db` rejects a model whose architecture is already stored
+  under another name and attaches its statistics to the stored model.
+  [#325](https://github.com/ABrain-One/nn-dataset/pull/325)
+- Dependencies: `torch==2.13.0`, `torchvision==0.28.0`, `transformers==5.17.0`,
+  `diffusers==0.41.0`, `datasets>=4.8.5,<5.0.0`, `huggingface_hub>=1.5.0,<2.0`. New
+  optional groups `nn-dataset[litert]`, `[tflite]` and `[tflite-run]`
+  (`requirements-*.txt`); `litert-torch` moves from the core requirements to `[litert]`,
+  which cannot be combined with `[tflite]` (the file comments give the reasons: pins
+  that conflict with vLLM, no Windows wheels).
+- `ResNet` and `MobileNetV2` decay the learning rate with a cosine schedule over `epoch`
+  and accept an `augment` hyperparameter that applies `BatchTransform` batch
+  augmentation. [#351](https://github.com/ABrain-One/nn-dataset/pull/351)
+- UTKFace validation and test images use fixed preprocessing (resize to 224 x 224,
+  ImageNet normalization) instead of the training augmentation.
+  [#350](https://github.com/ABrain-One/nn-dataset/pull/350)
+- BLIP-2 captioning: only `Blip2Fast` and `Blip2FastOpt` are kept (`Blip2Sota`,
+  `Blip2FastSota`, `Blip2Improved` removed), shared code lives in
+  `ab/nn/util/captioning`, the `cached_blip2fast_processor` transform is removed, and
+  `Blip2Fast` loads a pinned GPT-2 tokenizer revision.
+  [#326](https://github.com/ABrain-One/nn-dataset/pull/326),
+  [#328](https://github.com/ABrain-One/nn-dataset/pull/328)
+- ImageNet-100 TFLite run statistics moved into the shared
+  `ab/nn/stat/run/tflite/<mode>` folders.
+  [#354](https://github.com/ABrain-One/nn-dataset/pull/354)
 
 ### Removed
-- `ab/nn/transform/norm_160_flip.py`, `k8s/submit-imagenet100-checkpoints.sh`, the top-level `run_layer_analysis.sh`, and `test-nonnull.py`.
+- 2,701 models that duplicated another model's architecture (merged onto 1,611 surviving
+  models, which received their statistics)
+  [#316](https://github.com/ABrain-One/nn-dataset/pull/316), and the transform
+  `ab/nn/transform/base/norm_256.py`.
+
+### Fixed
+- The missing-`HF_TOKEN` warning is printed only when uploading, not on import;
+  downloading the public database needs no token.
+  [#338](https://github.com/ABrain-One/nn-dataset/pull/338)
+
+## [2.2.12] - 2026-08-08
+
+### Added
+- `info.py`: read-only command-line query tool: list tasks, show models and best
+  accuracy per task (`--task`) or per dataset (`--best-accuracy`), save model source
+  code by name prefix (`--code`, `--out-dir`), export with `--csv` (`.xlsx` or CSV by
+  file extension) or `--txt`; documented in `LEMUR_QUERY_README.md`.
+  [#306](https://github.com/ABrain-One/nn-dataset/pull/306)
+- `syncDB2HF.py` replaces `lemur_archival_pipeline.py`: ten phases, now including
+  download of the database from Hugging Face when no local copy exists and ingestion of
+  new statistics; local files are deleted only after verification and a successful
+  upload; documented in `LEMUR_PIPELINE_README.md`.
+  [#306](https://github.com/ABrain-One/nn-dataset/pull/306)
+- Models: 3,153 new models in `ab/nn/nn`, among them 2,137 `edge-*` models with
+  one-epoch CIFAR-10 statistics
+  [#307](https://github.com/ABrain-One/nn-dataset/pull/307), 880 `FractalFusion-*`
+  models [#295](https://github.com/ABrain-One/nn-dataset/pull/295),
+  [#300](https://github.com/ABrain-One/nn-dataset/pull/300),
+  [#303](https://github.com/ABrain-One/nn-dataset/pull/303), 132 denoising models
+  [#302](https://github.com/ABrain-One/nn-dataset/pull/302) and `TitanV12`-`TitanV14`
+  [#301](https://github.com/ABrain-One/nn-dataset/pull/301); 6,795 new folders in
+  `ab/nn/stat/train`; inference statistics for 16,058 models
+  [#289](https://github.com/ABrain-One/nn-dataset/pull/289).
+
+### Changed
+- Layer-analysis results are stored in the per-epoch training JSON again;
+  `json_train_to_db()` loads them into `layer_stat` and `per_layer_stat` and skips
+  malformed `layers` entries with a warning, and `save_stat()` no longer keeps
+  `layer_stat` inside `prm`. [#308](https://github.com/ABrain-One/nn-dataset/pull/308)
+- Inference skips a model only if its output exists for the same dataset.
+  [#289](https://github.com/ABrain-One/nn-dataset/pull/289)
+- `util/sh/run_layer_analysis.sh` rewritten: freezes the highest-numbered epoch JSON,
+  retrains `records[0]` for 50 epochs, and backs up the SQLite database and restores the
+  JSON before writing results back. The top-level copy of the script is removed.
+- Tests moved: `test.py` to `test/test.py`, `test-nonnull.py` to `test/test_nonnull.py`,
+  `test_utkface.py` to `test-ext/test_utkface.py`.
+
+### Removed
+- Transform `norm_160_flip` (added in 2.2.11).
+
+### Fixed
+- `Train.py` creates the output directory before writing `training_summary.json`.
 
 ## [2.2.11] - 2026-07-10
 
 ### Added
-- **ImageNet-1k loader** (`ab/nn/loader/imagenet.py`): streams `ILSVRC/imagenet-1k` via `datasets`, but only after checking `HF_TOKEN`. The token gate exists because the dataset is licence-gated, so failing immediately with setup instructions is far cheaper than a run that dies mid-download; streaming avoids shipping ~150 GB of images in the repo.
-- **ImageNet-100 loader** (`ab/nn/loader/imagenet100.py`): downloads `ambityga/imagenet100` with `kagglehub` and symlink-merges the `train.X*` shards into one `ImageFolder`. The shards are merged with symlinks, not copies, so the loader adds no duplicate disk use, and 100 classes keep training cheap enough to fan out over the cluster while remaining ImageNet-like.
-- **Super-resolution transform `complex_192`**: paired `RandomCrop(size=192, scale=3)` with flips and 90° rotation. The HR crop is derived from the LR crop at the same location (`hr = lr * scale`), because independently cropped pairs do not correspond and would train the model on unrelated pixels.
-- **Classification transforms `norm_160_flip`, `norm_256_224_flip`**: two standard recipes (resized-crop 160; resize-256/center-crop-224) so ImageNet-100 runs have sensible defaults at both reduced and full resolution.
-- **LEMUR archival/cleanup pipeline** (`lemur_archival_pipeline.py`, phases 0–7): inventories models/stats/transforms, maps their dependencies, and labels each SAFE or KEEP before touching anything.
-- **Kubernetes checkpoint fan-out** `k8s/submit-imagenet100-checkpoints.sh`: one Job per classifier (38 models). Deletion in the pipeline is multi-gated — SHA-256 of `nn_code`/`transform_code`, `(task,dataset,nn)` lookups, Excel audit, zstd upload, and only then removal — because local stats and models are irreplaceable and cannot be recovered once deleted. Splitting training per model likewise isolates each run in its own GPU/memory budget so one failure is retryable rather than fatal to the batch.
-- Deps: `kagglehub` (ImageNet-100 download), `matplotlib` and `openpyxl` (Excel audit output).
+- `imagenet` loader: streams `ILSVRC/imagenet-1k` from Hugging Face and requires
+  `HF_TOKEN`.
+- `imagenet100` loader: downloads `ambityga/imagenet100` with `kagglehub` and merges the
+  shards into one `ImageFolder` through symlinks.
+- Transforms `complex_192` (super-resolution: random 192-pixel HR crop and the matching
+  64-pixel LR crop for scale 3, with the same random flips and 90-degree rotations on
+  both), `norm_160_flip` and `norm_256_224_flip`.
+- `lemur_archival_pipeline.py`: archival and cleanup pipeline (inventory, dependency
+  mapping, database verification with SHA-256, Excel audit, zstd compression, upload to
+  Hugging Face, local deletion).
+  [#273](https://github.com/ABrain-One/nn-dataset/pull/273)
+- Models: 1,238 new models in `ab/nn/nn`, among them 1,214 `GenFractalNet-*`, 20
+  denoising models [#286](https://github.com/ABrain-One/nn-dataset/pull/286) and
+  `TitanV8`-`TitanV11` [#276](https://github.com/ABrain-One/nn-dataset/pull/276),
+  [#279](https://github.com/ABrain-One/nn-dataset/pull/279),
+  [#285](https://github.com/ABrain-One/nn-dataset/pull/285); inference statistics for
+  1,969 models [#278](https://github.com/ABrain-One/nn-dataset/pull/278) and FP32
+  PyTorch inference results [#277](https://github.com/ABrain-One/nn-dataset/pull/277).
 
 ### Changed
-- `Loader.get_obj` gains a `loader` branch that imports `ab.nn.loader.<name>` directly, so loaders are resolved as ordinary modules instead of through the DB attribute helper.
-- **Inference consolidated into `run_test_drive`** (`ab/nn/util/Inference.py`): one argparse CLI doing warmup then 20 CPU/20 GPU timings and writing JSON under `stat_run_dir/pt/fp32`. Previously an uppercase `Inference.py` profiler and a lowercase `inference.py` benchmark duplicated each other; merging them removes the divergent copies and the case collision that breaks checkouts on case-insensitive (Windows) filesystems.
-- `checkpoints_to_hugging_face.py` builds a per-model training plan with per-dataset defaults (`imagenet100` → `norm_160_flip`, batch 256). Defaults are used only when the DB lacks a complete parameter set, so every model still yields checkpoints, and `param_source` keeps DB-derived and defaulted runs distinguishable.
-
-### Fixed
-- Migrated the TFLite exporter from `ai-edge-torch` to `litert-torch` (its renamed successor) and pinned `torch==2.9.1`, `torchvision==0.24.1`. The converter builds against a specific torch ABI, so the old `>=2.4,<2.9` range could resolve to a version it cannot convert; exact pins keep export reproducible.
+- Inference: `ab/nn/util/inference.py` merged into `ab/nn/util/Inference.py`
+  (`run_test_drive()`); `python -m ab.nn.util.Inference` takes `--model-name`, `--task`,
+  `--dataset`, `--batch`, `--limit` and `--skip` and skips models already processed.
+  [#271](https://github.com/ABrain-One/nn-dataset/pull/271),
+  [#278](https://github.com/ABrain-One/nn-dataset/pull/278)
+- TFLite export in `ab/nn/imp/upload2HF.py` uses `litert-torch`, the successor of the
+  deprecated `ai-edge-torch`, for all five conversion modes.
+  [#281](https://github.com/ABrain-One/nn-dataset/pull/281)
+- Dependencies: `torch==2.9.1`, `torchvision==0.24.1`, `litert-torch` (non-Windows)
+  instead of `ai-edge-torch`; new `kagglehub`, `matplotlib` and `openpyxl`.
+- Training JSON keeps `epoch_max` at the top level instead of inside `train_stat`,
+  because existing code reads it there.
+  [#282](https://github.com/ABrain-One/nn-dataset/pull/282)
 
 ### Removed
-- Standalone `ab/nn/util/inference.py` (folded into `Inference.py`); `ab/nn/util/db/Query_CLI.py`; reverted the Blip2FastOpt captioning-stat change.
+- `ab/nn/util/db/Query_CLI.py`.
 
 ## [2.2.10] - 2026-06-25
 
 ### Added
-- **Inference benchmarking harness** (`ab/nn/util/inference.py`): training accuracy says nothing about how fast or how memory-hungry a network is on real hardware, so the harness fetches the best-accuracy row for a model directly from the DB and rebuilds it with the stored hyperparameters and transform. CPU passes are timed with `perf_counter`, but GPU passes must be timed with CUDA events, because kernel launches are asynchronous and wall-clock timing would measure the enqueue rather than the compute. Ten warm-up passes are discarded so allocator/JIT/clock ramp-up does not inflate the result, and mean/min/max/std-dev plus RAM and peak RSS/GPU MB are written as JSON under `stat/run/pt/fp32/...` keyed by device, so numbers from different machines can be compared. `--batch`/`--limit`/`--skip` exist so the whole ~15K-model database can be swept unattended.
+- `ab/nn/util/inference.py`: inference benchmark (CPU timing with `perf_counter`, GPU
+  timing with CUDA events, 10 warm-up passes; `--batch`, `--limit`, `--skip`).
+  [#268](https://github.com/ABrain-One/nn-dataset/pull/268)
+- Models: 1,584 new models in `ab/nn/nn` (1,163 `GenFractalNet-*`, 420
+  `rl-bb-struct1-v2-*`, `TitanV6`
+  [#263](https://github.com/ABrain-One/nn-dataset/pull/263)) and 1,584 new folders in
+  `ab/nn/stat/train`.
 
 ### Changed
-- **Multi-config training CLI** — `-c/--config` becomes `action='append'`, because a layer-analysis sweep previously meant editing the shell script and invoking the trainer once per model, re-paying interpreter, dataset and DB-startup cost every time; one invocation now queues several configs. `train.py` correspondingly accumulates `last_accuracy` and returns it only after the loop, since the old in-loop `return` abandoned every config after the first.
-- **Idempotent stat writes + code override** — `save_stat` uses `INSERT OR IGNORE`, because a stat row's id is a content hash of the run, so re-running the same `(config, epoch)` would otherwise collide on the primary key and abort a resumed or repeated sweep. `save_results(..., nn_code=...)` routes through `code_to_db`, because generated and in-memory models have no registered name to look up, and storing the code that actually trained the model keeps the DB honest about what produced each result. `json_train_to_db` re-attaches the nested `train_stat` so training telemetry survives the flatten-to-columns step.
-- **Unified stat JSON** — `Train.py` builds one `prm_json` containing `task/dataset/metric/model` promoted to the top level and `layer_stat` nested inside, so the file and the DB record describe the same experiment without a separate join step. `util/sh/run_layer_analysis.sh` is rewritten in the appendable `-c` style so several models share a single run.
-
-### Removed
-- **Per-epoch layer dumps** — `Train._save_layer_analysis`/`_save_layer_table` wrote a separate JSON file per epoch, scattering thousands of files that later had to be matched back to their run. Layer data now travels inside `prm_json["layer_stat"]` (`summary`, `layers`, `raw_analysis`), so the payload is self-contained.
+- `-c/--config` can be repeated to run several pipeline configurations in one
+  `ab.nn.train` invocation. [#269](https://github.com/ABrain-One/nn-dataset/pull/269)
+- Layer-analysis JSON export restructured and `util/sh/run_layer_analysis.sh` switched
+  to the multi-configuration form
+  [#269](https://github.com/ABrain-One/nn-dataset/pull/269); the per-epoch helpers
+  `_save_layer_analysis()` and `_save_layer_table()` are removed from `Train.py`.
+- `save_stat()` inserts with `INSERT OR IGNORE`, so a statistic row that is already
+  stored is skipped.
 
 ### Fixed
-- `util/sh/run_layer_analysis.sh` mis-cased the model name `rlfn` → `RLFN`; model names resolve case-sensitively, so the old spelling silently matched nothing.
+- The `train_stat` table is filled when the database is built from JSON;
+  `json_train_to_db()` used to drop the nested `train_stat` object, leaving the table
+  empty. [#262](https://github.com/ABrain-One/nn-dataset/pull/262)
 
 ## [2.2.9] - 2026-06-20
 
 ### Added
-- ONNX export pipeline (`ab/nn/imp/onnx_pipeline.py`): trained checkpoints existed only as `nn`/`transform` code plus `.pth` weights, so the platform could not ship a framework-neutral artifact. The pipeline rebuilds each `Net` via `importlib`, exports it with `torch.onnx.export(opset_version=18)`, and re-scores 1000 test images through `onnxruntime`, because an export that raises no error can still be wrong. The input resolution is read from the transform file by regex instead of being assumed to be 32, successes and skips are written to separate `all_models.json`/`skipped_models.json` so one bad model cannot abort the sweep, and existing ONNX files are re-evaluated rather than re-exported.
-- Age TFLite validation with MAE (`ab/nn/imp/run_tflite_validation_age.py`, `ab/nn/metric/mae.py`): age is a regression task, so classification accuracy is meaningless; a normalised MAE score of `max(0, 1 - MAE/15)` lets it pass the same `good()`/minimum-accuracy gate as every other task while `get_mae()` still reports the raw error in years. Because the deployment target is a phone, the INT8 TFLite conversion is validated rather than merely produced, and the report is kept on disk so a rerun only redoes the models that are not already `success`.
-- Strict ONNX→TFLite converter (`util/py/age/convert_onnx_to_tflite_age.py`): it infers layout and size and refuses any TFLite input that is not exactly `[1, H, W, 3]`, instead of silently resizing the interpreter during evaluation, which previously hid export bugs.
-- Layer analysis (`ab/nn/util/LayerAnalysis.py`): pruning and architecture search need to know which layers matter, so `LayerAnalyzer` measures them with WeightWatcher `alpha`, gradient/activation hooks, Taylor importance, `_linear_cka`, effective rank and sensitivity. Missing/NaN values are mapped to SQL `NULL` so stored statistics stay queryable.
-- New transforms: `Resize_ColorJit_Flip_Blur.py` (224 face crops for age, with jitter/flip/blur/erasing), `norm_224.py` (224 input backbones), `sr.py`, and `cached_blip2fast_processor.py`, which returns data precomputed by BLIP-2/Q-Former so caption training does not re-run the vision encoder every epoch.
-- Mobile/HF tooling (`util/py/age/{upload_tflite_for_mobile,upload_age_checkpoint_to_hf,monitor_mobile_testing,process_age_mobile_results}.py`).
+- `ab/nn/imp/upload2HF.py`: ONNX export with `--format onnx`
+  (`ab/nn/imp/onnx_pipeline.py`, opset 18, re-evaluated on 1,000 test images with
+  `onnxruntime`) [#219](https://github.com/ABrain-One/nn-dataset/pull/219), and TFLite
+  modes `fp16`, `mixed` and `dynamic` besides `fp32` and `static`, resumable per mode
+  [#258](https://github.com/ABrain-One/nn-dataset/pull/258).
+- Layer analysis: `--layer_analysis` flag (every epoch for the first five, then every
+  fifth), `ab/nn/util/LayerAnalysis.py`, tables `layer_stat` and `per_layer_stat`, and
+  `layer_data()` in `ab.nn.api`.
+  [#259](https://github.com/ABrain-One/nn-dataset/pull/259)
+- `train_stat` table for per-epoch diagnostics (losses, gradient norm, resource use),
+  grouped under `train_stat` in the per-epoch JSON;
+  `util/py/restructure_train_stat_json.py` migrates older files.
+  [#251](https://github.com/ABrain-One/nn-dataset/pull/251),
+  [#260](https://github.com/ABrain-One/nn-dataset/pull/260)
+- Age estimation: `MobileAgeNet`, `mae` metric (score `max(0, 1 - MAE/15)`),
+  `ab/nn/imp/run_tflite_validation_age.py`
+  [#199](https://github.com/ABrain-One/nn-dataset/pull/199), and conversion and
+  mobile-testing scripts in `util/py/age/`.
+- Transforms `Resize_ColorJit_Flip_Blur`, `norm_224`
+  [#210](https://github.com/ABrain-One/nn-dataset/pull/210) and `sr`
+  [#250](https://github.com/ABrain-One/nn-dataset/pull/250).
+- Models: 5,404 new models in `ab/nn/nn`, among them 2,521 `GenFractalNet-*`, 1,295
+  `MoE4*`, 938 layer-wise learning-rate variants (`llr-*`, `llr2-*`, `llr3-*`), 197
+  `del-*` delta-NAS models [#204](https://github.com/ABrain-One/nn-dataset/pull/204),
+  BLIP-2 captioning models [#188](https://github.com/ABrain-One/nn-dataset/pull/188),
+  [#193](https://github.com/ABrain-One/nn-dataset/pull/193),
+  [#203](https://github.com/ABrain-One/nn-dataset/pull/203),
+  [#254](https://github.com/ABrain-One/nn-dataset/pull/254) and super-resolution and
+  denoising models [#233](https://github.com/ABrain-One/nn-dataset/pull/233),
+  [#246](https://github.com/ABrain-One/nn-dataset/pull/246),
+  [#250](https://github.com/ABrain-One/nn-dataset/pull/250); 6,319 new folders in
+  `ab/nn/stat/train`; Android TFLite benchmarks
+  [#226](https://github.com/ABrain-One/nn-dataset/pull/226),
+  [#258](https://github.com/ABrain-One/nn-dataset/pull/258).
 
 ### Changed
-- Serialized DB writes (`ab/nn/util/db/Write.py`): many training jobs write the same SQLite file, so writers are wrapped in a re-entrant `_db_write_lock` (`flock` + `RLock`) to avoid corruption and self-deadlock, and `save_stat` now returns the `stat_id` that the new layer tables link to. `Init.py` sets `PRAGMA busy_timeout=300000` so a competing writer waits instead of failing.
-- Telemetry schema: per-epoch diagnostics were accumulating inside the free-form `prm`, so they are normalised into `train_stat` (one row per `stat(id)`) and `layer_stat`/`per_layer_stat`, which makes CPU/GPU/RAM, loss and per-layer values addressable columns.
-- Pretrained resume (`Util.save_if_best`/`load_pretrained_weights`, `train.py --layer_analysis`): the monotonic-best rule previously forgot the best score between runs, so a resumed run could overwrite a better checkpoint with a worse one; a `best_model.json` sidecar now persists it, and loading tolerates a missing file or an architecture change.
-- Loaders: `utkface.py` gains an age-stratified split, `div2k.py` scale 3, `denoise.py` a 256 crop with augmentation, `imdb_wiki.py` caching, and `coco_/Caption.py` a cached-feature branch plus `gpt2_collate_fn` for decoder compatibility.
-- Query rework (`db/Query.py`): `SIM_BANDS` is split into six similarity bands with anchor fallback and chunked `prm` loading, so curriculum selection stays responsive as the table grows.
+- Database writes are serialised across processes with a file lock, and SQLite waits up
+  to 300 s for a lock, so concurrent workers no longer fail with "database is locked".
+  [#208](https://github.com/ABrain-One/nn-dataset/pull/208)
+- Similarity bands for `JoinConf.similarity_band`: `very_high`, `high`, `medium`, `low`,
+  `very_low_near`, `very_low_far`; `very_low` is gone and `high` now covers 0.95-0.98.
+- Dependencies: `torch>=2.4,<2.9`, `torchvision>=0.21,<0.24`, `ai-edge-torch` only on
+  non-Windows platforms (its dependencies ship no Windows wheels); new `bitsandbytes`
+  and `onnxruntime`.
 
 ### Fixed
-- `layer_stat` epoch collisions — the row id now includes the epoch (`uuid4([stat_id, layer_name, str(epoch)])`), and `save_stat` removes `layer_stat` before the `prm` insert so it is not stored twice.
-- Invalid layer rows are skipped with a warning instead of aborting the import when `layers` is not a list or a row has no name.
+- `--pretrained 1` loads the best saved checkpoint; before, the flag was parsed but no
+  weights were loaded. [#238](https://github.com/ABrain-One/nn-dataset/pull/238)
+- `pip install --user` installs no longer fail with `no such table: loader`.
+  [#209](https://github.com/ABrain-One/nn-dataset/pull/209)
 
-### Removed
-- `ab/nn/imp/backup/*` (superseded quantisation scripts and JSON dumps); `ab/nn/metric/__init__.py` registry emptied.
-
-## [2.2.8] - 2026-03-25
+## [2.2.8] - 2026-03-26
 
 ### Added
-- `bleu1.py`–`bleu4.py` each expose a `BLEUMetric` that scores one n-gram order, so the pipeline can persist all four as separate `metric_*` columns while Optuna still ranks by BLEU-1, preserving the earlier 41–44% baseline instead of collapsing n-gram degradation into a single blended score.
-- `ab/nn/imp/prHF.py` prunes checkpoints with `torch_pruning` (structured L1, layer-wise, `PRUNING_RATIO=0.30`) and uploads the `.pt` files with resumable history, so pruned variants are stored and re-runnable on HF rather than recomputed from scratch.
-- `ab/nn/imp/upload2HF.py` converts to FP32/INT8, evaluates TFLite accuracy in a subprocess and retries on rate limits, so mobile artifacts and their measured accuracy stay together.
-- `ab/nn/util/Inference.py` (`build_dataset_loader`, `build_model`, `run_inference`) moves the profiling logic into a reusable module.
-- `ab/nn/transform/base/BatchTransform.py` (CutMix/MixUp/CutOut scheduled by epoch progress) plus `base/norm_256.py` and `norm_cc_256.py`, so augmentations follow a fixed order within an epoch rather than being chosen per batch.
-- `test-nonnull.py` exercises the new non-NULL query path; new `tflite` and `prun` analytics tables and a BLOB `nn_minhash`.
+- `ab/nn/imp/upload2HF.py`: converts models to FP32 and INT8 TFLite, checks accuracy on
+  1,000 CIFAR-10 images and uploads the results to Hugging Face.
+  [#160](https://github.com/ABrain-One/nn-dataset/pull/160),
+  [#166](https://github.com/ABrain-One/nn-dataset/pull/166)
+- `ab/nn/imp/prHF.py`: structured L1 layer-wise pruning with `torch_pruning` (ratio
+  0.30). [#162](https://github.com/ABrain-One/nn-dataset/pull/162),
+  [#165](https://github.com/ABrain-One/nn-dataset/pull/165),
+  [#167](https://github.com/ABrain-One/nn-dataset/pull/167),
+  [#174](https://github.com/ABrain-One/nn-dataset/pull/174)
+- Database tables `tflite` and `prun`, and `precision_type`, `accuracy` and `transform`
+  in `run` [#171](https://github.com/ABrain-One/nn-dataset/pull/171),
+  [#172](https://github.com/ABrain-One/nn-dataset/pull/172),
+  [#173](https://github.com/ABrain-One/nn-dataset/pull/173); in `ab.nn.api`,
+  `run_data()` joins `run` and `tflite`, and `prun_data()` and `data_withnonnullvalue()`
+  are new. [#182](https://github.com/ABrain-One/nn-dataset/pull/182),
+  [#187](https://github.com/ABrain-One/nn-dataset/pull/187)
+- `JoinConf` queries: SQL-only selection of several models (`num_joint_nns > 1`) and
+  similarity mode `anchor_band_db_minhash` with `similarity_band` (`high`, `medium`,
+  `low`, `very_low`), using the `nn_minhash` table and the `jaccard_blobs` SQLite
+  function [#161](https://github.com/ABrain-One/nn-dataset/pull/161),
+  [#164](https://github.com/ABrain-One/nn-dataset/pull/164); faster SQL read path
+  [#170](https://github.com/ABrain-One/nn-dataset/pull/170),
+  [#180](https://github.com/ABrain-One/nn-dataset/pull/180).
+- Metrics `bleu1` to `bleu4`; transforms `ab/nn/transform/base/BatchTransform.py`
+  (CutMix, MixUp or CutOut, switched by progress through the epoch)
+  [#177](https://github.com/ABrain-One/nn-dataset/pull/177), `base/norm_256` and
+  `norm_cc_256`.
+- Models: 292 new models in `ab/nn/nn` (289 `rl-bb-test1-*`
+  [#175](https://github.com/ABrain-One/nn-dataset/pull/175), 3 `MoE4-*`
+  [#179](https://github.com/ABrain-One/nn-dataset/pull/179)).
 
 ### Changed
-- `ab/nn/run.py` becomes a thin CLI (366 → ~24 lines) that delegates to `Inference.run_inference`, so the profiler has one implementation instead of two that drift.
-- `Const.py` adds `tflite_table`, `prun_table`, `stat_run_tflite_{fp32,int8}_dir` and `stat_run_pt_dir`, giving the new artifacts typed locations.
-- `Train.py` unpacks `model.learn()` into `(train_accuracy, train_loss)` and stores every metric as `metric_<k>`, so secondary metrics are persisted instead of discarded.
-- `build_nn_similarity.py` drops `datasketch`/LSH for 128-perm `struct` BLOB packing and a `jaccard_blobs` SQLite UDF, so Jaccard is computed in SQL over compact 512-byte signatures without keeping an LSH dependency and its Python-side state.
-- The read API gains `data_withnonnullvalue`, `tflite_data`, `prun_data` and `precision_type` in `run_data`, so callers can require rows whose `nn_stat`/`prm` values are actually non-NULL instead of filtering them out by hand.
-
-### Fixed
-- `db/Calc.py` gains `sanitize_for_json` and `_safe_json_load`, because NaN/Inf accuracies and their bare JSON tokens previously produced files that could not be loaded again.
-- `Train.py` re-raises validation exceptions and `Write.py` logs and skips bad files, so a failed epoch no longer masquerades as a zero-accuracy result.
-- `db/Util.py` resolves the package location through `importlib.metadata`, as `pkg_resources` is no longer reliable.
+- `ab/nn/run.py` is a thin command-line wrapper around `run_inference()` in the new
+  `ab/nn/util/Inference.py`.
+- Dependencies: `torch==2.9.1`, `diffusers==0.33.0`; the package location is found with
+  `importlib.metadata` instead of `pkg_resources`.
 
 ### Removed
-- Legacy loader `ab/nn/loader/lemur-v2.py`, the datasketch-based similarity builder and the `nn_code_minhash` schema (replaced by `nn_minhash` with BLOB signatures).
+- 2,613 `FractalNet-*` models with their 4,955 folders in `ab/nn/stat/train`, and the
+  `lemur-v2` loader.
+
+### Fixed
+- Statistics JSON: NaN and infinite values are written as `null`, and files with bare
+  `NaN`/`Infinity` tokens can be read; JSON import into the database avoids
+  platform-specific decoding problems on Windows.
+  [#170](https://github.com/ABrain-One/nn-dataset/pull/170)
 
 ## [2.2.7] - 2026-02-12
 
 ### Added
-- INT8/TFLite export (`ab/nn/imp/quant8.py`): `convert_int8()` converts a checkpoint with a representative CIFAR-10 dataset and `TFLITE_BUILTINS_INT8`, so the model zoo can be measured on the hardware it actually runs on instead of only on the workstation. Accuracy is evaluated in a subprocess because the TensorFlow Lite interpreter is native code that can crash the whole process; isolating it lets a resumable run over hundreds of models record the failure and carry on rather than die. Latency comes from the LiteRT `benchmark_model` binary over `adb` on CPU, GPU and NNAPI, which is what feeds the mobile `run` analytics table; writes are atomic and resumable because Android benchmarking is slow and fragile.
-- The first converted artifact (~306 KB, under `ab/nn/stat/run/...`) is committed so one known-good model can be benchmarked before the whole zoo is converted.
-- CIDEr (`ab/nn/metric/cider.py`, `CiderScorer`/`CiderMetric`): captions were only scored by BLEU/METEOR, whose plain n-gram overlap tracks human judgement poorly; CIDEr's TF-IDF-weighted n-gram consensus is the standard captioning score, and the comma-separated metric support added below lets `bleu,meteor,cider` be evaluated together.
-- Curriculum query tooling (`ab/nn/util/db/Query_CLI.py`, `build_nn_similarity.py`): the similarity edges become usable, so the next architectures to train can be chosen by a similarity band around a good anchor rather than at random.
-- HF processor transforms (`blip2_processor.py`, `git_processor.py`, `sr_transforms.py`) and new networks `GIT-SOTA.py` / rewritten `rlfn.py` to cover the captioning and super-resolution tasks.
+- `ab/nn/imp/quant8.py`: INT8 TFLite export of CIFAR-10 models (`convert_int8()`); accuracy
+  is checked in a subprocess and Android latency is measured over `adb` on CPU, GPU and
+  NNAPI. Requires `tensorflow`, which is not a declared dependency.
+- Image captioning: `GIT-SOTA` and `Blip2Sota` models with `git_processor.py` and
+  `blip2_processor.py` transforms, and the CIDEr metric `ab/nn/metric/cider.py` [#141](https://github.com/ABrain-One/nn-dataset/pull/141).
+- `metric` accepts a comma-separated list (e.g. `bleu,meteor,cider`); the first entry is the
+  primary metric and `Train.eval()` returns `(primary_accuracy, all_results)`.
+- `nn_stat` table, filled from the per-model statistics in `ab/nn/stat/nn/` (which now include
+  code-MinHash signatures); `api.data(include_nn_stats=True)`, `api.nn_stat_data()` [#140](https://github.com/ABrain-One/nn-dataset/pull/140)
+  [#144](https://github.com/ABrain-One/nn-dataset/pull/144) [#148](https://github.com/ABrain-One/nn-dataset/pull/148).
+- Architecture similarity: `nn_sim.jsonl.gz` index [#146](https://github.com/ABrain-One/nn-dataset/pull/146) and `nn_similarity` table, filled
+  by `ab/nn/util/db/build_nn_similarity.py` so that queries need not compute it [#149](https://github.com/ABrain-One/nn-dataset/pull/149).
+- Per-epoch system metrics in training statistics: CPU and GPU type, RAM and GPU memory (KB),
+  CPU and RAM usage [#142](https://github.com/ABrain-One/nn-dataset/pull/142).
+- Models: 1,322 `rl-bb-init-*` [#152](https://github.com/ABrain-One/nn-dataset/pull/152) and 963 `FractalNet--*` variants, with CIFAR-10
+  statistics.
 
 ### Changed
-- NN-statistics joins: static architecture properties (params, FLOPs, depth, residual/attention flags, code length) were already written to per-model JSON but were not queryable next to accuracy. Persisting them in `nn_stat` (keyed on `nn_name`+`prm_id`, via `save_nn_stat()` / `json_nn_to_db()`) and LEFT JOINing it behind `Read.data(..., include_nn_stats=...)` avoids a second lookup and lets a single query correlate architecture with accuracy and duration; `Read.nn_stat_data()` exposes the raw table.
-- Code-similarity rework: similarity used to be recomputed in memory from the whole `data()` DataFrame, holding `nn_code` for every row and merging one large `nn.json`. Instead each model's stat JSON now stores a portable 128-perm/7-gram `code_minhash_signature()`, and similarity is streamed from those files as `.jsonl(.gz)`, keeping memory bounded and the result consumable piece by piece; `nn_code_minhash`/`nn_similarity` support the same data DB-side.
-- `ab/nn/run.py` now delegates to `Train.Train.eval` instead of reimplementing a private accuracy class, so profiling scores with the same metric stack as training; durations are written in nanoseconds and the report is named `windows_<host>.json` under `stat/run/<config>_<arch>-<ts>/` so desktop and Android numbers share one unit and runs from several machines do not overwrite each other.
-- Multi-metric training: `metric` is split on `,` into `self.metric_fns` with the first as `primary_metric`, and `eval()` returns `(primary_accuracy, all_results)`, so a model can be scored against several captioning metrics at once while ranking stays on one of them.
-- SR loader and metrics: `div2k.py` pairs real LR/HR at X4 (the earlier X2 URLs and expected filenames did not match the downloaded set, and it now falls back to synthetic pairs when the data is absent); `psnr.py`/`ssim.py` compute on the Y-channel, the standard super-resolution convention, because RGB over-weights chroma.
-- Repo layout: `cmd/` → `util/` groups all repo-level helper scripts under a name matching the library's `ab/nn/util`, and the added `__init__.py` files make them importable as modules instead of only runnable from disk, keeping tooling distinct from the shipped `ab` package.
+- `ab/nn/run.py` evaluates with `Train.Train.eval` (its own `SimpleAccuracy` is removed),
+  records durations in nanoseconds and writes
+  `stat/run/<config>_<arch>-<timestamp>/windows_<hostname>.json`.
+- Super-resolution: the `div2k` loader switches from x2 to x4 pairs (synthetic pairs when
+  the data is absent), `sr_transforms.py` is added, and PSNR and SSIM are computed on the
+  Y channel (ITU-R BT.601) [#145](https://github.com/ABrain-One/nn-dataset/pull/145).
+- Repository helper scripts moved from `cmd/` to `util/` (e.g. `util/py/log_nn_stat.py`).
 
-### Fixed
-- `HF.py` cache-cleanup `Path`/`str` bug; `Train.py` `accuracy = test_accuracy[0]` after eval began returning a tuple; `div2k.py` X4 scale and HR/LR pairing; `Const.get_version()` now resolves the root explicitly and prefers installed metadata, so version lookup no longer depends on cwd.
-
-### Removed
-- `SimpleAccuracy` and the inline profiler aggregation (superseded by `Train.eval`), and the DataFrame-based similarity merge (superseded by the streamed per-model signatures).
+### Known issues
+- `ab/nn/util/db/Query_CLI.py` passes `similarity_mode`, `anchor_nn` and `similarity_band`
+  to `JoinConf`, which no longer accepts them (the curriculum logic in `Query.py` was
+  reverted before this release), so the CLI fails with a `TypeError`.
+- `ab.nn.util.db.Util.min_accuracy()` returns 0.0 for every dataset instead of the loader's
+  `MINIMUM_ACCURACY`, so `ab.nn.train` resets its failed-attempt counter for any accuracy
+  above 0.
 
 ## [2.2.6] - 2026-01-11
 
-This release consolidates six untagged intermediate versions (2.1.3 → 2.2.6), so the "why" matters more than the raw diff: the goal was to turn LEMUR from a CPU/GPU benchmark into a pipeline whose models can actually be deployed and whose results can be trusted and filtered.
-
 ### Added
-- **FX-graph static quantisation** `ab/nn/imp/quantize_fx_static.py`. Static INT8 is what edge runtimes execute fastest, and FX tracing quantises the whole graph rather than individual modules; CIFAR-10 calibration supplies the activation ranges static quantisation needs, and `fbgemm` targets x86 CPUs. The comparison report exists so the accuracy cost of INT8 is measured per model instead of assumed.
-- **Hybrid repair pipeline** `ab/nn/imp/quantize_hybrid_fallback.py`. Some architectures contain ops FX cannot statically quantise, and failing them outright would leave gaps in the model zoo, so when the static drop exceeds `ACCURACY_DROP_LIMIT=0.10` the pipeline retries with dynamic `qint8`. `QuantWrapper` provides the quant/dequant stubs eager mode requires, so every model still yields a deployable artifact.
-- **TFLite export + LiteRT validation** `ab/nn/imp/run_tflite_validation.py`. Mobile is the real target, and export alone is not enough: the script converts through `ai_edge_torch` with the XNNPACK quantizer, then re-evaluates the flatbuffer in `ai_edge_litert` to confirm the artifact behaves like the PyTorch original.
-- **Four loaders** (`denoise.py`, `div2k.py`, `imdb_wiki.py`, `utkface.py`) and **metrics** (`mai_psnr.py`, `meteor.py`, `ssim.py`, `ssim_module.py` + a `METRICS` registry). Classification alone could not validate quantisation across tasks, so denoising, super-resolution and age regression were added, each with the metric it needs: PSNR/SSIM on the Y-channel to match perceived brightness for restoration, and METEOR to complement BLEU for captioning.
-- **Hugging Face DB sync** (`ZST.py`, `util/hf/{DB2HF,DB_from_HF,HF}.py`), with `init_population()` bootstrapping from HF. A fresh checkout cannot afford to regenerate thousands of stats, so the SQLite DB is zstd-compressed at level 16 and uploaded to HF, then downloaded transparently when no local `stat/` exists — keeping clones small and the DB reproducible.
-- **Maintenance tooling** `cmd/py/checkpoints_to_hugging_face.py`, `cmd/py/log_nn_stat.py`, `ab/nn/util/db/Util.py`; **code-novelty analysis** `NNAnalysisSimilarity.py`. With thousands of generated models, near-duplicate code masks genuine novelty, so MinHash+LSH over 7-gram shingles (the same tokenisation as nn-gpt) scales similarity search instead of comparing every pair.
-- **New models/transforms** — `DeepSeek-Coder-V2-Lite.py`, `DenoiseUNet2.py`, `rlfn.py`, seven `bf-v1-*_256.py` transforms and `ab/nn/transform/denoise.py`.
+- Quantisation and TFLite scripts in `ab/nn/imp/`: `quantize_fx_static.py` (FX static INT8,
+  fbgemm, CIFAR-10 calibration), `quantize_hybrid_fallback.py` (falls back to dynamic
+  `qint8` when accuracy drops by more than 0.10) and `run_tflite_validation.py`
+  (`ai_edge_torch` export, re-evaluation with `ai_edge_litert`).
+- Loaders `denoise`, `div2k`, `imdb_wiki`, `utkface`; metrics `meteor`, `ssim`, `mai_psnr`
+  and a `METRICS` registry in `ab/nn/metric/__init__.py` [#123](https://github.com/ABrain-One/nn-dataset/pull/123) [#128](https://github.com/ABrain-One/nn-dataset/pull/128) [#129](https://github.com/ABrain-One/nn-dataset/pull/129) [#130](https://github.com/ABrain-One/nn-dataset/pull/130) [#131](https://github.com/ABrain-One/nn-dataset/pull/131).
+- Database from Hugging Face: when neither a local database nor `ab/nn/stat/` exists,
+  `init_population()` downloads `ab.nn-<version>.zst` from `NN-Dataset/LEMUR_DB`.
+- Per-model architecture statistics in `ab/nn/stat/nn/<model>.json`, written by
+  `log_nn_stat()` during `ab.nn.train` and by `cmd/py/log_nn_stat.py` [#137](https://github.com/ABrain-One/nn-dataset/pull/137);
+  `ab/nn/util/NNAnalysisSimilarity.py` for MinHash/LSH code similarity [#133](https://github.com/ABrain-One/nn-dataset/pull/133).
+- `api.data(unique_nn=True)`: one row per model, the one with the highest accuracy.
+- Per-epoch training metrics (`EpochMetrics`: losses, accuracies, learning rate, gradient
+  norm, throughput) and `out/training_summary.json` with learning curves [#134](https://github.com/ABrain-One/nn-dataset/pull/134).
+- Models `DeepSeek-Coder-V2-Lite`, `DenoiseUNet2` [#136](https://github.com/ABrain-One/nn-dataset/pull/136) and `rlfn`; transforms
+  `denoise` and seven `bf-v1-*_256` [#135](https://github.com/ABrain-One/nn-dataset/pull/135).
+- Models: 2,861 `unq-*` variants with CIFAR-10 statistics (2,316 in one commit, 545 in
+  [#127](https://github.com/ABrain-One/nn-dataset/pull/127)) and 874 `rl-back-init-*` variants with CIFAR-10 statistics [#139](https://github.com/ABrain-One/nn-dataset/pull/139).
 
 ### Changed
-- **Training telemetry** — `EpochMetrics`, `compute_gradient_norm`, throughput and `training_summary.json`. Persisting only a final accuracy made divergence and LR problems impossible to diagnose after the fact, so per-epoch loss/accuracy/LR/gradient-norm/throughput are now recorded as a learning curve.
-- **Config paths** — `get_version`/`add_version`, `ckpt_dir`, `zst_db_file`, `stat_nn_dir`, `code_folders`/`gen_folders`, `core_nn`/`core_nn_cls`. Version-stamped artifact names stop one release overwriting another's DB and checkpoints, and the allow-lists separate hand-written architectures from generated variants.
-- **DB/API filtering** — `unique_nn` (`ROW_NUMBER() OVER (PARTITION BY nn ORDER BY accuracy DESC)`) and tuple-valued `nn`, so repeated trials collapse to the best run per model instead of polluting queries.
-- **PSNR normalisation** — raw dB is unbounded and not comparable across datasets, so the score is clipped to `[0, 48]` and min–max scaled to `[0, 1]`, which is what the optimizer and DB expect.
-- **Packaging** — `packages.find` restricted to `["ab", "ab.*"]` (the old root-wide search mis-collected files), the `hf` extra dropped because DB sync is now core, and `ai-edge-torch`, `einops`, `datasketch`, `zstandard` added.
-
-### Fixed
-- The SQLite run-analytics schema is extended and nested stat directories are created with `mkdir(parents=True, exist_ok=True)`, so writes to new paths no longer fail; empty or infinite PSNR returns a neutral `0.5` rather than `NaN`/`0`.
+- PSNR metric `psnr` is clipped to [0, 48] dB and scaled to [0, 1] (0.5 for empty input);
+  in 2.1.3 it returned dB.
+- `run` table: 24 new columns (CPU/GPU/NPU timing statistics, RAM, input dimensions), also
+  returned by `api.run_data()` [#138](https://github.com/ABrain-One/nn-dataset/pull/138).
+- Packaging: only `ab` and `ab.*` packages are installed; the `hf` extra is removed;
+  `ai-edge-torch`, `einops`, `datasketch` and `zstandard` are new dependencies.
 
 ### Removed
-- `ab/nn/imp/auto_train.py`, superseded by the explicit training plus `checkpoints_to_hugging_face.py` upload flow.
-
-### Documentation
-- README: Optuna stat requirement lowered from 100 to 10 trials so a new contributor can reproduce results quickly; "run all tests before a PR"; LEMUR HF checkpoint link.
+- `ab/nn/imp/auto_train.py`.
 
 ## [2.1.3] - 2025-12-11
 
 ### Added
-- **Inference profiler** `ab/nn/run.py`: `run_inference()` builds a model from a dotted class path and scores it with a standalone `SimpleAccuracy`, so an architecture can be compared on inference cost the same way training runs are compared on accuracy, without dragging in the training metric registry. It samples `nvidia-smi` and process/system memory around each batch, folds `torch.profiler` key-averages into a top-40 op timeline, and writes `report.json` (device, timeline, peak RSS/GPU, metric) under `ab/nn/stat/run/<name>-<ts>/`, giving the `run` table added in 2.1.1 a producer of real device-analytics records.
-- **Automatic train-and-upload loop** `ab/nn/imp/auto_train.py`: closes the gap between a recorded result and a downloadable artifact by reading each model's best existing hyperparameters from `data()`, retraining with `n_optuna_trials=-1` to force a fresh run, deriving `metadata.json` from the newest training stat, and pushing weights plus metadata to the `NN-Dataset/checkpoints` Hugging Face repo. Batch size is clamped to 32 and `num_workers=0` so a long unattended sweep survives OOM, and clearly unsuitable families are filtered out up front rather than crashing midway.
-- **LEMUR v2 denoising task**: `ab/nn/loader/lemur-v2.py` downloads and extracts the noisy/clean train and validation archives on first use and pairs `denoised`→`original` at `(3,256,256)`, while `ab/nn/metric/psnr.py` supplies the matching restoration metric. PSNR is used because denoising has a clean reference, so pixel fidelity is directly measurable; the metric accumulates squared error across the epoch and returns a neutral 100.0 when the error is zero, avoiding `log(0)` infinities.
-- **Static model analysis** `ab/nn/util/NNAnalysis.py`: instantiates each `Net` from its stored `nn_code` and writes cheap, deterministic structural descriptors (parameter counts, depth, conv/linear/activation/norm/pool statistics, estimated FLOPs, detected architecture patterns) to `stat_dir/nn.json`, so models can be grouped and filtered by structure without paying for a training or profiling run.
-- **Supporting tooling/models**: `resize-lemur-256.py` transform; caption inference `cmd/py/infer_caption.py`; training-curve plotting under `simple_stat_viz/`; `DenoiseUNet` and the `C10C`/`C5C-RESNETLSTM` captioning variants; and a `pyproject.toml` `hf = ['nn-hf']` extra so the Hugging Face helpers stay an optional install.
+- `ab/nn/run.py`: inference profiler (`run_inference()`) that builds a model from a dotted
+  class path, scores it, samples `nvidia-smi` and process memory and writes `report.json`
+  under `ab/nn/stat/run/<name>-<timestamp>/`.
+- `ab/nn/imp/auto_train.py`: retrains models with their best stored hyperparameters and
+  writes `metadata.json`; batch size 32 and `num_workers=0` (code comments: avoid OOM).
+- Image denoising: `lemur-v2` loader (downloads and splits the data on first use), `psnr`
+  metric, `DenoiseUNet` model and `resize-lemur-256` transform [#126](https://github.com/ABrain-One/nn-dataset/pull/126).
+- `ab/nn/util/NNAnalysis.py`: static architecture descriptors (parameters, depth, layer
+  statistics, FLOPs estimate) in `ab/nn/stat/nn.json` [#121](https://github.com/ABrain-One/nn-dataset/pull/121).
+- Image captioning: `C10C-RESNETLSTM-IMG-CAP-IMPROVED` with `demo/img-caption-single.py` and
+  `demo/infer_alexnet_caps.py` [#118](https://github.com/ABrain-One/nn-dataset/pull/118); ten `C5C-RESNETLSTM-*` variants [#119](https://github.com/ABrain-One/nn-dataset/pull/119);
+  `cmd/py/infer_caption.py`.
+- `cmd/py/simple_stat_viz/`: accuracy-statistics plots [#122](https://github.com/ABrain-One/nn-dataset/pull/122).
+- `hf` optional dependency group (`nn-hf`).
 
 ### Changed
-- **`epoch_max` replaces `n_epochs`/`num_epochs`** across `train.py`, `Train.optuna_objective` and `Train.train_n_eval`, and is now injected as `prms['epoch_max']`. The rename makes the epoch count an explicit upper bound (alongside the existing wall-clock `epoch_limit_minutes`) and, by recording it as an ordinary hyperparameter, lets every stored stat and Optuna trial state how long it was allowed to train.
-- `Util.accuracy_to_time_metric` parameter `training_duration` → `duration`, since the same accuracy-per-time score is now computed for inference as well as training.
-
-### Fixed
-- `optuna_objective()` re-raises the original exception (`raise e`) instead of swallowing it in the empty `NNException`; the real traceback and message survive a failure, making retries debuggable. `LemurDataset.__getitem__` logs the offending file paths and returns zero tensors for a corrupt image, preserving the fixed `(3,256,256)` shape so one bad file cannot abort a long run.
+- `ab.nn.train.main()`: parameter `n_epochs` renamed to `epoch_max`, which is also stored in
+  the hyperparameters as `epoch_max`; the CLI flag `-e/--epochs` is unchanged.
+- `Util.accuracy_to_time_metric()`: parameter `training_duration` renamed to `duration`.
+- `optuna_objective()` re-raises the original training exception instead of `NNException`.
 
 ### Removed
-- Unused `ab/nn/util/Exception.NNException`, superseded by the `raise e` fix.
+- `NNException`; the root-level `run_all_models.sh`.
 
 ## [2.1.2] - 2025-11-15
 
 ### Added
-- A catalogue of 155 `bf-v1-*.py` transforms under `ab/nn/transform/`, each one operation or a fixed chain ending in `Resize((64, 64))`, `ToTensor` and `Normalize`. The dataset compares architectures, so augmentation must be varied deliberately and held equal when it is not; naming each file after the operations it composes makes every regime addressable and reproducible, while numeric suffixes (`_4`, `_57`) separate parameter draws.
-- A `cmd/` toolkit for repairing statistics the pipelines had already produced: `add_prm.py` merges new `gpu`/`cpu` fields into each recorded trial, `uid_gen.py` recomputes `uid` after the identity rule changed, and `duration_checker.py` drops entries with no duration so crashed runs stop counting as results. They rewrite local JSON in place, so they stay out of the importable package under `cmd/`, with a `README.md` marking them as operator tools.
-- 44 generated `ab/nn/nn/rl-init1-*.py` models, growing the architecture axis alongside the transform axis, plus `evaluate` in `requirements.txt`.
+- Transforms: 155 `bf-v1-*` augmentation pipelines in `ab/nn/transform/` [#115](https://github.com/ABrain-One/nn-dataset/pull/115).
+- `cmd/py/` auxiliary scripts `add_prm.py`, `uid_gen.py` and `duration_checker.py`,
+  described in `cmd/README.md`.
+- `evaluate` dependency.
+- Models: 22 `rl-init1-*` variants with CIFAR-10 statistics.
 
 ### Changed
-- Packaging ships what it claims: `data-files` is scoped to `ab` (`'ab' = ['**/*.json']`) instead of `'*'`, which had scattered the dataset's JSON across the install tree, and the `doc` package-data key picks up `licenses/*` so the third-party texts ship with a build.
-- Licences moved `Doc/Licenses/` → `doc/licenses/`, with README links updated, because the old spelling never matched the lowercase `doc` glob and mixed case does not survive the case-sensitive filesystems that build and install the package; `sh/rename-dir.sh` moved to `cmd/sh/rename-dir.sh` for the same reason, grouping maintenance scripts in one place.
-- `version` 2.1.1 → 2.1.2; README cites LEMUR 2.
+- Licences moved from `Doc/Licenses/` to `doc/licenses/` and `sh/rename-dir.sh` to
+  `cmd/sh/`; package data follows (`'ab' = ['**/*.json']`, `'doc' = ['licenses/*']`).
 
 ### Removed
-- The old `Doc/Licenses/` and `sh/` locations, and the large CIFAR-10 `ga-*` stat set, which duplicated pipeline output and only bloated the package.
+- Statistics: the 1,015 `0.json` files of the `ga-*` models [#112](https://github.com/ABrain-One/nn-dataset/pull/112); records without a
+  `duration` removed from 17,675 statistics files [#113](https://github.com/ABrain-One/nn-dataset/pull/113).
 
 ## [2.1.1] - 2025-10-27
 
 ### Added
-- **Mobile runtime analytics** — a new `run` table (device, OS, validity, emulator, error, JSON analytics) indexed by model and device, so on-device results can be compared beside training stats instead of living outside the database; runs accumulate far faster than those stats, which is why both lookup axes are indexed up front.
-- **`api.run_data(model_name, device_type, max_rows)`** exposes those records publicly, so analysts can pull device telemetry without hand-writing SQL, with the analytics JSON parsed.
-- **`join_nn_query`/`JoinConf`** (`db/Query.py`) — a frozen, validating config that compares related models in one query (`same_columns`, `diff_columns`, optional accuracy gain) and returns the variant as `nn_2`/`accuracy_2`/`prm_2`; comparing a seed with its variant previously meant two queries plus manual joining, so the comparison is now pushed into SQL.
-- **`sql=` (`JoinConf`) and `nn_prefixes` on `api.data`** let a family of generated models (e.g. `rag-`) be filtered and compared in one pass instead of materialising the whole DataFrame and filtering afterwards; covered by `test_data_join`.
-- **`save_onnx_weights` toggle** through `Const`/`Util.args`/`Train.train_n_eval`/`save_if_best` — mobile/non-PyTorch runtimes need ONNX, and exporting inside the best-model path means the exported graph is the checkpoint whose accuracy is reported, not whatever model finished last.
-- **Heterogeneous `MoE-hetero4-Alex-Dense-Air-Bag`** — four structurally different experts behind one gate (load-balance loss, routing diagnostics), because homogeneous MoE variants had not shown whether cross-architecture routing actually helps.
+- `run` table for on-device runtime reports imported from `ab/nn/stat/run/`
+  (`json_run_to_db()`), indexed by model and device; `api.run_data()` [#108](https://github.com/ABrain-One/nn-dataset/pull/108).
+- Paired-model queries: `api.data(sql=JoinConf(...))` joins each row with another model that
+  matches `same_columns`/`diff_columns` (optionally with higher accuracy, `enhance_nn`);
+  the partner is returned as `nn_2`, `accuracy_2`, `prm_2`, etc.
+- `api.data(nn_prefixes=...)` filters models by name prefix.
+- `--save_onnx_weights` flag: `Util.save_if_best` also exports the best model to ONNX [#110](https://github.com/ABrain-One/nn-dataset/pull/110).
+- `MoE-hetero4-Alex-Dense-Air-Bag` heterogeneous mixture-of-experts model [#109](https://github.com/ABrain-One/nn-dataset/pull/109);
+  `demo/Text-ImageUnet.py` with HTML page [#110](https://github.com/ABrain-One/nn-dataset/pull/110).
 
 ### Changed
-- Checkpointing centralized in `Util.save_if_best`, which owns `.pth` and `.onnx` and honours the save toggles; one owner keeps "best" consistent across models and demos and finally gates the `.pth` write, which was previously unconditional.
-- `json_n_code_to_db` → `json_train_to_db` (+ `json_run_to_db`), so `init_population` also ingests runtime analytics; a malformed JSON is logged instead of aborting the entire import.
-
-### Fixed
-- Hyperparameter assembly uses one bulk `SELECT uid, name, value FROM prm`, replacing chunked `IN (...)` fetches that only dodged SQLite's variable limit.
-- `str_not_none` prefixes a leading space so SQL fragments like `LIMIT` cannot glue onto the previous token, and checkpoint/ONNX dirs are created via `makedirs(dirname(path))`.
+- `api.data(sql=...)` takes a `JoinConf` instead of the SQL string introduced in 2.1.0.
+- `json_n_code_to_db()` replaced by `json_train_to_db()` and `json_run_to_db()`.
+- Model `Unet-D` renamed to `UnetD`.
 
 ### Removed
-- `ab/nn/metric/utils/` and per-epoch checkpoint bookkeeping in `ConditionalGAN`, both replaced by the centralized save path.
+- `ab/nn/metric/utils/` (`flatten_logits_and_labels`).
 
-## [2.1.0] - 2025-10-15
+## [2.1.0] - 2025-10-14
 
 ### Added
-- The public `data()` query accepts an optional `sql` string that is spliced into the read query as a CTE over a `WITH all_data AS (...)` wrapper. The wrapper always exposes the fully joined dataset, so callers can aggregate, filter or reshape results with their own SQL while keeping the same API signature and column contract; when `sql` is omitted the query falls back to `SELECT * FROM all_data`.
-- Training can save the best PyTorch weights (`save_if_best`, `export_torch_weights`), enabled with `--save_pth_weights`. It is off by default so ordinary benchmark runs stay lightweight and the repository does not fill with checkpoints; only users who need to reuse a model pay the disk cost, and only the best-scoring epoch is kept.
-- A second, CVAE-based text-to-image demo (`demo/Text-ImageCVAE.py`) beside the GAN one, a bulk directory renamer (`sh/rename-dir.sh`), and a `demo/README.md`.
+- `api.data(sql=...)`: SQL appended to an `all_data` CTE (default `SELECT * FROM all_data`).
+- `--save_pth_weights` flag (off by default) to save PyTorch weights through `save_if_best`.
+- Demos `demo/Text-Image-GAN.py` (FastAPI, `ConditionalGAN` weights from Hugging Face
+  `NN-Dataset/ConditionalGAN-checkpoints`) and `demo/Text-ImageCVAE.py`, with HTML pages
+  [#104](https://github.com/ABrain-One/nn-dataset/pull/104).
+- Models `ConditionalVAE2` to `ConditionalVAE4` [#93](https://github.com/ABrain-One/nn-dataset/pull/93) and four `MoE-0707-*`
+  mixture-of-experts variants [#94](https://github.com/ABrain-One/nn-dataset/pull/94).
+- On-device (Android) runtime reports for 2,476 model runs under `ab/nn/stat/run/` [#105](https://github.com/ABrain-One/nn-dataset/pull/105).
+- Models: 2,712 `ga-mut-*` [#106](https://github.com/ABrain-One/nn-dataset/pull/106), 964 `FractalNet-*` and 101 `rl-init-*` [#99](https://github.com/ABrain-One/nn-dataset/pull/99) variants
+  with CIFAR-10 statistics; 647 generated `alt-nn<N>-*` variants (N = number of supporting
+  models in the generation prompt) with image-classification statistics [#90](https://github.com/ABrain-One/nn-dataset/pull/90) [#97](https://github.com/ABrain-One/nn-dataset/pull/97) [#101](https://github.com/ABrain-One/nn-dataset/pull/101)
+  [#102](https://github.com/ABrain-One/nn-dataset/pull/102) [#103](https://github.com/ABrain-One/nn-dataset/pull/103).
 
 ### Changed
-- Training artifacts move from `stat/` to `stat/train/` (`stat_train_dir`), and `model_stat_dir()` and the DB importer scan the new location. This frees the top-level `stat/` for other artifact kinds, so training statistics no longer collide with run or inference output.
-- The demo now lives at the repository root (`ab/nn/demo/` → `demo/`) and fetches generator weights on demand from the Hugging Face hub, so it runs from a clean checkout instead of depending on a pre-existing local checkpoint.
-- The COCO text-to-image loader reads the image size from the framework transform and adds an explicit `CenterCrop`, so every sample is square, and skips corrupt images instead of crashing training.
-- `Train` records `self.model_name`, which the checkpoint saver uses to name its directory.
-
-### Fixed
-- Evaluation moves both inputs and labels to the device unconditionally, so tasks with non-tensor or CPU-resident labels no longer fail.
+- Training statistics moved from `ab/nn/stat/` to `ab/nn/stat/train/` (`stat_train_dir`)
+  [#105](https://github.com/ABrain-One/nn-dataset/pull/105).
+- The 1,127 `rl-init-*` models of 2.0.6 renamed to `alt-<hash>` [#99](https://github.com/ABrain-One/nn-dataset/pull/99).
+- COCO text-to-image loader takes only the image size from the framework's transform and
+  applies its own `Resize`, `CenterCrop`, `ToTensor`, `Normalize` pipeline (square images).
 
 ### Removed
-- The `ab.nn.api.accuracy_to_time_metric` wrapper; the metric remains available as `Util.accuracy_to_time_metric`.
+- `api.accuracy_to_time_metric()` (`ab.nn.util.Util.accuracy_to_time_metric` remains).
+- `demo/app.py` and `demo/index.html`, replaced by `demo/Text-Image-GAN.py` and its page.
+
+### Known issues
+- The evaluation loop in `ab/nn/util/Train.py` again moves labels to the device
+  unconditionally, undoing the 2.0.5 fix for non-tensor labels.
 
 ## [2.0.6] - 2025-10-03
 
 ### Added
-- Text-to-image demo (`demo/app.py`, `demo/index.html`, `demo/requirements.txt`): a standalone FastAPI app serves `POST /generate_image`, which runs the trained `ConditionalGAN` generator on a `CLIPTokenizer`-encoded prompt and returns the saved PNG. It exists to make the trained generator usable from a browser without dragging in the training framework, and its file route rejects `..` paths because images are served back by name from a writable directory.
-- MoE variants (`MoEv2.py`–`MoEv9-AlexNetv4.py`, 12 files): top-2 gated experts, `SEBlock` attention experts, class-biased expert initialisation, `mixup_data()` and `ExpertUtilizationTracker`. These are deliberate probes into the MoE failure modes seen earlier: top-k gating with load-balancing/importance/entropy aux losses guards against expert collapse (where the gate routes everything to a few experts and the rest never train), `SEBlock` adds channel attention where a plain expert overfits, and the class prior gives each expert a starting specialisation so the gate has something to differentiate.
-- Regenerated `ab/nn/nn/rag-*.py`/`alt-nn*.py` candidates.
+- `demo/app.py`: FastAPI text-to-image demo (`POST /generate_image` runs the `ConditionalGAN`
+  generator on a CLIP-tokenised prompt), with `demo/index.html` [#86](https://github.com/ABrain-One/nn-dataset/pull/86).
+- Mixture-of-experts models with top-2 expert gating: `MoEv2` to `MoEv8` [#84](https://github.com/ABrain-One/nn-dataset/pull/84),
+  `MoEv9-AlexNet` [#87](https://github.com/ABrain-One/nn-dataset/pull/87), `MoEv9-AlexNetv1` to `v4` [#89](https://github.com/ABrain-One/nn-dataset/pull/89).
+- Models: 685 `FractalNet-*` and 494 `rag-*` [#82](https://github.com/ABrain-One/nn-dataset/pull/82) variants with CIFAR-10 statistics; 1,127
+  `rl-init-*` [#79](https://github.com/ABrain-One/nn-dataset/pull/79) and 901 `alt-nn<N>-*` [#78](https://github.com/ABrain-One/nn-dataset/pull/78) [#80](https://github.com/ABrain-One/nn-dataset/pull/80) [#81](https://github.com/ABrain-One/nn-dataset/pull/81) [#83](https://github.com/ABrain-One/nn-dataset/pull/83) [#88](https://github.com/ABrain-One/nn-dataset/pull/88) variants with
+  image-classification statistics on several datasets.
 
 ### Changed
-- `ab/nn/util/Train.py` calls `release_memory()` after the model is deleted: `del` only drops the Python reference, and CPython/CUDA do not reliably return the memory at once, so a sequence of training runs kept growing in RAM/VRAM until it failed; `gc.collect()` plus `torch.cuda.empty_cache()` (`Util.release_memory`) actually reclaims it.
-- `db/Write.py` `json_n_code_to_db()` wraps its `for sub_config_str in sub_configs` loop in `tqdm` and prints the target directory, so the long JSON import shows progress and a stall can be told apart from a hang.
-- `version` 2.0.5 → 2.0.6, with the `pyproject.toml` authors table collapsed to a single line (no behaviour change).
+- `Util.release_memory()` (garbage collection, CUDA cache release) runs after each trained
+  model is deleted.
+- The statistics import `json_n_code_to_db()` shows a progress bar.
 
-### Fixed
-- Memory accumulation across runs is mitigated by the `release_memory()` call above.
-- Expert collapse in the MoE probes is addressed in `MoEv8`/`MoEv9-AlexNetv3` through the stronger balancing losses and class-biased initialisation described above.
-
-## [2.0.5] - 2025-09-25
+## [2.0.5] - 2025-09-26
 
 ### Added
-- **Transforms can be loaded from any directory** — `Loader.load_dataset` now takes `transform_dir`; when `<transform_dir>/<transform_name>.py` exists it is imported by file path and its `transform` function is used, and otherwise the loader falls back to the built-in `ab.nn.transform` registry. External and one-off transforms can be tried without adding them to the package, and existing configs keep working because the registry remains the default.
-- **`transform_dir` is exposed through the public API** — `check_nn(..., transform_dir=...)` forwards to `Train.train_new` and then to `load_dataset`. The directory has to reach the training entry point, not only the loader, or a custom transform could not be selected programmatically.
-- **Resumable batch runner `run_all_models.sh`** — iterates over a model glob, runs `python -m ab.nn.train` for each, and appends each success to `processed_models.log`; a re-run skips the finished models. A long sweep can resume after a failure instead of repeating work that already succeeded.
-- **COCO reports real shape metadata** — the text-to-image loader returns `((in_shape, out_shape, class_names), 0.0, train, val)` with the output image size read from the transform and a `vocab_size` input shape, instead of `(None,)`; the framework and metric need those shapes to build and evaluate the model correctly.
+- `api.check_nn(transform_dir=...)`: loads the transform from `<transform_dir>/<name>.py`,
+  falling back to the built-in transform when the file is absent [#67](https://github.com/ABrain-One/nn-dataset/pull/67).
+- `run_all_models.sh`: runs `python -m ab.nn.train` for each `ast*.py` model in a hard-coded
+  `~/Desktop/nn-dataset/ab/nn/nn`, logging to `mutation_tracking_logs/` [#71](https://github.com/ABrain-One/nn-dataset/pull/71).
+- Text-to-image models `ConditionalGAN` [#69](https://github.com/ABrain-One/nn-dataset/pull/69) [#70](https://github.com/ABrain-One/nn-dataset/pull/70) and `Unet-D` [#76](https://github.com/ABrain-One/nn-dataset/pull/76).
+- Ten captioning models generated with DeepSeek-R1-0528-Qwen3-8B (`C5C-`, `C8C-`, `C10C-`
+  `RESNETLSTM` and `ResNetTransformer` variants) [#66](https://github.com/ABrain-One/nn-dataset/pull/66) [#75](https://github.com/ABrain-One/nn-dataset/pull/75).
+- Models: 1,166 `ast-*` AlexNet variants (1,036 with CIFAR-10 statistics) [#71](https://github.com/ABrain-One/nn-dataset/pull/71), 227
+  `rag-*` with CIFAR-10 statistics [#72](https://github.com/ABrain-One/nn-dataset/pull/72), 199 `alt-*` with image-classification statistics
+  [#74](https://github.com/ABrain-One/nn-dataset/pull/74) [#77](https://github.com/ABrain-One/nn-dataset/pull/77).
 
 ### Changed
-- **COCO trusts the transform it is handed** — the loader no longer rebuilds its own `Resize/CenterCrop/ToTensor/Normalize` pipeline but uses `transform_fn((NORM_MEAN, NORM_DEV))`. Rebuilding it silently discarded the transform requested by every caller.
-- **CLIP uses the model's own similarity** — scoring reads `outputs.logits_per_image.diag()` and divides the average by 100, following CLIP's convention, rather than a hand-rolled embedding dot product.
-- **`setuptools` unbounded** — the `setuptools<80.0.0` pin blocked installs on newer setuptools builds for no functional reason.
-
-### Fixed
-- **Non-tensor labels no longer break evaluation** — the eval loop moved `labels` to the device unconditionally, which fails for image-generation tasks whose labels are raw text/prompt lists; tensors are still moved and everything else is passed through untouched.
-- **CLIP survives malformed or empty batches** — unexpected `preds` shapes and empty lists are ignored instead of raising.
-- **COCO image-size detection is guarded** — if no `Resize` step can be found the loader warns and falls back to 256 instead of raising.
+- COCO text-to-image loader uses the transform passed by the framework and reports the
+  output shape from the transform and `vocab_size` as input shape.
+- CLIP metric score is `logits_per_image.diag()` divided by 100.
+- `setuptools` is no longer pinned below 80.
 
 ### Removed
-- **`ftfy` hard dependency** — the stable CLIP processor no longer needs it.
-- Obsolete COCO transform-rebuild path.
+- `C1C-RESNETLSTM` model (added in 2.0.4).
+
+### Fixed
+- Evaluation moves labels to the device only when they are tensors (code comment: fixes an
+  image-generation error).
+- CLIP metric tolerates malformed or empty batches; COCO image-size detection falls back
+  with a warning.
 
 ## [2.0.4] - 2025-08-26
 
 ### Added
-- **Fixed hyperparameters via CLI** — `-p/--nn_prm` (parsed with `json.loads`, default `default_nn_hyperparameters={}`) accepts e.g. `{"lr": 0.0061, "momentum": 0.7549, "batch": 4}`, so a known-good run can be reproduced with the exact values that produced it instead of being re-searched differently each time.
-- New `C1C-RESNETLSTM.py` and 51 RAG-generated `rag-*.py` candidates.
-
-### Changed
-- `train.main` wraps `nn_prm` in a read-only `MappingProxyType` and forwards it to `optuna_objective`, which starts from `dict(nn_prm)` and suggests a hyperparameter only when it is absent or falsy: pinned values are kept, everything else is still searched.
-- Pinned `batch`/`transform` are honoured by the new `Util.add_categorical_if_absent(...)`, which calls `trial.suggest_categorical` only for unset names and builds the candidate list lazily (`default or fn()`).
-- `version` 2.0.4 → 2.0.5; README adds "Reproducing Results with Fixed Training Parameters" and `pip install nn-dataset[stat]`.
-
-### Fixed
-- BagNet declared a `SupportedHyperparameters` class with `check_hyperparameters` instead of the `supported_hyperparameters()` the trainer calls, so its `{'lr','momentum','dropout'}` set was never found; it now exposes the function the framework expects.
-- `Train.py` warning text corrected (`staticis`→`statics`, `save_Path`→`save_path`) so it names the real field.
-
-### Removed
-- Duplicate imports and a second, identical `supported_hyperparameters()` in `ConvNeXtTransformer.py`, a dead shadow of the real declaration that could silently drift out of sync.
-- The commented-out beam-search `forward`/`generate` block in `ResNetTransformer.py`, superseded by `beam_search_generate`/`batch_beam_search`, so the file no longer carries two decoding paths.
+- `-p/--nn_prm` CLI option: JSON object of fixed hyperparameters, for reproducing results
+  (README "Reproducing Results with Fixed Training Parameters"); others are still searched.
+- `C1C-RESNETLSTM` captioning model [#65](https://github.com/ABrain-One/nn-dataset/pull/65).
+- Models: 51 `rag-*` variants with CIFAR-10 statistics [#64](https://github.com/ABrain-One/nn-dataset/pull/64).
 
 ## [2.0.3] - 2025-08-20
 
 ### Added
-- **CLIP text-to-image metric** `ab/nn/metric/clip.py` (`CLIPMetric`, `openai/clip-vit-base-patch32`) — generated images have no ground-truth label to score against, so instead of comparing to a target the metric embeds each generated image and its prompt with CLIP and reports the mean cosine similarity of the two normalised embeddings; the model/processor are cached per device (the backbone is loaded once per run, not per batch) and the small `base-patch32` variant keeps scoring cheap enough to run on CPU.
-- **Conditional VAE** `ab/nn/nn/ConditionalVAE.py` (encoder→`fc_mu`/`fc_log_var`, `SelfAttention` decoder, `PerceptualLoss` on VGG16) — a latent-variable counterpart to the GAN/diffusion text-to-image models, so the benchmark can compare generative families rather than one. The VGG perceptual term is added to the L1 reconstruction loss because pixel loss alone yields blurry samples; `SelfAttention` lets distant regions (e.g. the car and its background) influence each other, which matters when condensing one category; and the `kld_warmup_epochs` schedule ramps the KL weight so the posterior is not collapsed before reconstruction is learnt.
-- **20 classifier backbones** `ab/nn/nn/rag-*.py` (MBConv/EfficientNet, GhostNet, MobileNet inverted-residual, CSP, YOLO/RT-DETR blocks) — efficient, well-proven designs added as a batch so the architecture search gains strong low-FLOPs baselines instead of relying only on the hand-written models.
+- CLIP metric `ab/nn/metric/clip.py` (`openai/clip-vit-base-patch32`, cached per device)
+  and `ConditionalVAE` text-to-image model (VGG16 perceptual loss, `kld_warmup_epochs`)
+  [#63](https://github.com/ABrain-One/nn-dataset/pull/63).
+- Models: 20 `rag-*` variants with CIFAR-10 statistics [#62](https://github.com/ABrain-One/nn-dataset/pull/62).
 
 ### Changed
-- **Conditional diffusion** `ConditionalDiffusion.py`: `supported_hyperparameters()` → `{'lr','beta1','beta2','steps_per_epoch'}`, AMP + `GradScaler`, xformers memory-efficient attention, frozen VAE. Training a UNet alongside a VAE and a text encoder exceeds a single GPU's memory, so the VAE is frozen (it only supplies latents), xformers attention and gradient checkpointing shrink the activation footprint, and AMP/`GradScaler` halves the compute and memory of the forward/backward pass; the hyperparameter set is narrowed to the values the training loop actually consumes.
-- **COCO Text2Image loader** filters to one category, emits eval labels, deterministic square transform. Fitting a small conditional model to all 80 COCO categories from scratch is infeasible and would make the CLIP score hard to interpret, so images are restricted to `TARGET_CATEGORIES=['car']` to give the model one consistent text→image mapping; the transform is rebuilt as `Resize` + `CenterCrop` because the VAE/UNet assume square inputs, and the val split returns a dummy tensor label since evaluation prompts are supplied by the model.
-- Deps: `transformers`, `accelerate`, `diffusers`, `ftfy`, `scikit-learn` — required by the CLIP metric, the DistilBERT text encoders, the diffusers VAE/UNet/scheduler, CLIP text cleanup, and metric math; 1015 `ga-alexnet-*.py` renamed to `ga-*.py` to drop the redundant `alexnet` prefix from these generated variants; `train.sh` made executable.
-
-### Fixed
-- Image-load errors print a warning and advance, so one unreadable COCO file cannot abort a whole epoch; CLIP uses the stable slow processor, whose tokenisation is deterministic, instead of the fast processor that scored unstably.
-
-### Removed
-- Standalone inference CLI in `ConditionalDiffusion.py`; generation is now driven through the framework's eval loop, so there is a single code path for training and inference.
+- `ConditionalDiffusion`: hyperparameters `lr`, `beta1`, `beta2`, `steps_per_epoch`; mixed
+  precision, xformers attention and a frozen VAE; its standalone inference CLI is removed
+  [#63](https://github.com/ABrain-One/nn-dataset/pull/63).
+- COCO text-to-image loader restricted to `TARGET_CATEGORIES = ['car']`; resize then
+  centre-crop; unreadable images are skipped with a warning.
+- New dependencies: `transformers`, `accelerate`, `diffusers`, `ftfy`, `scikit-learn`.
+- The 1,015 `ga-alexnet-*` models renamed to `ga-*`.
 
 ## [2.0.2] - 2025-08-12
 
 ### Changed
-- Built distributions now carry the JSON dataset. `package-data` keys are matched per package directory with non-recursive globs, so `'ab' = ['*.json']` only ever matched JSON sitting directly in `ab/`; the deeply nested `ab/nn/stat/**` stat/config files were silently dropped from wheels and sdists. Moving JSON to `[tool.setuptools.data-files] '*' = ['**/*.json']` uses a recursive glob over the whole tree, so one pattern ships every JSON artifact at any depth.
-- The `ab` package-data entry is narrowed from `['*.py', '*.json', '*.md']` to `['*.md']`, because `.py` sources are already installed as package modules and `*.json` is now owned by `data-files`; keeping either would only double-ship files, so only the package-local markdown docs still need to travel with `ab`.
-- `version` 2.0.1 → 2.0.2, a patch release that changes packaging only.
-
-### Fixed
-- Missing nested JSON in built distributions: the non-recursive `*.json` glob was replaced by the recursive `**/*.json` one.
+- Packaging: JSON files are declared as `[tool.setuptools.data-files] '*' = ['**/*.json']`;
+  `package-data` for `ab` lists only `*.md`.
 
 ## [2.0.1] - 2025-08-12
 
 ### Changed
-- Packaging moved from `setup.py` to a declarative `pyproject.toml` (PEP 621): the metadata now lives under `[project]`, so builds no longer import or execute project code, and any PEP 517/518 frontend can read the same fields instead of relying on setuptools' imperative API.
-- `version` and `dependencies` are declared dynamic (`version = { file = 'version' }`, `dependencies = { file = 'requirements.txt' }`), so the `version` file and `requirements.txt` remain the single source of truth; previously `setup.py` re-read both by hand, which let the installed metadata drift from what the repository actually stated.
-- Package discovery and shipped data are delegated to `[tool.setuptools.packages.find]`, `include-package-data`, and `[tool.setuptools.package-data]`, replacing the hardcoded includes; the contents of a wheel are now described in one place rather than split across `packages=`, `include_package_data`, and `MANIFEST.in`.
+- Packaging moved from `setup.py` to `pyproject.toml` (PEP 621); version and dependencies
+  are read from `version` and `requirements.txt`.
 
 ### Removed
-- `setup.py`, because everything it did (reading `README.md`, `requirements.txt`, and `version`, and listing packages) is now expressed directly in `pyproject.toml`; keeping both would duplicate the metadata and let the two copies disagree.
-- `MANIFEST.in`, because its `recursive-include` rules duplicate what `package-data` already ships; maintaining both invites the sdist and the wheel to package different files.
-- The empty top-level `__init__.py`, which otherwise made the repository root look like an importable package.
+- `setup.py`, `MANIFEST.in` and the empty top-level `__init__.py`.
 
 ## [2.0.0] - 2025-08-11
 
 ### Added
-- Text-to-image task and COCO loader (`ab/nn/loader/coco_/Text2Image.py`): the framework could benchmark models that classify, detect, segment or caption, but not a model that *consumes* text to synthesise an image, so the newly added conditional generators had no benchmark. The loader draws one random caption per COCO image (auto-downloading annotations and images), registers `txt-image` in the COCO task dispatcher, and steps to the next index on unreadable images so one corrupt file cannot abort a training epoch.
-- FID metric (`ab/nn/metric/fid.py`): generated images are judged by distributional distance to real ones, which the framework's accuracy-style maximisation cannot express. FID is lower-is-better, so the result is returned negated; the InceptionV3 feature extractor is cached globally to avoid reloading it on every batch, and the matrix square root is regularised and de-complexified so degenerate covariances cannot crash a run.
-- Shared metric helpers (`ab/nn/metric/utils/utils.py`, `metric/base/__init__.py`): `flatten_logits_and_labels` folds `[B,S,V]`/`[B,S]` sequence outputs to `[B*S,V]`/`[B*S]`, so the same classification and cross-entropy logic serves both sequence and single-label models instead of each metric re-implementing the reshape.
+- Text-to-image task `txt-image`: COCO loader `ab/nn/loader/coco_/Text2Image.py` (one
+  random caption per image) and `ConditionalDiffusion` model [#58](https://github.com/ABrain-One/nn-dataset/pull/58) [#59](https://github.com/ABrain-One/nn-dataset/pull/59) [#60](https://github.com/ABrain-One/nn-dataset/pull/60).
+- FID metric `ab/nn/metric/fid.py`, negated because the framework maximises the result
+  (code comment) [#58](https://github.com/ABrain-One/nn-dataset/pull/58).
+- Models: 1,015 `ga-alexnet-*` genetic-algorithm AlexNet variants with CIFAR-10
+  statistics [#61](https://github.com/ABrain-One/nn-dataset/pull/61).
 
 ### Changed
-- Perplexity is min-max normalised in log-space to `[0,1]` (`PPL_MIN=1`, `PPL_MAX=1_000`): raw perplexity is unbounded and lower-is-better, so it was neither comparable across datasets nor usable by the maximisation loop. Log scaling keeps the whole 1–1000 range meaningful, mapping a perfect model to 1 and anything at or beyond the worst threshold to 0.
-- Accuracy `update()` now runs through `flatten_logits_and_labels` and `__call__` returns the accumulated totals, so sequence models are scored on every token and batch statistics have a single source of truth instead of being computed twice.
-- `acc.py`, `ppl.py`, `iou.py` and `map.py` import `BaseMetric` relatively (`from .base import ...`): absolute `ab.nn.metric...` imports pin metrics to the installed package root, which breaks under the namespace-package install or when metrics are loaded from a different checkout; relative imports keep the metric package portable.
-- `accuracy_to_time_metric` and `good` treat a missing accuracy or threshold as `0.0`, so runs without a score (or a dataset without a minimum) are ranked as worst-case rather than raising `TypeError` during result ranking.
-- `version` 1.2.6 → 2.0.0: metric score semantics changed (the FID sign and the perplexity scale), so new statistics are intentionally not comparable with older ones.
+- Perplexity metric is min-max normalised in log space to [0, 1] (`PPL_MIN = 1`,
+  `PPL_MAX = 1000`); in 1.2.6 it returned raw perplexity.
 
 ### Fixed
-- `None`-safety in `Util.py`, and `Text2Image.__getitem__` skips unreadable images and advances instead of failing the whole epoch.
+- `Util.accuracy_to_time_metric()` and `good()` accept `None` for the accuracy or minimum
+  accuracy (treated as 0.0).
 
 ## [1.2.6] - 2025-07-17
 
 ### Added
-- **Perplexity metric** (`ab/nn/metric/ppl.py`): character-level language models had no usable score, so WikiText could be trained but not ranked. Perplexity is the exponential of the mean per-token cross-entropy, min-max normalised in log space over `PPL_MIN=1`–`PPL_MAX=1000` into `[0,1]`, which makes it comparable with the other accuracy-like metrics and lets the shared threshold/ranking logic treat it uniformly. An optional `ignore_index` excludes padding so batches of unequal length do not skew the score.
-- **New models** `ConvNeXtTransformer.py`, `ResNetTransformer.py`, `MoE-0707.py`.
-- **New transforms** (`center_crop.py`, `five_crop.py`, `random_horizontal_flip.py`, `random_vertical_flip.py`): flips and crops previously existed only inside larger composed recipes, so the search could not isolate a single augmentation's effect. Each file is a minimal, standard `transform(norm)` recipe (one operation, then resize to 64×64 and normalise), giving the pipeline catalogue independent, attributable variants.
-- **Shell entry points** `train.sh`, `train-loop.sh`, `train-loop-50.sh`.
+- `--train_missing_pipelines` flag: trains every task/dataset/metric/model combination built
+  from the matched configurations that has no statistics yet.
+- Perplexity metric `ppl` (`Perplexity`): exponential of the mean per-token cross-entropy,
+  with optional `ignore_index`.
+- Transforms `center_crop`, `five_crop`, `random_horizontal_flip`, `random_vertical_flip`
+  (each resizes to 64x64) [#56](https://github.com/ABrain-One/nn-dataset/pull/56).
+- Shell entry points: `train.sh` (activates `.venv` if present, then runs
+  `python -m ab.nn.train "$@"`), `train-loop.sh` (restarts training endlessly) and
+  `train-loop-50.sh` (image classification, 50 epochs, random order); README examples use `train.sh`.
+- Models: `ConvNeXtTransformer` and `ResNetTransformer` for image captioning
+  [#52](https://github.com/ABrain-One/nn-dataset/pull/52) and `MoE-0707`, a sparse
+  mixture-of-experts model [#54](https://github.com/ABrain-One/nn-dataset/pull/54); statistics
+  grow to 664 pipeline configurations and 14,791 per-epoch files (305 and 8,811 in 1.2.5).
 
 ### Changed
-- **WikiText loader rewrite**: the loader now exposes `out_shape=(vocab_size,)` instead of `None`, because the perplexity metric and cross-entropy loss need the model to emit `[B,S,V]` logits, which require the vocabulary size up front. The dataset switched from non-overlapping blocks to a stride-1 sliding window, so every character position becomes a training example (~`seq_length`× more samples from the same small corpus) and next-character prediction is learned densely rather than only on block boundaries; `seq_length` rose 100→128 for a longer context. Targets are now `torch.long` (cross-entropy) rather than float, indices are precomputed once, and `__getitem__` bounds-checks.
-- `minimum_accuracy` → `MINIMUM_ACCURACY` across all loaders, with `min_accuracy()` reading the new name; the old lowercase spelling was easy to miss and inconsistent between files.
-- COCO Caption NLP now uses `nltk.word_tokenize`, `threshold=5`, and a process-wide `GLOBAL_CAPTION_VOCAB`, so captions with punctuation and numbers split correctly and rare words collapse to `<UNK>` instead of bloating the vocabulary.
-- **Per-epoch time limit expressed in minutes** (`default_epoch_limit_minutes=30`): the old `Const.max_epoch_seconds` was a globally-mutated constant in a different unit from the duration that is reported and stored. The limit is now an explicit parameter threaded `train.main → optuna_objective → Train.train_n_eval → DataRoll`, so it is per-call and shares the unit of the training-time report.
-- `check_nn()` returns a 4-tuple `(name, accuracy, accuracy_to_time, score)` and `train_n_eval()` returns `(accuracy, accuracy_to_time, duration)`: the old return dropped the accuracy-to-time metric and let the time-penalised value be reported and compared as accuracy, so the objective and the `minimum_accuracy` gate used the wrong number.
-- `check_nn()`/`data()` drop `cast_prm`, and DB joins/indexes move to `(uid, name, value)`: hyperparameters have been stored in native Python types since 1.2.2, so the runtime cast flag was dead weight, and the covering index turns the bulk `WHERE uid IN (...)` hyperparameter fetch into an index-only lookup.
-- Sequence models modernized (`LSTM.py`, `RNN.py`, `RESNETLSTM.py`, now with AMP).
+- `check_nn` returns `(name, accuracy, accuracy_to_time, code_score)` and decides whether to
+  save by accuracy; since 1.0.0 its "accuracy" value was the accuracy-to-time value, as
+  noted in [#37](https://github.com/ABrain-One/nn-dataset/pull/37). Optuna now also maximises
+  accuracy instead of the accuracy-to-time value.
+- Per-epoch time limit is set in minutes: `--epoch_limit_minutes` and
+  `check_nn(epoch_limit_minutes=...)` (default 30) replace `check_nn(epoch_duration_limit_sec=...)`
+  and `Const.max_epoch_seconds`.
+- Loader attribute `minimum_accuracy` renamed to `MINIMUM_ACCURACY` in all loaders (the caption
+  loader's `minimum_bleu` too); custom loaders must use the new name.
+- WikiText loader returns output shape `(vocab_size,)` (was `None`) and builds 128-character
+  windows at stride 1 with `torch.long` inputs and targets.
+- Database: code tables get an `id` column (MD5 of the code) and `data()` also returns `nn_id`,
+  `metric_id`, `transform_id` [#51](https://github.com/ABrain-One/nn-dataset/pull/51); the
+  hyperparameter `uid` is a hash of the hyperparameters only (no `accuracy`, `duration`, `epoch`),
+  and uids in the shipped statistics are replaced by such hashes
+  [#53](https://github.com/ABrain-One/nn-dataset/pull/53). A `db/` from an older version has
+  the old schema; the README install steps delete it.
+- Image captioning: captions are tokenised with `nltk.word_tokenize` (the loader downloads
+  `punkt_tab`), the vocabulary is shared through `GLOBAL_CAPTION_VOCAB`, and `RESNETLSTM`
+  trains with mixed precision (`autocast`, `GradScaler`).
 
 ### Fixed
-- Duplicate `trial.suggest_float` for `lr` removed: the learning rate was sampled twice, wasting an Optuna sample and distorting parameter-importance reporting.
-- `uid` is computed from `only_prm` (hyperparameters alone, excluding `duration`/`accuracy`/`epoch`): hashing the full dictionary gave the same configuration a different id every epoch, defeating dedup. The stat id is likewise now `uuid4(configuration + transform)` and `populate_prm_table` uses `INSERT OR IGNORE`, so re-saving is idempotent.
-- `Read.data` bulk-loads hyperparameters by `stat_prm` rather than `stat_id` (the parameter tables are keyed by the stat's `uid`, so the previous key returned empty `prm` dictionaries), and now selects `metric_id`/`nn_id`/`transform_id` alongside the code columns.
-- BLEU skips empty references.
+- `python -m ab.nn.train` passes `--min_dropout` and `--max_dropout` to `main()`; since 1.2.1
+  they were missing from the positional call, which shifted `--transform` and every later flag.
 
 ### Removed
-- `run.py`, `run.sh`: `run.py` duplicated `ab/nn/train.py`'s argparse setup and kept a hand-maintained argument list that drifted whenever a flag was added. `train.sh` now activates `.venv` if present and calls `python -m ab.nn.train "$@"`, so the CLI has one source of truth and shell callers forward flags transparently.
-- `ab/nn/nn/LSTMK.py`; `test_cast_flag_equivalence` and `cast_prm`.
+- `run.py` and `run.sh` (use `train.sh` or `python -m ab.nn.train`); `cast_prm` argument of
+  `data()` and `check_nn()`; model `LSTMK.py` and the disabled `MoE-1.py_`, `MoE-2.py_`,
+  `MoEHierarchical.py_`.
 
 ## [1.2.5] - 2025-06-06
 
 ### Changed
-- Relaxed the lower bounds on `tqdm`, `optuna`, `numpy`, `pandas`, `scipy` and `pillow` from `>=` pins to plain requirement names. Those floors were never real runtime requirements; they only forced pip to upgrade already-satisfied dependencies and made resolution fail when another package — notably `torch` — constrained the same library to an older release. Dropping the floors lets pip reuse whatever compatible version the target environment already has, so installs stop failing for no functional reason.
-- Changed the `setuptools` cap from `<=80.0.0` to `<80.0.0`, so version 80.0.0 itself is now excluded rather than allowed. The inclusive bound was an off-by-one against the intended "stay below setuptools 80" limit: that release dropped build behaviour the package's `setup.py`-era build still relies on, so a range admitting it could install a setuptools that breaks the build. The exclusive bound restores the intended ceiling.
-- Bumped `version` 1.2.4 → 1.2.5 for the release.
+- `requirements.txt`: version floors dropped for `tqdm`, `optuna`, `numpy`, `pandas`, `scipy`
+  and `pillow`; `setuptools<80.0.0` (was `<=80.0.0`). `torch>=2.6.0`, `torchvision>=0.21.0`,
+  `datasets>=3.2.0` and `nltk>=3.9.1` keep their floors.
+
+### Known issues
+- `python -m ab.nn.train` passes flags to the wrong parameters from `--transform` onward (see
+  1.2.3); fixed in 1.2.6.
 
 ## [1.2.4] - 2025-06-06
 
 ### Added
-- Model and run identity is now the content hash of what is recorded (`uuid4(obj)` = MD5 of the whitespace-stripped string): equal code or equal hyperparameters map to the same name and `uid`, so re-runs update one row instead of duplicating it.
-- `test_nn_train` trains CIFAR-10 for an epoch, because the tests all passed while training was broken.
+- `test_nn_train` in `test.py`: trains AlexNet on CIFAR-10 for one epoch through `train.main()`.
 
 ### Changed
-- Task key `image-captioning` → `img-captioning`, matching the `img-*` prefix of every other task (`img-classification`, `img-segmentation`); `coco.py`'s dispatch and the loader's guard changed together so they cannot drift.
-- The captioning pipeline was reworked end to end: the vocabulary now lives on the dataset, and `collate_fn(batch, word2idx)` wraps captions in `<SOS>`/`<EOS>`, pads to `[B, caps, T]` and returns token ids, with the embedding moved into `LSTMDecoder` so the pipeline is device-free and the model owns its parameters. `RESNETLSTM` trains by teacher forcing and decodes greedily at inference, with `Adam` instead of `SGD` for its pretrained, frozen ResNet-50 backbone, and `minimum_bleu` fell 0.05 → 0.001 so early training is no longer discarded as "too low".
-- BLEU now scores BLEU-1..4 separately and returns BLEU-4, ignoring padding and empty references and accepting logits or ids; the old metric averaged one opaque score that counted pad tokens.
-- `requirements.txt` relaxed `~=` → `>=` so installs can take newer compatible releases, added `nltk` and `gdown` for captioning, and bounded `setuptools<=80.0.0` for build compatibility.
+- Names are content hashes: `Util.uuid4(obj)` is the MD5 of `str(obj)` without whitespace and
+  replaces random UUIDs for code submitted via `check_nn`, code-table entries and statistic
+  `uid`s [#46](https://github.com/ABrain-One/nn-dataset/pull/46).
+- Task name `image-captioning` renamed to `img-captioning`.
+- BLEU metric (`BLEUMetric`, no longer a `BaseMetric` subclass) computes BLEU-1 to BLEU-4 with
+  NLTK smoothing, reports BLEU-4, and skips padding tokens and empty references.
+- Caption loader: `minimum_bleu` lowered from 0.05 to 0.001; on-the-fly download of a missing
+  COCO image uses a 10 s timeout [#45](https://github.com/ABrain-One/nn-dataset/pull/45),
+  [#47](https://github.com/ABrain-One/nn-dataset/pull/47).
+- `requirements.txt`: `~=` pins become `>=` floors; adds `nltk>=3.9.1`, `gdown` and
+  `setuptools<=80.0.0`.
 
-### Fixed
-- Caption images load in a bounded two-attempt loop (local, then a 10 s download) that reports the failing path, and `validate_prm` guards each range only when both bounds are set.
+### Known issues
+- `python -m ab.nn.train` passes flags to the wrong parameters from `--transform` onward (see
+  1.2.3); fixed in 1.2.6.
 
-### Removed
-- `BaseMetric` inheritance from `bleu.py`, the local `uuid4` in `Write.py`, and the loader-built shared embedding.
-
-## [1.2.3] - 2025-05-19
+## [1.2.3] - 2025-05-20
 
 ### Added
-- Image captioning as a first-class COCO task (`ab/nn/loader/coco_/Caption.py`): detection and segmentation targets are per-box or per-pixel and a caption model cannot consume them, so `COCOCaptionDataset` returns an image with its raw captions and `build_vocab` builds a shared vocabulary with `<PAD>/<SOS>/<EOS>/<UNK>`. Captions vary in length and count, so `collate_fn` pads both to the batch maximum, and the loader returns `(vocab_size,)` so the framework can size the decoder head.
-- BLEU (`ab/nn/metric/bleu.py`) because token accuracy is meaningless for free-form text: it measures n-gram overlap with the references while keeping the `BaseMetric` interface, and captioning networks `RESNETLSTM.py`/`LSTMK.py`, which emit a logit per vocabulary token instead of one class.
-- `ab/nn/util/DeleteNN.py`, because deleting a model by hand left its `<name>`-suffixed stat directories and its DB rows, so it kept appearing in queries; the tool removes file, stat dirs and DB, which is rebuilt clean.
-
-### Changed
-- `coco.py` dispatches `image-captioning` to `Caption`, keeping task-name selection in one entry point, and `Const.model_script(name)` centralises the `<nn_dir>/<name>.py` path shared by the tool and the default model.
-- `Read.query_rows()` returns plain tuples, since callers reached `sqlite3.Row` objects that broke the set/dedup comparisons used to collect configs; `test.py` runs a real `check_nn` pass (as well as the mocked path) so the caption wiring is covered by the suite.
+- Image captioning on COCO: `coco_/Caption.py` (`COCOCaptionDataset`, vocabulary with `<PAD>`,
+  `<SOS>`, `<EOS>`, `<UNK>` cached in `data/coco/vocab.pth`), task `image-captioning`, BLEU
+  metric `bleu.py`, and models `RESNETLSTM` and `LSTMK`
+  [#44](https://github.com/ABrain-One/nn-dataset/pull/44).
+- `python -m ab.nn.util.DeleteNN <model_name>`: deletes the model file, its statistics
+  directories and the `db/` directory.
 
 ### Fixed
-- `train_new()` wraps each cleanup `del` in `try/except NameError`: when loading failed before `train_set`/`test_set` existed, cleanup raised a misleading `NameError` that hid the real error, letting the original exception surface.
+- Command-line training starts again: `Const` defines `default_min_dropout = 0.0` and
+  `default_max_dropout = 0.5`.
+- `check_nn` cleanup no longer raises `NameError` when it fails before the datasets are loaded.
 
 ### Removed
-- 27 generated `*-<uuid>.py` models and their stats, plus the unused `gdown` dependency.
+- 24 UUID-suffixed generated models and their 24 statistics directories (85 to 61 such models).
+- `gdown` dependency (re-added in 1.2.4).
+
+### Known issues
+- `python -m ab.nn.train` calls `main()` positionally without `--min_dropout`/`--max_dropout`,
+  so `--transform` and every later flag reach the wrong parameter; `run.py` passes them
+  correctly. Fixed in 1.2.6.
 
 ## [1.2.2] - 2025-05-02
 
 ### Changed
-- Hyper-parameters are now stored in the `prm` tables in their native type (`(uid, name, value OBJECT)`) instead of `str(value)` plus a `type` column that reads cast back with `getattr(builtins, ...)`. The stringify-and-cast round-trip rejected values whose type is not a `builtins` name and paid a Python-level cast per row, so writing `int`/`float`/`str` natively keeps type fidelity and turns `cast_prm` into a no-op (`test_cast_flag_equivalence`, `test_native_param_types`).
-- `data()` reconstructs hyper-parameters with a single chunked `SELECT uid, name, value FROM prm WHERE uid IN (...)` (900 ids per chunk, below SQLite's 999-parameter limit) into a `defaultdict`, replacing the old one-query-per-stat-row `WHERE uid = ?` loop. That loop had no index and full-scanned `prm` for every row, so read cost scaled with rows × columns; the new `idx_<table>_uid` indexes plus the bulk fetch keep it proportional to rows, which `test_fetch_time_budget` guards at ≈0.25 ms/row.
-- The connection uses `row_factory = sqlite3.Row`, and every `data()` query runs inside `try/finally: close_conn`, so column-name access replaces manual tuple zipping and the connection is closed even when a query raises.
-- `ab.nn.api.data()` is wrapped in `lru_cache(maxsize=10)`, so repeated identical queries (tests, CLI, `only_best_accuracy`) reuse the cached frame instead of re-reading the database.
-- `crate_file` is renamed `create_file` and removes an existing file before writing; the old version skipped the write when the path already existed, leaving stale content or failing on repeated writes.
-- ONNX export moved inside the `train_new` `try` block (with `trainer = None` initialised first), and `train_set`/`test_set`/`trainer.model` are deleted in `finally`, so the model and datasets are no longer leaked on the error/early-return paths.
+- Hyperparameters are stored with native SQLite types in `prm(uid, name, value)`; the `type`
+  column is gone and `data(cast_prm=...)` is accepted but has no effect
+  [#43](https://github.com/ABrain-One/nn-dataset/pull/43). A `db/` from an older version has
+  the old schema; the README install steps delete it.
+- `data()` loads hyperparameters in bulk (chunks of 900 uids) using new `uid` indexes
+  [#43](https://github.com/ABrain-One/nn-dataset/pull/43).
+- `api.data()` is wrapped in `functools.lru_cache(maxsize=10)`: repeated calls with the same
+  arguments return the cached `DataFrame`.
+- `check_nn` deletes its datasets and model after each call and exports ONNX inside its
+  error handling.
+- `test.py` adds tests for native parameter types, a fetch-time budget, remaining trials,
+  transforms, unique configurations and filters
+  [#43](https://github.com/ABrain-One/nn-dataset/pull/43).
+- README cites the LEMUR article (arXiv:2504.10552).
+
+### Known issues
+- Command-line training (`python -m ab.nn.train`, `run.py`) fails on import with `NameError`:
+  `default_min_dropout` and `default_max_dropout` are not defined in `Const.py`. Fixed in 1.2.3.
+
+## [1.2.1] - 2025-04-13
 
 ### Added
-- A rewritten `test.py` that checks the new data contract instead of running a real train: `test_native_param_types` round-trips float/int/str (and bool as 0/1) through write→read, `test_cast_flag_equivalence` proves the removed cast is neutral, `test_fetch_time_budget` fails if bulk loading regresses, `test_remaining_trials`/`test_supported_transformers`/`test_unique_configs`/`test_fetch_all_data_filters` cover the read helpers, `test_check_nn` stubs `train_new`, and `setUpClass`/`tearDownClass` insert then delete a synthetic row and assert it is gone.
-
-### Removed
-- The `type` column on the `prm` tables and the runtime casting path it fed.
-
-## [1.2.1] - 2025-04-08
-
-### Added
-- Configurable dropout search range (`--min_dropout`/`--max_dropout`, threaded through `train.main` and `optuna_objective`). Optuna had hard-coded `0.0–0.5` with the note that high dropout prevents learning, so every model was searched against the same assumed ceiling; exposing the bounds lets the range be narrowed or widened per experiment instead of editing `Train.py`.
-- `Util.torch_device()`, `Util.create_file()`, `Util.str_not_none()` and the DataLoader factories `train_loader_f()`/`test_loader_f()`, plus `onnx_dir`/`onnx_file` constants and the `onnx` dependency.
-- `max_rows` on `data()` (API and `db/Read`), rendered with `str_not_none('LIMIT ', …)`, so callers can cap how many rows a query materialises instead of always loading every matching record.
-- `check_nn(epoch_duration_limit_sec=...)`. The 30-minute `max_epoch_seconds` was a module constant imported *by value* in `DataRoll`, so a caller could not change it; `api.check_nn` now rebinds `Const.max_epoch_seconds` and `DataRoll` reads it at call time, so long CPU runs can raise the limit.
+- `--min_dropout` and `-d/--max_dropout` flags set the dropout search range, previously fixed
+  at 0.0 to 0.5; `validate_prm` rejects a minimum above the maximum.
+- `data(max_rows=...)` limits the number of returned rows.
+- `check_nn(epoch_duration_limit_sec=...)` overrides the per-epoch time limit (default 30 min).
+- `onnx` dependency.
 
 ### Changed
-- Device selection and loader construction are centralised in `Util.torch_device()` and the loader factories. The MPS-aware device check was duplicated, and the test loader incorrectly reused the *train* dataset's `num_workers`/`collate_fn`; one helper now yields a consistent device and each loader is built from its own dataset.
-- `Train.__init__` now takes a dotted `nn_module` path, `get_attr` no longer prepends `ab.nn`, and `get_ab_nn_attr` preserves the old behaviour for dataset/model helpers. This decouples training from the `ab.nn.nn` package, which is what makes dynamically generated models loadable by name.
-- `train_new` writes generated code to `out/nn/tmp/<uuid>.py` (an importable package seeded with `__init__.py`) rather than a `NamedTemporaryFile`, because the module must be importable by dotted path while `Train` loads it; the file is deleted in a `finally` so failed runs do not leak it.
-- `export_model_to_onnx(model, dummy_input)` is simplified: it writes to the fixed `onnx_dir`/`onnx_file`, runs `model.eval()` under `torch.no_grad()`, and exports a real training sample instead of `torch.randn(in_shape)`, so the graph matches the actual input and omits training state.
-- Inline RNN/LSTM construction for `txt-generation` is dropped from `optuna_objective`; those models flow through the same `Net` path as everything else.
+- `check_nn` writes submitted code to `out/nn/tmp/<name>.py` under the project root (was the
+  `ab.nn.tmp` package), deletes it afterwards, and always returns the generated name.
+- ONNX export writes `out/onnx/nn.onnx` (directory created) and traces the model with one
+  batch from the training set.
+- `Train` takes the full module path of the network (`nn_module`, e.g. `ab.nn.nn.ResNet`);
+  `Util.get_attr` no longer prepends `ab.nn` (`get_ab_nn_attr` does).
 
-### Fixed
-- The test loader derives `num_workers`/`collate_fn` from `test_dataset`; `validate_prm` rejects `dropout_min > dropout_max`; `CodeEval.dynamic_evaluation` builds the model with an explicit device and the `train_setup(prm)` contract, and the code-quality score is normalised to `[0,1]`.
-
-### Removed
-- Ad-hoc temp-module loading and the `txt-generation` special case in `optuna_objective`/`train_new`.
+### Known issues
+- Command-line training (`python -m ab.nn.train`, `run.py`) fails on import with `NameError`:
+  `default_min_dropout` and `default_max_dropout` are not defined in `Const.py`. Fixed in 1.2.3.
 
 ## [1.2.0] - 2025-03-31
 
 ### Added
-- Unified metric interface `ab/nn/metric/base/base.py`: `BaseMetric` fixes one contract — `reset()`, a per-batch `__call__()`/`update()` and `result()`. Previously `Train.load_metric_function()` hard-coded `if metric_name == "iou" … elif "map" … else compute` and `eval()` guessed the shape of the object with `hasattr(..., "update")`/`hasattr(..., "get")`, so every new metric meant editing the trainer and every metric had a slightly different lifecycle. Each metric module now just exposes `create_metric(out_shape)`, so `Train` builds a metric with `module.create_metric(self.out_shape)` and trains through the fixed sequence; metrics became plug-ins and the `get`/`compute` split disappeared. `Accuracy`, `MIoU` and `MAPMetric` were reimplemented on the base.
-- `Util.export_model_to_onnx(model, model_name, dummy_input)` and `check_nn(..., export_onnx=...)`: trained networks can now leave the PyTorch training stack as a runtime-neutral ONNX graph, which is what later mobile/quantisation work consumes. The exporter checks for non-trivial `AdaptiveAvgPool2d`/`AdaptiveMaxPool2d` and only marks the spatial axes dynamic when they are actually free, because `torch.onnx.export` cannot combine free height/width with a fixed adaptive-pool target and would otherwise fail or emit a wrong graph.
-- `default_pretrained=None` with a `--pretrained {1,0}` flag and `prms['pretrained']` handling in `optuna_objective`: many models can initialise from pretrained weights, but whether that helps depends on task and dataset, so the default now lets Optuna search `pretrained` like any other hyperparameter while 1/0 forces the decision for reproducible runs.
-- `Util.min_accuracy(dataset)` and public `ab.nn.api.accuracy_to_time_metric(accuracy, training_duration, dataset)`: speed-aware benchmarking ranks models by the accuracy they gain per unit time, so the wrapper resolves the dataset's floor via `min_accuracy()` and exposes the metric to API users. It is deliberately not stored in the database, since it can be recomputed at any time from the stored accuracy and duration.
-- New models `Diffuser.py`, `FractalNet.py` and ~81 NNGPT-generated UUID-suffixed models; the `ab/nn/tmp/` package and a `version` file.
+- `check_nn(save_path=...)`: writes the per-epoch statistics of submitted code to the given
+  directory, which is created if missing [#37](https://github.com/ABrain-One/nn-dataset/pull/37).
+- `check_nn(export_onnx=True)`: exports the trained model to ONNX (`Util.export_model_to_onnx`).
+- `api.accuracy_to_time_metric(accuracy, training_duration, dataset)` and
+  `Util.min_accuracy(dataset)`.
+- Models: `Diffuser` [#38](https://github.com/ABrain-One/nn-dataset/pull/38) and 85 models
+  generated or modified by NNGPT language models, named with UUID suffixes; #40 notes that some
+  may be duplicates [#40](https://github.com/ABrain-One/nn-dataset/pull/40),
+  [#41](https://github.com/ABrain-One/nn-dataset/pull/41). Statistics: 328 pipeline
+  configurations and 8,854 per-epoch files (236 and 7,337 in 1.1.0).
 
 ### Changed
-- The `Loader` class became the module functions `load_dataset()` and `get_obj()`. The static wrapper added nothing, and routing loaders/transforms through the same dynamic name lookup makes dataset loading consistent with how metrics and transforms are resolved.
-- Loaders now expose `minimum_accuracy` as part of the dataset contract, so the acceptance threshold travels with the data instead of being a trainer-side constant.
-- `train_new()` writes the submitted `nn_code` into the new `ab/nn/tmp` package and imports it from there, so dynamically submitted architectures are real importable modules — needed for correct model naming and ONNX export.
-- `check_nn()` now returns `(name, accuracy, score)`, surfacing the static code-quality score next to accuracy; `train_new()` gained `prefix`/`save_path` to control the generated model name and where statistics are written.
-- `setup.py` reads the version from the `version` file instead of a hard-coded string, removing a second place that had to be bumped per release.
+- `check_nn` returns the code-quality score scaled to [0, 1] (was 0 to 100).
+- Loaders expose a public module attribute `minimum_accuracy` (was private
+  `__minimum_accuracy`), read by `Util.min_accuracy`.
+- `ab.nn.util.Loader`: the `Loader.load_dataset` static method is replaced by the functions
+  `load_dataset()` and `get_obj()`.
+- README explains the naming of NNGPT-generated models and installs PyTorch from the CUDA 12.6
+  index (`cu126`).
+
+## [1.1.0] - 2025-03-09
+
+### Added
+- `--pretrained {1,0}` flag: always or never use pretrained weights; when unset, Optuna chooses
+  for models that list `pretrained` [#31](https://github.com/ABrain-One/nn-dataset/pull/31).
+- Metric interface `BaseMetric` (`ab/nn/metric/base/base.py`: `reset`, `update`, `__call__`,
+  `result`); `acc`, `iou` and `map` implement it and each metric module provides
+  `create_metric(out_shape)`, replacing the per-metric `compute()`
+  [#35](https://github.com/ABrain-One/nn-dataset/pull/35).
+- `check_nn(prefix=...)`: the saved model is named `<prefix>-<uuid>`
+  [#36](https://github.com/ABrain-One/nn-dataset/pull/36).
+- `check_nn` returns `(name, accuracy, code_score)` with the `CodeEval` score
+  [#27](https://github.com/ABrain-One/nn-dataset/pull/27).
+- `version` file as the single version source, read by `setup.py` and shipped via `MANIFEST.in`.
+- Models: `FractalNet` [#30](https://github.com/ABrain-One/nn-dataset/pull/30); classification
+  statistics for SVHN, Places365 and CelebA-gender
+  [#29](https://github.com/ABrain-One/nn-dataset/pull/29). Statistics: 236 pipeline
+  configurations and 7,337 per-epoch files (145 and 3,830 in 1.0.4).
+- README: `lmur` short alias on PyPI; citation retitled "LEMUR Neural Network Dataset: Towards
+  Seamless AutoML" with additional authors.
+
+### Changed
+- `check_nn` imports submitted code as a temporary module of the `ab.nn.tmp` package with
+  `importlib` instead of `exec` [#27](https://github.com/ABrain-One/nn-dataset/pull/27),
+  [#28](https://github.com/ABrain-One/nn-dataset/pull/28).
 
 ### Fixed
-- `LearnTimeException` is reported as a bounded ratio and no longer masks the duration; `Calc.save_results` creates the missing stat directory instead of failing on first write; the eval loop reads `metric_function.result()` under the new interface.
-
-### Removed
-- The `Loader` class and the per-metric `compute()`/`get()` methods, along with the hard-coded metric dispatch they required; commented-out AP printing.
-
-### Documentation
-- README rebranded to LEMUR (with the `lmur` PyPI alias); citation updated (including Tolgay Atinc Uzun, Zofia Antonina Bentyn); NNGPT acknowledged as backer.
+- `check_nn(save_to_db=True)`: `train_n_eval` no longer writes statistics files for submitted
+  code; `train_new` saves the result itself [#36](https://github.com/ABrain-One/nn-dataset/pull/36).
+- Detection networks (`FCOS`, `FasterRCNN`, `RetinaNet`, `SSDFull`) set their trainable layers
+  according to `pretrained`, and layer freezing is fixed for non-pretrained models
+  [#35](https://github.com/ABrain-One/nn-dataset/pull/35).
 
 ## [1.0.4] - 2025-02-09
 
-### Added
-- **Namespace-package support** — `ab/__init__.py` sets `__path__ = pkgutil.extend_path(__path__, __name__)` (before `from ab.nn import *`). This is what allows several distributions that each own a subtree of `ab/` to be importable together: previously every such wheel shipped its own `ab/__init__.py`, so the last one installed replaced the others and made `import ab.nn` or the sibling package fail depending on install order. `extend_path` merges those directories into one search path instead of letting one shadow the rest.
-
 ### Changed
-- `Const.nn_path` is re-anchored from `ab/nn/__init__.py` to `ab/nn/util/__init__.py` (`Path(init_file.__file__).parent.parent` instead of `.parent`). Both resolve to the same `ab/nn` directory, but the old anchor assumed `ab/nn/__init__.py` sits at a fixed place in the installed tree, which namespace packaging no longer guarantees. Anchoring on `ab/nn/util`, a file this distribution always ships itself, keeps `nn_path` correct regardless of how the `ab` namespace is assembled from several packages.
-- `setup.py` distribution name `NN-Dataset` → `nn-dataset` (version `1.0.3` → `1.0.4`), so the installed name matches the PyPI project users actually type rather than a differently-cased alias.
-- Startup banner reworded from "LEMUR operates within the root directory" to "LEMUR uses the root directory", which reports the resolved root without implying the tool is installed there.
-
-### Fixed
-- Path resolution no longer depends on `ab.nn.__init__` being present at a fixed location, the assumption the namespace-package change invalidates.
-
-### Removed
-- The PyPI-only `nn-stat` install instruction, replaced by the Git install flow; a standalone PyPI `nn-stat` does not by itself join the `ab` namespace, so the old step misled users.
+- `ab` is an extendable namespace package (`pkgutil.extend_path` in `ab/__init__.py`), so
+  `ab.*` packages from other installed distributions can be imported alongside it.
+- Distribution name in `setup.py` is `nn-dataset` again (1.0.3 used `NN-Dataset`).
+- README installs `nn-stat` from GitHub and runs the export with `python -m ab.plot.export`.
+- Statistics: 3,830 per-epoch files (3,695 in 1.0.3).
 
 ## [1.0.3] - 2025-02-08
 
 ### Added
-- `data(..., cast_prm=True)` on `ab/nn/api.py`, forwarded to `Read.data`. The `prm` table stores every hyperparameter as a string next to a type tag, and `data()` always rebuilt it with `getattr(builtins, pr_type)(pr_value)`. That rebuild assumes the tag names a Python builtin that can re-parse the stored text, which is not guaranteed for every row. The flag keeps the typed result as the default but lets a caller request the raw column value, so code that compares or hashes stored hyperparameters sees exactly what is in the database rather than a reconstruction of it.
-- `default_nn_name = 'AlexNet'` in `Const.py`, with `default_nn_path` derived from it, so the default architecture is named once instead of a separate literal filename.
+- `data(cast_prm=True)`: with `False`, hyperparameter values are returned as stored instead of
+  being cast to their recorded type.
+- `stat` extra (`pip install nn-dataset[stat]` installs `nn-stat`), replacing the `nn-plots`
+  extra; README describes `nn-stat` for Excel export and plots.
 
 ### Changed
-- `torch~=2.5.1`/`torchvision~=0.20.1` → `torch~=2.6.0`/`torchvision~=0.21.0`. torchvision releases are pinned to a matching torch release, so the two must move together; the bump advances the pair to the then-current matched set instead of leaving torch and torchvision on a stale combination.
-- Project-root discovery rewritten. The old `__project_root_path()` checked only `Path().absolute().parent` and returned `'..' * len(to_nn)`, so it assumed the process ran at one exact depth inside `ab/` and resolved the wrong root from any other working directory. The new version walks up from the cwd until it finds a directory containing both `ab/` and `README.md`, returns that absolute path, and stops at the filesystem root so it cannot loop forever. It also prints the root it selected, so a wrong checkout fails visibly instead of silently writing stats into the wrong tree.
-- Package metadata: name `nn-dataset` → `NN-Dataset`, version 1.0.2 → 1.0.3, and the project URL points at `https://ABrain.one`. The `nn-plots` extra becomes `stat = ['nn-stat']`, the name that matches the statistics package the extra actually installs.
-
-### Fixed
-- `test.py` passes `cast_prm=False` and filters by `default_nn_name`, so it checks the raw stored hyperparameters and the default model instead of depending on the casting path and a hard-coded name.
-
-### Removed
-- `LICENSE.md` in favour of `LICENSE`.
-
-### Documentation
-- Install/update instructions rewritten; license files renamed extension-less.
+- PyTorch requirement raised to `torch~=2.6.0`, `torchvision~=0.21.0`.
+- Project root is found by walking up from the current directory to a folder containing `ab/`
+  and `README.md`; the root is printed on import.
+- Package metadata: name `NN-Dataset`, homepage `https://ABrain.one`.
+- License files renamed without the `.md` extension (`LICENSE`, `Doc/Licenses/LICENSE-*`).
+- Statistics: 3,695 per-epoch files (3,335 in 1.0.2).
 
 ## [1.0.2] - 2025-02-06
 
 ### Added
-- PyPI version badge and PyPI-first install instructions, because `pip install nn-dataset` is now the supported distribution channel and users need a visible version reference and the CUDA wheel index (`--extra-index-url`); the GitHub install flow is kept below as the alternative, and `rm -rf db` is called out because a stale local database silently shadows the freshly installed data. The new `nn-plots` extra makes the plotting dependencies opt-in, so analysis tooling no longer forces matplotlib's install cost on every user.
-- License documents are now shipped inside the package: `MANIFEST.in` adds `LICENSE.md` and `Doc/Licenses/*.md`, so the MIT, BSD-3-Clause and DeepSeek-LLM-V2 notices covering models adopted from other projects travel with every sdist/wheel and are not lost when the source is redistributed.
-
-### Changed
-- README license links point at absolute GitHub URLs instead of repo-relative paths, because relative links do not resolve on the PyPI project page.
-- Version 1.0.1 → 1.0.2.
+- README: PyPI badge and PyPI install instructions, including the optional `nn-plots` extra
+  (`pip install nn-dataset[nn-plots]`); license links point to absolute GitHub URLs.
+- Source distributions include `LICENSE.md` and `Doc/Licenses/*.md` (`MANIFEST.in`).
 
 ### Removed
-- `pyproject.toml`, reverting to `setup.py`-only packaging: after the 1.0.1 torch-pin removal the file had shrunk to a three-line `[build-system]` block whose only effect was to declare `pip` itself as a build requirement, which is redundant and can interfere with isolated PEP 517 builds, so keeping a second packaging manifest only invited drift from the real metadata in `setup.py`.
+- `pyproject.toml`; packaging is defined in `setup.py` only.
 
 ## [1.0.1] - 2025-02-05
 
 ### Changed
-- `setup.py` no longer installs PyTorch itself, and the `[tool.pip_install]` torch pin in `pyproject.toml` is gone with it. The removed `install_pytorch()` ran `pip install torch~=2.5.1` from the CUDA 12.4 index on every build or install, which reached the network as a side effect of packaging and forced one cu124 build onto every user — breaking or mis-installing on CPU-only hosts and on other CUDA versions. PyTorch is now resolved through normal dependency metadata, so the target environment chooses the correct build, which is the only reliable way to support the range of machines the package is installed on.
-- Version 1.0.0 → 1.0.1, so the release carrying the installation fix can be distinguished on PyPI.
+- `setup.py` no longer runs `pip install torch~=2.5.1` from the CUDA 12.4 index during
+  installation (`install_pytorch()` removed); the `[tool.pip_install]` torch pin in
+  `pyproject.toml` is removed too.
 
 ### Fixed
-- ICNet.py built its SGD optimizer with `lr=prm['ls']`, a typo for `prm['lr']`. The `ls` key is never supplied — `supported_hyperparameters()` advertises `lr` — so model construction raised `KeyError` and ICNet could not be trained at all; reading `lr` restores the intended learning-rate search.
-
-### Added
-- README links to the public LEMUR repository, so the source and the released package can be found from each other.
-
-### Removed
-- The unused module-level `args = []` in `AirNet.py`, which nothing read and which only risked shadowing the framework's own argument handling.
+- `ICNet` read the learning rate from `prm['ls']`; it now uses `prm['lr']`.
 
 ## [1.0.0] - 2025-02-05
 
-Major release that turns the benchmark from a CLI-only, file-scattered experiment runner into a library other programs can query and extend.
-
 ### Added
-- Programmatic API (`ab/nn/api.py`): `data(...)` returns the database contents as a pandas DataFrame (model source, transform source, hyperparameters and stats), and `check_nn(nn_code, task, dataset, metric, prm, save_to_db=True)` trains a model supplied as a source string and stores it. Before this, results could only be produced through the CLI, so no external code could read the benchmark or contribute a model without knowing the on-disk layout; one documented function for reading and one for contributing is now the public surface.
-- SQLite persistence layer (`ab/nn/util/db/`: `Init.py`, `Write.py`, `Read.py`, `Calc.py`), replacing the per-config `trials.json` files that had to be discovered by listing `ab/nn/stat/*`. Model, metric and transform source live in their own code tables so identical code is stored once and joined back onto each stat row, and hyperparameters are stored as name/value/type triples so native Python types survive the round trip instead of being flattened to strings.
-- `data(only_best_accuracy=True)` computes the highest-accuracy row per `(task, dataset, metric, nn, epoch)` in SQL, so callers no longer load every trial and filter in Python; indexes on `accuracy` and the join columns keep those queries cheap.
-- Task-specialised COCO loaders (`coco_/Detection.py`, `coco_/Segmentation.py`) and additional classification loaders (CelebA-gender, CIFAR-10/100, MNIST, SVHN, ImageNette, Places365): a single `coco.py` had grown to do two unrelated jobs, and every loader now follows the same `(out_shape, minimum_accuracy, train_set, test_set)` return shape that `Train` expects.
-- mAP metric (`ab/nn/metric/map.py`) so the newly added detection models can be scored.
-- Model source checker (`ab/nn/util/CodeEval.py`): runs Pylint, Radon cyclomatic complexity and a dynamic smoke test (instantiate `Net`, call `train_setup`, run `learn` on random tensors) and folds the results into a 0–100 score. Because contributed models are arbitrary user code, the project needed an automatic way to reject broken or unmaintainable submissions rather than relying on manual review.
-- `pyproject.toml`, a `test.py` suite exercising `api.data()`/`api.check_nn()`, and helpers `Classes.py` (`DataRoll`), `Exception.py`, `soft_pad.py`.
+- Python API `ab.nn.api`: `data()` returns models, code and statistics as a pandas `DataFrame`,
+  filterable by `task`, `dataset`, `metric`, `nn`, `epoch` and `only_best_accuracy`
+  [#26](https://github.com/ABrain-One/nn-dataset/pull/26); `check_nn(nn_code, task, dataset,
+  metric, prm, save_to_db=True)` trains a model from source code and stores it if it passes.
+- SQLite database `db/ab.nn.db` (`ab/nn/util/db/`), built on first use from the JSON
+  statistics in `ab/nn/stat/` [#10](https://github.com/ABrain-One/nn-dataset/pull/10),
+  [#12](https://github.com/ABrain-One/nn-dataset/pull/12).
+- `ab/nn/util/CodeEval.py`: checks model source with Pylint, Radon complexity and a smoke run,
+  giving a 0 to 100 score; used by `check_nn`.
+- Object detection on COCO with an mAP metric (`metric/map.py`)
+  [#24](https://github.com/ABrain-One/nn-dataset/pull/24); classification loaders for
+  CIFAR-100, MNIST [#23](https://github.com/ABrain-One/nn-dataset/pull/23), SVHN, ImageNette,
+  Places365 and CelebA-gender; COCO split into `coco_/Detection.py` and `coco_/Segmentation.py`,
+  which caches its filtered image list [#16](https://github.com/ABrain-One/nn-dataset/pull/16).
+- Transforms: `norm`, `complex` and `echo` families at sizes 32 to 512 with `_flip` variants,
+  plus `soft_pad` (43 in total); Optuna picks the transform unless `-f/--transform` fixes it.
+- CLI flags for search ranges and robustness: `--min_batch_binary_power` and
+  `-b/--max_batch_binary_power`, `--min_learning_rate` and `-l/--max_learning_rate`,
+  `--min_momentum` and `-m/--max_momentum`, `-a/--nn_fail_attempts`,
+  `-r/--random_config_order`, `-w/--workers`.
+- Models: 49 architectures in `ab/nn/nn/` (32 in 0.1.2), including AirNet, AirNext, BagNet,
+  DarkNet, DPN68/107/131, ICNet [#18](https://github.com/ABrain-One/nn-dataset/pull/18) and
+  the detectors FasterRCNN, RetinaNet, FCOS, SSDLite, SSDFull
+  [#24](https://github.com/ABrain-One/nn-dataset/pull/24). Statistics: 145 pipeline
+  configurations and 3,335 per-epoch files [#25](https://github.com/ABrain-One/nn-dataset/pull/25).
 
 ### Changed
-- Architectures relocated `ab/nn/dataset/` → `ab/nn/nn/` and made to obey one contract — `Net(in_shape, out_shape, prm, device)`, `train_setup(prm)`, `learn(train_data)` and `supported_hyperparameters()`. Model classes previously lived beside dataset code and each task was trained its own way, so the trainer had to special-case architectures (e.g. inline RNN/LSTM construction). With the uniform interface `Train`/`check_nn` can build, train and evaluate any model generically, and `supported_hyperparameters()` lets Optuna search only the parameters a model actually declares.
-- `Train.py` rewritten around `optuna_objective`, `train_n_eval` and persistence of `duration`/`accuracy`, with retry/backoff, so one failing trial no longer loses the whole run.
-- CLI extended with many flags and the config separator changed `-` → `_` to match the names stored in the database.
-
-### Fixed
-- `MIoU` accepts `out_shape`; the `minimum_accuracy`/`AccuracyException` gate stops wasted training; CUDA OOM triggers a batch rollback; `release_memory()` frees GPU memory between trials.
+- Model contract: `ab/nn/nn/<Name>.py` defines `Net(in_shape, out_shape, prm, device)` with
+  `train_setup(prm)` and `learn(train_data)`, plus `supported_hyperparameters()`; Optuna
+  searches each listed hyperparameter and the batch size. The README introduces the LEMUR
+  name and documents the contract.
+- Configuration names use `_` and drop the transform (`img-classification_cifar-10_acc_AlexNet`,
+  was `img_classification-cifar10-acc-cifar10_norm-AlexNet`); results are stored as
+  `ab/nn/stat/<config>/<epoch>.json`.
+- Defaults: one epoch per run (was `(1, 2, 5)`) and one additional trial (`-t -1`; negative
+  values add trials).
+- Training stops a trial whose accuracy is not above 1.2 times the loader's minimum accuracy or
+  whose epoch is estimated to exceed 30 minutes; on CUDA out-of-memory the maximum batch size
+  is lowered and the study restarts.
 
 ### Removed
-- The old `ab/nn/dataset/` tree, `ab/nn/util/Stat.py` (directory-scanning config discovery, superseded by the SQL queries in `db/Read.py`), the single-file `coco.py` bodies, `cifar10.py` and `transform/cifar10_*.py`.
-
-### Documentation
-- README rewritten with the LEMUR overview, CLI usage, contribution rules and citation, plus MIT attributions for the imported models.
+- `ab/nn/dataset/` (models moved to `ab/nn/nn/`), `ab/nn/util/Stat.py` with the
+  `trials.json`/`best_trial.json` layout, `loader/cifar10.py` (now `cifar-10.py`) and the
+  `cifar10_*` transforms.
 
 ## [0.1.2] - 2024-12-22
 
 ### Added
-- Config discovery as a reusable util (`ab/nn/util/Stat.py`: `extract_all_configs`, `provide_all_configs`), because it had lived inside `train.py`, where only `train.py`'s own CLI could reach it; extracting it lets any entry point discover configs, and `extract_all_configs` now also creates a missing `stat/<config>` directory for a complete config (via the new `Util.is_full_config`: five `-`-separated parts and the model module present), so a config that has not been trained yet is queued instead of silently skipped.
+- `run.py` reads `-c/--config`, `-e/--epochs`, `-t/--trials` and `-b/--max_batch_binary_power`
+  from the command line.
+- A full configuration name passed with `-c` (`task-dataset-metric-transform-model`) gets its
+  statistics directory created automatically; the README no longer asks to create it by hand.
 
 ### Changed
-- Path resolution became automatic (`Util.define_global_paths()`), and the `-r/--from_root` flag with the `Const.from_root_g` global is gone: previously every module had to consult that flag to know whether a path was relative to the project root or to `train.py`, which made the caller decide something the program can decide itself. `define_global_paths()` now probes the cwd for `stat/`, recognising the source layout (`ab/nn/stat`), the installed layout (`.venv/Lib/site-packages/ab/nn/stat`) and a bare run directory, and writes the result once to `Const.stat_dir_global` / `dataset_dir_global` / `data_dir_global`; loaders thus find `data/` and the model/dataset dirs the same way wherever the process starts.
-- Loaders honour that resolved directory instead of hardcoding it: `cifar10.py` uses `Const.data_dir_global` instead of a literal `root='data'`, and `coco.py` derives its `coco/` root from it and drops the `class_list`/`path` parameters, so `train.py` no longer imports `coco` specially to pass `img_segmentation` settings and the loader works on its own.
-- `run.py` and the CLI are driven by `argparse` (`--config`, `--epochs`, `--trials`, `--max_batch_binary_power`) rather than in-file constants, so a run is configured from the command line without editing the script; config parsing is centralised in `Util.conf_to_names`, and `train.main()` loses the removed `from_root` argument.
-- `setup.py` version 0.1.0 → 0.1.2.
-
-### Fixed
-- Config banner wording and a COCO comment typo ("doesn't exists" → "doesn't exist").
+- Paths are resolved automatically: statistics and models are found under `ab/nn/` in the
+  current directory or in `.venv/Lib/site-packages`, and the CIFAR-10 and COCO loaders store
+  data in `data/`.
+- COCO loader signature is `loader(resize, **kwargs)`; the `class_list` and `path` parameters
+  are removed.
+- `setup.py` version set to `0.1.2` (the 0.1.1 tag still declared `0.1.0`).
 
 ### Removed
-- `-r/--from_root` and `default_from_root`; unused imports in `train.py`; `ab/nn/stat/README.md`.
+- `-r/--from_root` flag and `default_from_root`.
+- `ab/nn/stat/README.md`.
 
 ## [0.1.1] - 2024-12-21
 
-Initial release. A framework for benchmarking neural-network architectures by combining datasets, transforms, and metrics, driven by Optuna search — so a model's quality is reported as a comparable metric value from many small training runs instead of one hand-tuned result. There is no `ab/nn/api.py` yet; the public surface is `ab/nn/train.py`, `ab/nn/util/*`, `ab/nn/loader/*`, `ab/nn/metric/*`, `ab/nn/transform/*`, and 32 `Net` model modules.
+Initial release.
 
 ### Added
-- **Single CLI entry point** `ab/nn/train.py` (`main(...)`, Optuna `study.optimize(objective)`, evaluation at 1/2/5 epochs): one command sweeps a whole (task, dataset, transform, model) grid, so recipes can be rerun and compared without bespoke scripts; the short epoch ladder gives cheap indicative scores before any expensive full run.
-- **Config discovery** `extract_all_configs()`/`provide_all_configs()` scanning `ab/nn/stat/*`: the existing result directory *is* the experiment registry, so a run resumes the grid a previous run left behind and nothing must be declared in a separate manifest. At this tag the helpers live in `train.py`; they move to `util/Stat.py` in 0.1.2.
-- **Resumable trials** `save_results()` appending to `trials.json`, with `count_trials_left()`: Optuna progress survives restarts, so a crashed or interrupted sweep continues instead of re-paying completed trials, and trials can be topped up with `+N`.
-- **Universal training harness** `ab/nn/util/Train.py` (`Train` with SGD + `CrossEntropyLoss`, grad-norm clipping, per-group LRs for segmentation): every architecture trains through one loop, so results reflect the model rather than a per-model recipe; the segmentation LR boost lets backbone-based nets train their heads without a separate script.
-- **Dynamic loading utilities** `ab/nn/util/Loader.py` (`load_dataset`) and `ab/nn/util/Util.py` (`nn_mod`, `get_attr`, `args`): datasets, transforms, metrics and models are imported by dotted name at call time, so the grid is data-driven and a new component appears simply by adding a file.
-- **Loaders** `cifar10.py`, `coco.py` (`COCOSegDataset`), `wikitext.py` (`TextDatasetPreparation`): classification, segmentation and character-level text generation are covered from the start, spanning the task families the benchmark is meant to compare.
-- **Metrics** `acc.py`, `iou.py`: a classification and a segmentation score share one call contract, so different tasks aggregate into the same comparison table.
-- **Transforms** `cifar10_norm.py`, `cifar10_norm_32.py`, `cifar10_complex.py`, `echo.py`: inputs are normalised for pretrained backbones, `cifar10_complex` feeds complex-valued nets, and `echo` is the identity baseline that separates model accuracy from transform effects.
-- **32 architectures** under `ab/nn/dataset/` (ResNet, VGG, ConvNeXt, SwinTransformer, VisionTransformer, MaxVit, FCN, UNet, DeepLabV3, LRASPP, RNN, LSTM, ComplexNet, BayesianNet, …): a broad, pre-implemented library is what makes the benchmark useful — a contributor adds a model, not a whole pipeline.
-- **Packaging** `setup.py`, `setup.cfg`, `MANIFEST.in`, `requirements.txt`, `run.py`: pip-installability plus a runnable example let external contributors reproduce results on their own hardware.
-
-### Documentation
-- README (install, Docker, usage, model-contribution criteria, citation); loader/metric/transform READMEs; licensing split in `LICENSE.md` and `Doc/Licenses/`: the contribution criteria fix the contract a new model must satisfy, while the license split keeps third-party model attributions explicit.
+- Training command `python -m ab.nn.train` (or `run.py`): runs an Optuna search over `lr`,
+  `momentum` and `batch_size` for every pipeline configuration under `ab/nn/stat/` named
+  `task-dataset-metric-transform-model`, by default for 1, 2 and 5 epochs and 100 trials.
+- Resumable runs: finished trials are counted from `trials.json`; a negative or `"+N"` trial
+  count adds N trials. Results are kept as `trials.json` and `best_trial.json` per epoch count.
+- Tasks: image classification on CIFAR-10, semantic segmentation on COCO and character-level
+  text generation on WikiText; metrics `acc` and `iou`; transforms `cifar10_norm`,
+  `cifar10_norm_32`, `cifar10_complex`, `echo`.
+- Models: 32 architectures in `ab/nn/dataset/`, including segmentation networks
+  [#2](https://github.com/ABrain-One/nn-dataset/pull/2), ComplexNet
+  [#3](https://github.com/ABrain-One/nn-dataset/pull/3) and BayesianNet variants
+  [#5](https://github.com/ABrain-One/nn-dataset/pull/5),
+  [#9](https://github.com/ABrain-One/nn-dataset/pull/9). Statistics: 28 pipeline
+  configurations (CIFAR-10 classification and COCO segmentation).
+- Packaging: `setup.py` (Python 3.10 or newer, requirements including `torch~=2.5.1` and
+  `optuna~=4.1.0`) and `MANIFEST.in` [#7](https://github.com/ABrain-One/nn-dataset/pull/7),
+  [#8](https://github.com/ABrain-One/nn-dataset/pull/8); MIT `LICENSE.md` and third-party
+  licenses in `Doc/Licenses/`.

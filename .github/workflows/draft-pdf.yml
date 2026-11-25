@@ -4,27 +4,38 @@ on:
     paths:
       - paper/**
       - .github/workflows/draft-pdf.yml
+  pull_request:
+    paths:
+      - paper/**
+      - .github/workflows/draft-pdf.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   paper:
     runs-on: ubuntu-latest
     name: Paper Draft
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           sparse-checkout: paper
       - name: Build draft PDF
+        # Pinned to a commit of openjournals/openjournals-draft-action (master, 2026-09-23).
         uses: openjournals/openjournals-draft-action@af22ceb4b8f9eff6b3a13c05747ccc2f573cf2e6
         with:
           journal: joss
           paper-path: paper/paper.md
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: paper
           path: paper/paper.pdf
+          if-no-files-found: error

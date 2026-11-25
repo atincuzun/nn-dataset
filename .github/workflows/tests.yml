@@ -1,61 +1,85 @@
 name: Tests
 on:
   push:
+    paths-ignore:
+      - 'paper/**'
   pull_request:
+    paths-ignore:
+      - 'paper/**'
+  schedule:
+    - cron: '17 3 * * 1'   # weekly; also runs the database-backed tests
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# A newer push to the same branch or PR cancels the run it supersedes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONUNBUFFERED: '1'
+  TORCH_CPU_INDEX: https://download.pytorch.org/whl/cpu
+
 jobs:
-  lint:
+  compile:
+    name: byte-compile
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      # The archive under ab/nn/stat holds ~545k JSON files that the code
-      # and tests do not need; skipping it keeps checkout fast.
-      - uses: actions/checkout@v4
+      # ab/nn/stat holds ~545k JSON files and results/ ~50 MB of images and
+      # exported models; neither is needed to build, install or test the code.
+      - uses: actions/checkout@v7
         with:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
             !/ab/nn/stat/
             !/results/
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
-      - name: Byte-compile the package
-        run: python -m compileall -q ab
+      - name: Byte-compile the package and the tests
+        run: python -m compileall -q ab test
 
   unit-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11']
+        # requires-python is >=3.10: test the oldest and newest supported.
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
             !/ab/nn/stat/
             !/results/
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install pytest pandas pyyaml optuna psutil tqdm radon zstandard huggingface_hub datasets
+          # Same torch/torchvision versions as requirements.txt, CPU build.
+          pip install $(grep -E '^torch(vision)?==' requirements.txt) --index-url "$TORCH_CPU_INDEX"
+          pip install pytest pandas optuna psutil tqdm zstandard huggingface_hub datasets
           pip install --no-deps -e .
-      # Tests that download the full LEMUR database from Hugging Face are
-      # excluded from the fast CI run; run them locally against a released
-      # database snapshot. test/val_split runs in its own step below.
+      # Tests that need the LEMUR database run in the `database` job below,
+      # because importing ab.nn.util.db.Write downloads it from Hugging Face.
+      # test/val_split runs in its own step below.
       - name: Run tests
         run: >-
-          python -m pytest -q -o python_files="test_*.py test.py" test test-ext
-          --ignore=test-ext/test_utkface.py
+          python -m pytest -q test
           --ignore=test/test.py
           --ignore=test/test_nonnull.py
           --ignore=test/val_split
@@ -65,31 +89,136 @@ jobs:
       - name: Run validation-split tests
         run: |
           tests=$(python -m pytest --collect-only -q test/val_split | grep '::')
+          test -n "$tests" || { echo "::error::no validation-split tests collected"; exit 1; }
           for t in $tests; do
             d=$(mktemp -d)
             (cd "$d" && python -m pytest -q -p no:cacheprovider "$GITHUB_WORKSPACE/$t") || exit 1
           done
 
-  install:
-    # Installs the package with all declared dependencies, as users and
-    # reviewers do, and imports the public API from outside the source tree.
+  package:
+    # Builds the sdist and wheel exactly as a release would and checks them.
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
             !/ab/nn/stat/
             !/results/
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+          twine check --strict dist/*
+      - name: Inspect the wheel
+        run: |
+          ls -l dist/
+          python - <<'EOF'
+          import glob, sys, zipfile
+          names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist()
+          data = [n for n in names if '.data/data/' in n]
+          print(f'{len(names)} files in wheel')
+          for required in ('ab/nn/api.py', 'ab/nn/nn/__init__.py', 'ab/nn/metric/acc.py'):
+              if required not in names:
+                  print(f'::error::{required} missing from the wheel'); sys.exit(1)
+          if data:
+              # Known packaging issue ([tool.setuptools.data-files] in pyproject.toml);
+              # reported as a warning until pyproject.toml is fixed.
+              print(f'::warning::wheel installs {len(data)} files outside site-packages, e.g. {data[:3]}')
+          EOF
+
+  install:
+    # Installs the package with all declared dependencies, as users and
+    # reviewers do, and imports the public API from outside the source tree.
+    # Importing ab.nn.api downloads the LEMUR database for this version from
+    # Hugging Face, so this job needs ab.nn.zst-<version> to be published.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ab/nn/stat/
+            !/results/
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
+      - name: Check that the database for this version is published
+        run: |
+          f="ab.nn.zst-$(cat version)"
+          url="https://huggingface.co/NN-Dataset/LEMUR_DB/resolve/main/$f"
+          if ! curl -sfIL -o /dev/null "$url"; then
+            echo "::error title=LEMUR database not published::$f is not at the root of huggingface.co/NN-Dataset/LEMUR_DB, so 'import ab.nn.api' fails for every user of this version. Publish it there."
+            exit 1
+          fi
       - name: Install the package
+        # Same command as the README, with the CPU build of torch.
         run: |
           python -m pip install --upgrade pip
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install .
+          pip install . --extra-index-url "$TORCH_CPU_INDEX"
+          pip check
       - name: Import the public API
         working-directory: ${{ runner.temp }}
-        run: python -c "from ab.nn.api import data, check_nn; import ab.nn.train; print('import OK')"
+        run: python -c "from ab.nn.api import data, check_nn; import ab.nn.train; print(data(max_rows=1)); print('import OK')"
+
+  released-package:
+    # What a reviewer gets from `pip install nn-dataset` today. It tests the
+    # latest PyPI release, not this commit, so it does not block the run.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Install nn-dataset from PyPI
+        run: |
+          python -m pip install --upgrade pip
+          pip install nn-dataset --extra-index-url "$TORCH_CPU_INDEX"
+          pip show nn-dataset
+      - name: Import the public API
+        working-directory: ${{ runner.temp }}
+        run: python -c "from ab.nn.api import data; print(data(max_rows=1)); print('import OK')"
+
+  database:
+    # Tests of the public query API against the real LEMUR database. They
+    # download it from Hugging Face (several hundred MB), so they run weekly
+    # and on demand rather than on every push.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ab/nn/stat/
+            !/results/
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
+      - name: Install the package and pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest --extra-index-url "$TORCH_CPU_INDEX"
+      - name: Run the database tests
+        run: >-
+          python -m pytest -q -o python_files="test_*.py test.py"
+          test/test.py test/test_nonnull.py
+          test/test_uuid4_arch_uid.py::test_duplicate_model_is_not_added_twice
