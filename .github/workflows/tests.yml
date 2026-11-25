@@ -49,12 +49,23 @@ jobs:
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install pytest pandas pyyaml optuna psutil tqdm radon zstandard huggingface_hub datasets
           pip install --no-deps -e .
-      # test/test.py and test/test_nonnull.py download the full LEMUR database
-      # from Hugging Face at import time, so they are excluded from the fast
-      # CI run; run them locally against a released database snapshot.
+      # Tests that download the full LEMUR database from Hugging Face are
+      # excluded from the fast CI run; run them locally against a released
+      # database snapshot. test/val_split runs in its own step below.
       - name: Run tests
         run: >-
           python -m pytest -q -o python_files="test_*.py test.py" test test-ext
           --ignore=test-ext/test_utkface.py
           --ignore=test/test.py
           --ignore=test/test_nonnull.py
+          --ignore=test/val_split
+          --deselect test/test_uuid4_arch_uid.py::test_duplicate_model_is_not_added_twice
+      # The validation-split tests create db/ in the working directory, so each
+      # one runs in its own process from a fresh, empty directory.
+      - name: Run validation-split tests
+        run: |
+          tests=$(python -m pytest --collect-only -q test/val_split | grep '::')
+          for t in $tests; do
+            d=$(mktemp -d)
+            (cd "$d" && python -m pytest -q -p no:cacheprovider "$GITHUB_WORKSPACE/$t") || exit 1
+          done
