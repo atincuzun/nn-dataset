@@ -47,7 +47,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install pytest pandas pyyaml optuna psutil tqdm radon zstandard huggingface_hub
+          pip install pytest pandas pyyaml optuna psutil tqdm radon zstandard huggingface_hub datasets
           pip install --no-deps -e .
+      # test/test.py and test/test_nonnull.py download the full LEMUR database
+      # from Hugging Face at import time, so they are excluded from the fast
+      # CI run; run them locally against a released database snapshot.
       - name: Run tests
-        run: python -m pytest -q -o python_files="test_*.py test.py" test test-ext --ignore=test-ext/test_utkface.py
+        run: >-
+          python -m pytest -q -o python_files="test_*.py test.py" test test-ext
+          --ignore=test-ext/test_utkface.py
+          --ignore=test/test.py
+          --ignore=test/test_nonnull.py
