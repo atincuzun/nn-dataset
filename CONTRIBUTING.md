@@ -22,7 +22,9 @@ python -m pip install --upgrade pip
 pip install -e .
 ```
 
-An NVIDIA GPU with CUDA is required for training; the database, API, and
+Training uses an NVIDIA GPU (CUDA) when one is available and otherwise falls
+back to Apple MPS or the CPU, so the test suite and small models run on any
+machine; large studies are practical only on a GPU. The database, API, and
 architecture-analysis tools run on CPU.
 
 ## Adding a model
@@ -40,10 +42,24 @@ epochs; three trials are accepted for very large models).
 
 ## Running the tests
 
+The same tests run on every push and pull request through GitHub Actions
+(`.github/workflows/tests.yml`). To run them locally:
+
 ```bash
 pip install pytest
-pytest -q test
+# fast suite (CPU only, no large downloads)
+python -m pytest -q -o python_files="test_*.py test.py" test test-ext \
+  --ignore=test-ext/test_utkface.py --ignore=test/test.py \
+  --ignore=test/test_nonnull.py --ignore=test/val_split
+# validation-split tests: one test per process, each from an empty directory
+for t in $(python -m pytest --collect-only -q test/val_split | grep '::'); do
+  (cd "$(mktemp -d)" && python -m pytest -q "$OLDPWD/$t")
+done
 ```
+
+`test/test.py` and `test/test_nonnull.py` download the full LEMUR database
+from Hugging Face and take longer; run them before changes to the database or
+API layers.
 
 ## Pull-request process
 
@@ -55,8 +71,21 @@ pytest -q test
 
 ## Reporting issues
 
-Include the command you ran, the task/dataset/metric configuration, the expected
-and observed behaviour, and the full traceback.
+Report bugs at https://github.com/ABrain-One/nn-dataset/issues. Include the
+command you ran, the task/dataset/metric configuration, the expected and
+observed behaviour, and the full traceback.
+
+## Getting help
+
+Questions about installing or using the framework are welcome as GitHub
+issues at https://github.com/ABrain-One/nn-dataset/issues. Please search
+existing issues first and describe what you are trying to achieve.
+
+## Governance
+
+The project is maintained by the ABrain-One team at the Computer Vision Lab,
+University of Würzburg. Maintainers review every pull request, and changes are
+merged after maintainer approval.
 
 ## License
 
