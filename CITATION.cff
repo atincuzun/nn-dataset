@@ -1,48 +1,184 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "nn-dataset: Learning, Evaluation, and Modeling for Unified Research"
+message: >-
+  If you use this software, please cite it using the metadata
+  from this file. If you use the LEMUR dataset or its statistics,
+  please also cite the works listed under "references".
+title: >-
+  LEMUR: A Unified Python Framework for Reproducible Neural
+  Network Experiments at Scale
 type: software
+authors:
+  - given-names: Dmitry
+    family-names: Ignatov
+    affiliation: >-
+      Computer Vision Lab, CAIDAS & IFI, University of Würzburg,
+      Germany
+  - given-names: Tolgay Atinc
+    family-names: Uzun
+    affiliation: >-
+      Computer Vision Lab, CAIDAS & IFI, University of Würzburg,
+      Germany
+  - given-names: Waleed
+    family-names: Khalid
+  - given-names: Saif U
+    family-names: Din
+  - given-names: Sai Revanth
+    family-names: Mulukuledu
+  - given-names: Akashdeep
+    family-names: Singh
+  - given-names: Chandini
+    family-names: Vysyaraju
+  - given-names: Raghuvir
+    family-names: Duvvuri
+  - given-names: Avi
+    family-names: Goyal
+  - given-names: Yashkumar Rajeshbhai
+    family-names: Lukhi
+  - given-names: Muhammad A.
+    family-names: Hussain
+  - given-names: Krunal
+    family-names: Jesani
+  - given-names: Usha
+    family-names: Shrestha
+  - given-names: Yash
+    family-names: Mittal
+  - given-names: Roman
+    family-names: Kochnev
+  - given-names: Pritam
+    family-names: Kadam
+  - given-names: Mohsin
+    family-names: Ikram
+  - given-names: Harsh Rameshbhai
+    family-names: Moradiya
+  - given-names: Alice
+    family-names: Arslanian
+  - given-names: Arash Torabi
+    family-names: Goodarzi
+  - given-names: Zofia Antonina
+    family-names: Bentyn
+  - given-names: Radu
+    family-names: Timofte
+    affiliation: >-
+      Computer Vision Lab, CAIDAS & IFI, University of Würzburg,
+      Germany
+contact:
+  - name: ABrain One
+    email: AI@ABrain.one
+    website: "https://ABrain.one"
+version: 2.2.13
+date-released: "2026-10-26"
 license: MIT
 repository-code: "https://github.com/ABrain-One/nn-dataset"
-version: 2.2.13
-authors:
-  - family-names: Uzun
-    given-names: Tolgay Atinc
-  - family-names: Khalid
-    given-names: Waleed
-  - family-names: Din
-    given-names: Saif U
-  - family-names: Mulukuledu
-    given-names: Sai Revanth
-  - family-names: Singh
-    given-names: Akashdeep
-  - family-names: Vysyaraju
-    given-names: Chandini
-  - family-names: Duvvuri
-    given-names: Raghuvir
-  - family-names: Goyal
-    given-names: Avi
-  - family-names: Lukhi
-    given-names: Yashkumar Rajeshbhai
-  - family-names: Hussain
-    given-names: Muhammad A.
-  - family-names: Jesani
-    given-names: Krunal
-  - family-names: Shrestha
-    given-names: Usha
-  - family-names: Mittal
-    given-names: Yash
-  - family-names: Kochnev
-    given-names: Roman
-  - family-names: Kadam
-    given-names: Pritam
-  - family-names: Ikram
-    given-names: Mohsin
-  - family-names: Moradiya
-    given-names: Harsh Rameshbhai
-  - family-names: Arslanian
-    given-names: Alice
-  - family-names: Ignatov
-    given-names: Dmitry
-  - family-names: Timofte
-    given-names: Radu
+repository-artifact: "https://pypi.org/project/nn-dataset/"
+url: "https://github.com/ABrain-One/nn-dataset"
+abstract: >-
+  LEMUR (Learning, Evaluation, and Modeling for Unified Research),
+  distributed on PyPI as nn-dataset, is an open-source Python
+  framework for training neural networks and analyzing their results
+  under a shared protocol. Researchers provide model code and select
+  a task, dataset, and evaluation metric; the framework trains the
+  model and records its scores, losses, hardware context, and
+  resource use at every epoch in a queryable database. Additional
+  analyses characterize layers and identify architectures from source
+  code, so results from different studies can be compared. Models,
+  data loaders, transformations, and metrics are added as individual
+  Python files, and a programmatic interface accepts a network's
+  source code and returns validated measurements, allowing AutoML and
+  code-generation systems to submit candidates without manual
+  intervention.
+keywords:
+  - Python
+  - PyTorch
+  - deep learning
+  - neural network dataset
+  - neural architecture search
+  - AutoML
+  - hyperparameters
+  - benchmarking
+  - experiment management
+  - reproducibility
+  - LLM integration
+references:
+  - type: article
+    title: "LEMUR Neural Network Dataset: Towards Seamless AutoML"
+    authors:
+      - given-names: Arash Torabi
+        family-names: Goodarzi
+      - given-names: Roman
+        family-names: Kochnev
+      - given-names: Waleed
+        family-names: Khalid
+      - given-names: Hojjat
+        family-names: Torabi Goudarzi
+      - given-names: Furui
+        family-names: Qin
+      - given-names: Tolgay Atinc
+        family-names: Uzun
+      - given-names: Yashkumar Sanjaybhai
+        family-names: Dhameliya
+      - given-names: Yash Kanubhai
+        family-names: Kathiriya
+      - given-names: Zofia Antonina
+        family-names: Bentyn
+      - given-names: Dmitry
+        family-names: Ignatov
+      - given-names: Radu
+        family-names: Timofte
+    year: 2025
+    journal: arXiv preprint
+    identifiers:
+      - type: other
+        value: "arXiv:2504.10552"
+    doi: 10.48550/arXiv.2504.10552
+    url: "https://arxiv.org/abs/2504.10552"
+  - type: conference-paper
+    title: "LEMUR 2: Unlocking Neural Network Diversity for AI"
+    authors:
+      - given-names: Tolgay Atinc
+        family-names: Uzun
+      - given-names: Waleed
+        family-names: Khalid
+      - given-names: Saif U
+        family-names: Din
+      - given-names: Sai Revanth
+        family-names: Mulukuledu
+      - given-names: Akashdeep
+        family-names: Singh
+      - given-names: Chandini
+        family-names: Vysyaraju
+      - given-names: Raghuvir
+        family-names: Duvvuri
+      - given-names: Avi
+        family-names: Goyal
+      - given-names: Yashkumar Rajeshbhai
+        family-names: Lukhi
+      - given-names: Muhammad A.
+        family-names: Hussain
+      - given-names: Krunal
+        family-names: Jesani
+      - given-names: Usha
+        family-names: Shrestha
+      - given-names: Yash
+        family-names: Mittal
+      - given-names: Roman
+        family-names: Kochnev
+      - given-names: Pritam
+        family-names: Kadam
+      - given-names: Mohsin
+        family-names: Ikram
+      - given-names: Harsh Rameshbhai
+        family-names: Moradiya
+      - given-names: Alice
+        family-names: Arslanian
+      - given-names: Dmitry
+        family-names: Ignatov
+      - given-names: Radu
+        family-names: Timofte
+    collection-title: >-
+      Proceedings of the IEEE/CVF Conference on Computer Vision and
+      Pattern Recognition Workshops (CVPRW)
+    start: 3291
+    end: 3300
+    month: 6
+    year: 2026
+    url: "https://openaccess.thecvf.com/content/CVPR2026W/CVPR-NAS26/papers/Uzun_LEMUR_2_Unlocking_Neural_Network_Diversity_for_AI_CVPRW_2026_paper.pdf"
